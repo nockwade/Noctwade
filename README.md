@@ -14,6 +14,12 @@ This fork was developed with heavy use of AI assistants (an AI coding assistant,
 
 Проект создан с активным использованием нейросетей (ИИ-помощник для кода, в том числе Claude Code, и генерация части изображений). Проверка выполнялась сборкой и автотестами; независимого аудита безопасности не было.
 
+## Credits / Участники
+
+- **[nockwade](https://github.com/nockwade)** — maintainer and author of Noctwade.
+- **Claude (Anthropic)** and **Codex (OpenAI)** — AI assistants used to write and check code and assets; they are tools, not independent authors, and their output was directed and reviewed by the maintainer.
+- **[throneproj / Throne](https://github.com/throneproj/ThroneForAndroid)**, **SagerNet / NekoBox** and the upstream contributors — the original application (GPL-3.0); see [AUTHORS](AUTHORS) and the git history.
+
 ## Download and verify / Скачать и проверить
 
 Releases: <https://github.com/nockwade/Noctwade/releases>. Download only from there.
