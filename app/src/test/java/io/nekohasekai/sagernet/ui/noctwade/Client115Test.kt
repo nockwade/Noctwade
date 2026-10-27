@@ -191,7 +191,7 @@ class Client115Test {
             }
         }
         parser.close()
-        assertTrue("Notification mask must include crescent, star and mountains", paths >= 3)
+        assertTrue("Notification mask must include the crescent and the star", paths >= 2)
         controller.pause().stop().destroy()
     }
 

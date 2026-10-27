@@ -5,7 +5,7 @@
 > **Noctwade — неофициальный форк** [throneproj/ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid). Он никак не связан с авторами Throne и SagerNet и не поддерживается ими. Проблемы Noctwade не нужно сообщать в оригинальный проект.
 
 - Licence: **GNU GPL v3.0** (see [LICENSE](LICENSE)), same as upstream. All changes are published under the same licence.
-- Base: upstream commit [`5653af9`](https://github.com/throneproj/ThroneForAndroid/commit/5653af94e2b0d46a8ba34c606a09ade473c0c35d) (v2.0.3). Git history is preserved.
+- Base: upstream release [v2.0.4](https://github.com/throneproj/ThroneForAndroid/releases/tag/v2.0.4) (commit [`de0a8bd`](https://github.com/throneproj/ThroneForAndroid/commit/de0a8bd67a40d096418c565ebe388c4d506391a8)). Git history is preserved.
 - What changed: [CHANGES.md](CHANGES.md). Third-party material: [THIRD-PARTY.md](THIRD-PARTY.md). Upstream README: [README.upstream.md](README.upstream.md).
 
 ## Made with AI / Создано с помощью нейросетей
@@ -22,7 +22,7 @@ Releases: <https://github.com/nockwade/Noctwade/releases>. Download only from th
 2. Check the signing certificate:
 
 ```
-apksigner verify --print-certs Noctwade-1.0.0-arm64-v8a.apk
+apksigner verify --print-certs Noctwade-2.0.4-arm64-v8a.apk
 ```
 
 The certificate SHA-256 must be:

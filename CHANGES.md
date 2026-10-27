@@ -1,10 +1,10 @@
 # Changes relative to upstream / Изменения относительно оригинала
 
-Noctwade 1.0.0 (2026-10-27) is derived from [throneproj/ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid) commit `5653af94e2b0d46a8ba34c606a09ade473c0c35d` (v2.0.3, "resync with desktop"). Under GPLv3 §5(a) this file states that the files were modified and when. The full diff is the git history of this repository (`git diff 5653af9..HEAD`). Roughly 190 upstream files were modified and 470 added.
+Noctwade 2.0.4 (2026-10-27) is derived from [throneproj/ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid) release [v2.0.4](https://github.com/throneproj/ThroneForAndroid/releases/tag/v2.0.4) (commit `de0a8bd67a40d096418c565ebe388c4d506391a8`; development started from `5653af94`, v2.0.3, and upstream v2.0.4 was merged in). Under GPLv3 §5(a) this file states that the files were modified and when. The full diff is the git history of this repository (`git diff v2.0.4..HEAD`). Roughly 190 upstream files were modified and 470 added.
 
 ## Branding and packaging
 - App name Noctwade, package `com.noctwade.android`, new launcher icon (crescent moon and star), monochrome themed icon, notification and quick-settings tile icon.
-- Version 1.0.0 (versionCode 128000); ARM64 build only; release-key signing; the in-app updater checks `nockwade/Noctwade` releases and pins the Noctwade signing certificate.
+- Version 2.0.4, the same number as the upstream release it is based on (versionCode 110000); ARM64 build only; release-key signing; the in-app updater checks `nockwade/Noctwade` releases and pins the Noctwade signing certificate.
 - About screen links to this fork and credits the upstream project.
 
 ## Interface
@@ -32,4 +32,4 @@ Noctwade 1.0.0 (2026-10-27) is derived from [throneproj/ThroneForAndroid](https:
 - Removed upstream tooling files for AI coding agents (`.roo/`, `openspec/`); they are not part of the app.
 
 ## Removed
-- Per-route-profile DNS editor (replaced by the shared DNS tab); bottom tab bar.
+- Per-route-profile DNS editor, new in upstream 2.0.4 (replaced by the shared DNS tab); bottom tab bar.
