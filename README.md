@@ -33,19 +33,19 @@ The certificate SHA-256 must be:
 
 If the fingerprint differs, the file is not an official Noctwade build. The in-app updater pins this certificate. Builds are signed with a release key (not the public Android debug key); the key is held only by the maintainer.
 
-- Package: `com.noctwade.android`; minSdk 24; ARM64 (`arm64-v8a`) only.
+- Package: `com.noctwade.android`; minSdk 24; three builds: `arm64-v8a` (most phones), `armeabi-v7a`, `x86_64`.
 - It installs next to Throne (different package). It cannot update a build signed with another key: uninstall such a build first (export profiles first).
 
 ## Build from source / Сборка
 
 Requirements: JDK 17+ (21 used), Android SDK 35 / build-tools 35.0.1, Go (see `core/go.mod` of the core) for the core library.
 
-1. Build the core: the app embeds `ThroneCore.aar` (Go, gomobile) built from [throneproj/Throne](https://github.com/throneproj/Throne) at the commit in `THRONE_CORE_REF` of [nb4a.properties](nb4a.properties), see the `.github/actions/throne-core` action. Place the result at `app/libs/ThroneCore.aar`.
+1. Build the core: the app embeds `ThroneCore.aar` (Go, gomobile, targets `android/arm64,android/arm,android/amd64`) built from [throneproj/Throne](https://github.com/throneproj/Throne) at the commit in `THRONE_CORE_REF` of [nb4a.properties](nb4a.properties), see the `.github/actions/throne-core` action. Place the result at `app/libs/ThroneCore.aar`.
 2. Generate `app/src/main/assets/schema` (sing-box schema), `routeprofiles` and `sb-dashboard` like `.github/actions/*` does.
 3. Build:
 
 ```
-gradlew app:assembleFdroidRelease -Pthrone.abis=arm64-v8a
+gradlew app:assembleOssRelease
 ```
 
 Signing: set `SIGNING_KEYSTORE_B64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS` (see `buildSrc`); pin the updater with `-Pthrone.updateSignerSha256=<cert sha256>`.

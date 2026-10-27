@@ -5,7 +5,7 @@
 * Noctwade: shared DNS tab (Cloudflare / Google / Quad9 / manual) replaces per-routing-profile DNS
 * Noctwade: route templates with OutIP and RoscomVPN rule-sets; app routing hides system apps by default
 * Noctwade: random login/password for the local mixed proxy on first launch
-* Noctwade: sing-box core 1.15.0-alpha.13, ARM64 only, signed with the Noctwade release key
+* Noctwade: sing-box core 1.15.0-alpha.13, builds for arm64-v8a / armeabi-v7a / x86_64, signed with the Noctwade release key
 * Add DNS settings to routing profiles **1**
 * Add enable/disable toggle for route rules
 * Extend the Multiplex preset and allow custom per-profile Multiplex settings **2**

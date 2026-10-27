@@ -4,7 +4,7 @@ Noctwade 2.0.4 (2026-10-27) is derived from [throneproj/ThroneForAndroid](https:
 
 ## Branding and packaging
 - App name Noctwade, package `com.noctwade.android`, new launcher icon (crescent moon and star), monochrome themed icon, notification and quick-settings tile icon.
-- Version 2.0.4, the same number as the upstream release it is based on (versionCode 110000); ARM64 build only; release-key signing; the in-app updater checks `nockwade/Noctwade` releases and pins the Noctwade signing certificate.
+- Version 2.0.4, the same number as the upstream release it is based on (versionCode 110000); arm64-v8a, armeabi-v7a and x86_64 builds; release-key signing; the in-app updater checks `nockwade/Noctwade` releases and pins the Noctwade signing certificate.
 - About screen links to this fork and credits the upstream project.
 
 ## Interface
