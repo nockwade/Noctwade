@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Noctwade: routing screens -->
+<resources>
+    <string name="nw_routing_profiles_title">ПРОФИЛИ МАРШРУТИЗАЦИИ</string>
+    <string name="nw_routing_create">Создать профиль</string>
+    <string name="nw_routing_create_hint">Свои правила, DNS и маршрут по умолчанию</string>
+    <string name="nw_routing_presets">Готовые профили</string>
+    <string name="nw_routing_import_hint">Добавить профиль маршрутизации из буфера</string>
+    <string name="nw_routing_apps_bypass">Выбранные обходят VPN · %1$d</string>
+    <string name="nw_routing_more">Импорт и источники</string>
+    <string name="nw_routing_more_hint">Файлы, QR-коды, удалённые профили и списки</string>
+    <string name="nw_routing_order_hint">Нажмите на профиль, чтобы выбрать его, на карандаш — для настройки. Удерживайте для копирования, экспорта и удаления. Правила проверяются сверху вниз до первого совпадения.</string>
+    <string name="nw_routing_profile_info">Включено правил: %1$d из %2$d</string>
+    <string name="nw_routing_edit_profile">Настроить профиль: %1$s</string>
+    <string name="nw_routing_my_profile">Мой профиль</string>
+    <string name="nw_routing_configure">Настроить</string>
+    <string name="nw_routing_edit">Настроить</string>
+    <string name="nw_routing_duplicate">Создать копию профиля</string>
+    <string name="nw_routing_copy">Копия</string>
+    <string name="nw_routing_last_profile">Должен остаться хотя бы один профиль</string>
+    <string name="nw_routing_dns_expand">Настройки DNS</string>
+    <string name="nw_routing_rules_hint">До первого совпадения. Перетаскивайте за ручку, чтобы изменить порядок. Нажмите на правило для настройки.</string>
+    <string name="nw_routing_apps_enable">Маршрутизация по приложениям</string>
+    <string name="nw_routing_apps_enable_hint">Выключено: все приложения используют VPN</string>
+    <string name="nw_routing_apps_bypass_toggle">Выбранные приложения в обход VPN</string>
+    <string name="nw_routing_apps_bypass_hint">Выключено: только выбранные приложения через VPN</string>
+    <string name="nw_routing_tab_rules">Правила</string>
+    <string name="nw_routing_tab_apps">Приложения</string>
+    <string name="nw_apps_access_title">Доступ к списку приложений</string>
+    <string name="nw_apps_access_hint">Разрешите доступ к списку установленных приложений, чтобы выбрать, какие из них используют VPN.</string>
+    <string name="nw_apps_allow">Разрешить</string>
+    <string name="nw_apps_system">Системные</string>
+    <string name="nw_apps_auto">Автовыбор</string>
+    <string name="nw_dns_hint">Один DNS-сервер для всех профилей маршрутизации. Изменение применяется сразу.</string>
+    <string name="nw_dns_manual">Ручная</string>
+    <string name="nw_dns_manual_sum">Серверы, FakeIP, кэш, предопределённые ответы и DNS-объект</string>
+    <string name="nw_dns_manual_current">Удалённый DNS: %1$s</string>
+    <string name="nw_tpl_rulesets">Наборы правил Рунета</string>
+    <string name="nw_tpl_rs_ads">Блокировать рекламу</string>
+    <string name="nw_tpl_rs_blocked">Заблокированное в РФ — через VPN</string>
+    <string name="nw_tpl_rs_russia">Российские сайты — напрямую</string>
+    <string name="nw_tpl_rulesets_source">Списки: runetfreedom/russia-v2ray-rules-dat, ядро обновляет их каждый день. Загрузка идёт через VPN.</string>
+    <string name="nw_domain_strategy">Доменная стратегия</string>
+</resources>

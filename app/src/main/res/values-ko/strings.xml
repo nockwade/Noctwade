@@ -821,7 +821,7 @@
     <string name="listen_port">수신 포트</string>
     <string name="location_settings">위치 설정</string>
     <string name="log_buffer_size">로그 버퍼 크기 (kb)</string>
-    <string name="log_crash_title">Throne이 충돌했습니다</string>
+    <string name="log_crash_title">Noctwade이 충돌했습니다</string>
     <string name="log_export_failed">로그 내보내기 실패: %s</string>
     <string name="log_hide_destinations">대상 숨기기</string>
     <string name="log_hide_sensitive">민감한 데이터 숨기기</string>

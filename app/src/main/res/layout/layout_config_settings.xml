@@ -1,16 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/nwBackground"
+    android:clipChildren="true"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_appbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="?attr/nwBackground"
+        android:paddingTop="12dp"
+        android:paddingBottom="6dp"
+        app:elevation="0dp">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/settings"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="?attr/nwBackground"
+            app:contentInsetStartWithNavigation="12dp"
+            app:titleTextColor="?attr/nwText" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- The menu search panel opens over the settings list, right under the toolbar. -->
+    <FrameLayout
+        android:id="@+id/settings_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <io.nekohasekai.sagernet.ui.noctwade.MenuSearchPanel
+            android:id="@+id/settings_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

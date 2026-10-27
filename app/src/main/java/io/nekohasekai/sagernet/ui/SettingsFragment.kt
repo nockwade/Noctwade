@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.ui.settings.SettingsScreenFragment
-import io.nekohasekai.sagernet.utils.Theme
 import io.nekohasekai.sagernet.widget.applyListInsets
 
 /** Hosts the settings root and its sub-screens; back and the toolbar arrow return to the previous screen. */
@@ -20,8 +18,21 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
 
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            childFragmentManager.popBackStack()
+            if (searchPanel?.isOpen == true) closeSearch() else childFragmentManager.popBackStack()
         }
+    }
+
+    private val searchPanel: io.nekohasekai.sagernet.ui.noctwade.MenuSearchPanel?
+        get() = view?.findViewById(R.id.settings_search)
+
+    private fun openSearch() {
+        searchPanel?.open()
+        syncToolbar()
+    }
+
+    private fun closeSearch() {
+        searchPanel?.close()
+        syncToolbar()
     }
 
     private val backStackListener = FragmentManager.OnBackStackChangedListener { syncToolbar() }
@@ -29,13 +40,20 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
     /** Every settings screen's list scrolls under the navigation bar and clears side bars. */
     private val listInsets = object : FragmentManager.FragmentLifecycleCallbacks() {
         override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
-            (f as? PreferenceFragmentCompat)?.listView?.applyListInsets()
+            (f as? PreferenceFragmentCompat)?.let {
+                it.listView.applyListInsets()
+                io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.rows(it.preferenceScreen)
+                io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.list(it)
+                f.arguments?.getString("searchKey")?.let{key->it.listView.post{if(f.view!=null && it.findPreference<Preference>(key)!=null)it.scrollToPreference(key)}}
+
+            }
+            io.nekohasekai.sagernet.ui.noctwade.DockScrollContent.apply(v)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        childFragmentManager.registerFragmentLifecycleCallbacks(listInsets, false)
+        childFragmentManager.registerFragmentLifecycleCallbacks(listInsets, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,6 +61,10 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backCallback)
         childFragmentManager.addOnBackStackChangedListener(backStackListener)
+        searchPanel?.onOpen = { entry ->
+            closeSearch()
+            openScreen(entry.screen, getString(entry.screenTitle), Bundle().apply { putString("searchKey", entry.key) })
+        }
 
         // A recreated activity (theme switch) restores the open sub-screen and its back stack.
         if (childFragmentManager.findFragmentById(R.id.settings) == null) {
@@ -67,13 +89,14 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
         return true
     }
 
-    private fun openScreen(name: String, title: CharSequence?, extras: Bundle) {
+    internal fun openScreen(name: String, title: CharSequence?, extras: Bundle) {
         val fragment = childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, name)
         fragment.arguments = Bundle(extras).apply {
             putCharSequence(SettingsScreenFragment.ARG_TITLE, title)
         }
         childFragmentManager.beginTransaction()
             .setReorderingAllowed(true)
+            .apply { if(io.nekohasekai.sagernet.widget.noctwade.NoctwadeMotion.enabled(requireContext())) setCustomAnimations(R.anim.nw_slide_in_right,R.anim.nw_slide_out_left,R.anim.nw_slide_in_left,R.anim.nw_slide_out_right) }
             .replace(R.id.settings, fragment)
             .addToBackStack(null)
             .commitAllowingStateLoss()
@@ -95,25 +118,32 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
     private fun syncToolbar() {
         val toolbar = toolbar ?: return
         val nested = childFragmentManager.backStackEntryCount > 0
-        backCallback.isEnabled = nested
+        val searching = searchPanel?.isOpen == true
+        backCallback.isEnabled = nested || searching
         val current = childFragmentManager.findFragmentById(R.id.settings)
+        // Source-management pages supply their own toolbar, including import/update actions.
+        view?.findViewById<View>(R.id.appbar)?.visibility = if(current is ToolbarFragment) View.GONE else View.VISIBLE
+        toolbar.menu.removeItem(0x7751)
+        if (!nested) toolbar.menu.add(0, 0x7751, 0, if (searching) R.string.nw_search_close else R.string.nw_menu_search).apply {
+            setIcon(if (searching) R.drawable.nw_close else R.drawable.nw_search)
+            icon?.setTint(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(requireContext()))
+            setShowAsAction(android.view.MenuItem.SHOW_AS_ACTION_ALWAYS)
+            setOnMenuItemClickListener { if (searching) closeSearch() else openSearch(); true }
+        }
         toolbar.title = current?.arguments?.getCharSequence(SettingsScreenFragment.ARG_TITLE)
-            ?.takeIf { nested } ?: getString(R.string.settings)
+            ?.takeIf { nested } ?: getString(R.string.nw_menu)
         if (nested) {
-            toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+            toolbar.setNavigationIcon(R.drawable.nw_back)
             toolbar.setNavigationContentDescription(R.string.navigation_back)
             toolbar.setNavigationOnClickListener { childFragmentManager.popBackStack() }
         } else {
-            toolbar.setNavigationIcon(R.drawable.ic_navigation_menu)
-            toolbar.setNavigationContentDescription(R.string.navigation_open_drawer)
-            toolbar.setNavigationOnClickListener {
-                (activity as? MainActivity)?.binding?.drawerLayout?.openDrawer(GravityCompat.START)
-            }
+            toolbar.setNavigationIcon(R.drawable.nw_back)
+            toolbar.setNavigationContentDescription(R.string.nw_home)
+            toolbar.setNavigationOnClickListener { (activity as? MainActivity)?.displayFragmentWithId(R.id.nav_home) }
         }
-        // White theme: the toolbar is white, so the navigation icon turns dark
-        if (Theme.isWhiteTheme()) {
-            toolbar.navigationIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.black))
-        }
+        toolbar.setBackgroundColor(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.background(requireContext()))
+        toolbar.setTitleTextColor(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(requireContext()))
+        toolbar.navigationIcon?.setTint(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(requireContext()))
     }
 
 }

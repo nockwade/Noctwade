@@ -14,10 +14,13 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
+        <View android:id="@+id/navigation_backdrop" android:layout_width="match_parent" android:layout_height="match_parent" android:background="?attr/nwBackground"/>
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/fragment_holder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="96dp" />
 
         <!-- We double trackThickness as half of it will be invisible -->
         <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -50,6 +53,7 @@
 
         <io.nekohasekai.sagernet.widget.StatsBar
             android:id="@+id/stats"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -62,6 +66,17 @@
             <include layout="@layout/layout_stats_bar_content" />
 
         </io.nekohasekai.sagernet.widget.StatsBar>
+
+        <View android:id="@+id/navigation_scrim" android:layout_width="match_parent" android:layout_height="260dp" android:layout_gravity="bottom" android:background="@drawable/nw_navigation_scrim" android:importantForAccessibility="no"/>
+
+        <io.nekohasekai.sagernet.widget.noctwade.NoctwadeNavigation
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

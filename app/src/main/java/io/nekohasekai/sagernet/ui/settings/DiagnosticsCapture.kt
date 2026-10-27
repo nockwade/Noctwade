@@ -206,8 +206,7 @@ object DiagnosticsCapture {
         } else {
             null
         }
-        val (dns, routeOwnsDns) = runCatching { RouteDnsSettings.current() }
-            .getOrElse { RouteDnsSettings.global() to false }
+        val dns = RouteDnsSettings.global()
         return JsonWriter.writeIndented(
             jsonObjectOf(
                 "throne_version" to SagerNet.appVersionNameForDisplay,
@@ -225,7 +224,6 @@ object DiagnosticsCapture {
                 "enable_stats" to SettingsRegistry.ENABLE_STATS.read(store),
                 "resolve_domain_strategy" to SettingsRegistry.DOMAIN_STRATEGY.read(store),
                 "fake_dns" to dns.fakeDns,
-                "route_custom_dns" to routeOwnsDns,
                 "enable_tun_routing" to SettingsRegistry.ENABLE_TUN_ROUTING.read(store),
             )
         )

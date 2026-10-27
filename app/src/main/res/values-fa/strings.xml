@@ -850,7 +850,7 @@
     <string name="listen_port">پورت گوش‌دادن</string>
     <string name="location_settings">تنظیمات موقعیت مکانی</string>
     <string name="log_buffer_size">اندازه بافر گزارش (kb)</string>
-    <string name="log_crash_title">Throne از کار افتاد</string>
+    <string name="log_crash_title">Noctwade از کار افتاد</string>
     <string name="log_export_failed">برون‌بری گزارش شکست خورد: %s</string>
     <string name="log_hide_destinations">پنهان‌کردن مقاصد</string>
     <string name="log_hide_sensitive">پنهان‌کردن داده‌های حساس</string>

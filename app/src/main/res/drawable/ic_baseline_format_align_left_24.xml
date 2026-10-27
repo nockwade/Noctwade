@@ -1,11 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lucide "text-align-start" (ISC, see assets/licenses/lucide.txt), Noctwade outline style. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
+    android:autoMirrored="true"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24"
-    android:tint="?attr/colorControlNormal"
-    android:autoMirrored="true">
-  <path
-      android:fillColor="@android:color/white"
-      android:pathData="M15,15L3,15v2h12v-2zM15,7L3,7v2h12L15,7zM3,13h18v-2L3,11v2zM3,21h18v-2L3,19v2zM3,3v2h18L21,3L3,3z"/>
+    android:tint="?attr/colorControlNormal">
+    <path
+        android:pathData="M 21 5 H 3"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M 15 12 H 3"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M 17 19 H 3"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>

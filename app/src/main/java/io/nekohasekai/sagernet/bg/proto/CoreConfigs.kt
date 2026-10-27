@@ -45,9 +45,9 @@ object CoreConfigs {
     fun buildMain(profile: ProxyEntity, deferRuleSets: Boolean = false, ports: PortLease? = null): GeneratedConfig {
         val (landing, front) = groupProxies(profile.groupId)
         val routing = SettingsMapper.routingInput()
-        val dns = routing.profile?.activeDns()
-        val settings = SettingsMapper.generatorSettings(dns).copy(deferRuleSets = deferRuleSets)
-        val generated = generator(routing, settings, dns).build(profile.id, landing, front, ports)
+        // DNS is one global setting for every routing profile (Routing › DNS).
+        val settings = SettingsMapper.generatorSettings().copy(deferRuleSets = deferRuleSets)
+        val generated = generator(routing, settings).build(profile.id, landing, front, ports)
         if (!generated.ok) error(generated.error ?: "config generation failed")
         return generated
     }
@@ -63,8 +63,7 @@ object CoreConfigs {
             val (landing, front) = groups.getOrPut(groupId) { groupProxies(groupId) }
             TestCandidate(id, landing, front)
         }
-        val dns = RouteManager.customDns(DataStore.currentRouteId)
-        return generator(settings = SettingsMapper.generatorSettings(dns), dns = dns).buildTest(candidates, ports)
+        return generator().buildTest(candidates, ports)
     }
 
     /** (landing_proxy_id, front_proxy_id) of a group, -1 when unset (any id <= 0 is "none"). */

@@ -1,6 +1,31 @@
-<vector android:autoMirrored="true" android:height="24dp"
-    android:viewportHeight="24.0" android:viewportWidth="24.0"
-    android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lucide "signpost" (ISC, see assets/licenses/lucide.txt), Noctwade outline style. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:autoMirrored="true"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
     android:tint="?attr/colorControlNormal">
-    <path android:fillColor="#FF000000" android:pathData="M21.71,11.29l-9,-9c-0.39,-0.39 -1.02,-0.39 -1.41,0l-9,9c-0.39,0.39 -0.39,1.02 0,1.41l9,9c0.39,0.39 1.02,0.39 1.41,0l9,-9c0.39,-0.38 0.39,-1.01 0,-1.41zM14,14.5V12h-4v3H8v-4c0,-0.55 0.45,-1 1,-1h5V7.5l3.5,3.5 -3.5,3.5z"/>
+    <path
+        android:pathData="M 12 13 v 8"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M 12 3 v 3"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M 2.354 10.354 a 1.207 1.207 0 0 1 0 -1.708 l 2.06 -2.06 A 2 2 0 0 1 5.828 6 h 12.344 a 2 2 0 0 1 1.414 .586 l 2.06 2.06 a 1.207 1.207 0 0 1 0 1.708 l -2.06 2.06 a 2 2 0 0 1 -1.414 .586 H 5.828 a 2 2 0 0 1 -1.414 -.586 z"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>

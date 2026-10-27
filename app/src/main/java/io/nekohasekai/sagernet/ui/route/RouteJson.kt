@@ -22,6 +22,11 @@ internal object RouteJson {
         put("is_remote", p.is_remote)
         put("remote_url", p.remote_url)
         put("auto_update", p.auto_update)
+        put("is_raw", p.is_raw)
+        put("raw_route", p.raw_route)
+        put("prevent_modifications", p.prevent_modifications)
+        put("endpoint_profile_ids", p.endpoint_profile_ids)
+        put("inner_hop_endpoint_ids", p.inner_hop_endpoint_ids)
         put("remote_last_update", p.remote_last_update)
         put("custom_dns", p.custom_dns)
         p.dns?.let { put("dns", JSONObject(it.toJson().toCompact())) }
@@ -37,6 +42,11 @@ internal object RouteJson {
             is_remote = obj.optBoolean("is_remote")
             remote_url = obj.optString("remote_url")
             auto_update = obj.optBoolean("auto_update")
+            is_raw = obj.optBoolean("is_raw")
+            raw_route = obj.optString("raw_route")
+            prevent_modifications = obj.optBoolean("prevent_modifications")
+            endpoint_profile_ids = obj.optString("endpoint_profile_ids", "[]")
+            inner_hop_endpoint_ids = obj.optString("inner_hop_endpoint_ids", "[]")
             remote_last_update = obj.optLong("remote_last_update")
             dns = obj.optJSONObject("dns")?.let { RouteDns.fromJson(JsonInput.fromOrgJson(it)) }
             custom_dns = obj.optBoolean("custom_dns") && dns != null

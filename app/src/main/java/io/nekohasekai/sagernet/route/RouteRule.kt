@@ -109,6 +109,8 @@ class RouteRule {
     @JvmField var sniff_override_dest: Boolean = false
     @JvmField var strategy: String = ""
 
+    /** Native terminal actions carry no outgoing selector. Legacy `route` + block remains unchanged. */
+    fun normalizeActionOptions(){if(action=="reject" || action=="hijack-dns")outbound_id=OutboundIds.DIRECT}
     fun copy(): RouteRule {
         val c = RouteRule()
         c.name = name

@@ -822,7 +822,7 @@
     <string name="listen_port">待受ポート</string>
     <string name="location_settings">位置情報設定</string>
     <string name="log_buffer_size">ログバッファサイズ（kb）</string>
-    <string name="log_crash_title">Throne がクラッシュしました</string>
+    <string name="log_crash_title">Noctwade がクラッシュしました</string>
     <string name="log_export_failed">ログのエクスポートに失敗しました：%s</string>
     <string name="log_hide_destinations">送信先を隠す</string>
     <string name="log_hide_sensitive">機密データを隠す</string>

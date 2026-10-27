@@ -588,7 +588,7 @@
     <string name="listen_port">監聽端口</string>
     <string name="location_settings">定位設定</string>
     <string name="log_buffer_size">日誌緩衝區大小（kb）</string>
-    <string name="log_crash_title">Throne 已崩潰</string>
+    <string name="log_crash_title">Noctwade 已崩潰</string>
     <string name="log_export_failed">日誌匯出失敗：%s</string>
     <string name="log_hide_destinations">隱藏目標地址</string>
     <string name="log_hide_sensitive">隱藏敏感數據</string>

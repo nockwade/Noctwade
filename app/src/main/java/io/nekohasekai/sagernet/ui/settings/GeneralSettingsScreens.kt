@@ -37,6 +37,22 @@ class GeneralSettingsFragment : SettingsScreenFragment(R.xml.settings_general) {
     private lateinit var battery: Preference
 
     override fun bind() {
+        val serverOrder = io.nekohasekai.sagernet.ui.noctwade.ServerListOrder
+        preferenceScreen.addPreference(androidx.preference.ListPreference(requireContext()).apply {
+            key = serverOrder.KEY
+            preferenceDataStore = object : androidx.preference.PreferenceDataStore() {
+                override fun getString(key: String?, defValue: String?) = serverOrder.prefs(requireContext()).getString(key, defValue)
+                override fun putString(key: String?, value: String?) { serverOrder.prefs(requireContext()).edit().putString(key, value).apply() }
+            }
+            setTitle(R.string.nw_server_order)
+            setEntries(R.array.nw_server_order_labels)
+            setEntryValues(R.array.nw_server_order_values)
+            value = serverOrder.mode(requireContext()).key
+            summaryProvider = androidx.preference.ListPreference.SimpleSummaryProvider.getInstance()
+            setIcon(R.drawable.nw_list)
+            order = -10
+        })
+
         pref<Preference>(Key.SERVICE_MODE).setOnPreferenceChangeListener { _, _ ->
             if (DataStore.serviceState.started) SagerNet.stopService()
             true
@@ -118,7 +134,7 @@ class GeneralSettingsFragment : SettingsScreenFragment(R.xml.settings_general) {
 }
 
 /** Theme, language, profile list and notification options (all Android-only). */
-class AppearanceSettingsFragment : SettingsScreenFragment(R.xml.settings_appearance) {
+open class AppearanceSettingsFragment : SettingsScreenFragment(R.xml.settings_appearance) {
 
     override fun bind() {
         val appTheme = pref<ColorPickerPreference>(Key.APP_THEME)

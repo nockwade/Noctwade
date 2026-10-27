@@ -20,6 +20,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePaddingRelative
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.preference.PreferenceDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -58,9 +60,11 @@ import io.nekohasekai.sagernet.utils.PlatformNotifications
 import io.nekohasekai.sagernet.utils.Theme
 import io.nekohasekai.sagernet.utils.WifiStateAccess
 import io.nekohasekai.sagernet.widget.bars
+import io.nekohasekai.sagernet.widget.noctwade.NoctwadeMotion
 import androidx.lifecycle.lifecycleScope
 import androidx.drawerlayout.widget.DrawerLayout
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -77,6 +81,12 @@ class MainActivity : ThemedActivity(),
     lateinit var binding: LayoutMainBinding
     lateinit var navigation: NavigationView
     private var currentMainFragment: ToolbarFragment? = null
+    private val connectionPingGate=io.nekohasekai.sagernet.ui.noctwade.ConnectionPingGate()
+    private var automaticPing:kotlinx.coroutines.Job?=null
+    var homeSpeed = SpeedDisplayData()
+        private set
+
+    private var bottomContentInset = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +94,26 @@ class MainActivity : ThemedActivity(),
         val animateInitialControls = savedInstanceState == null
 
         binding = LayoutMainBinding.inflate(layoutInflater)
+        binding.coordinator.setBackgroundColor(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.background(this))
+        // No bottom tab bar: Menu opens from the top bar, Servers from the Home server card.
+        binding.bottomNavigation.visibility = View.GONE
+        binding.navigationScrim.visibility = View.GONE
+        binding.bottomNavigation.onTabSelected = { tab ->
+            val target = when (tab) {
+                0 -> R.id.nav_home
+                1 -> R.id.nav_servers
+                else -> R.id.nav_settings
+            }
+            val current = currentMainFragment
+            val alreadyThere = when (tab) {
+                0 -> current is NoctwadeHomeFragment
+                1 -> current is NoctwadeServersFragment
+                else -> current is SettingsFragment
+            }
+            if (!alreadyThere) displayFragmentWithId(target)
+        }
+        binding.navigationBackdrop.background=io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.menuGradient(this)
+        binding.navigationScrim.background=io.nekohasekai.sagernet.widget.noctwade.NavigationFadeDrawable(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.background(this))
         binding.fab.initProgress(binding.fabProgress)
         // White theme: a dark FAB with a light icon (white on white is unreadable)
         if (Theme.isWhiteTheme()) {
@@ -110,6 +140,21 @@ class MainActivity : ThemedActivity(),
             val bars = insets.bars()
             val rtl = navigation.layoutDirection == View.LAYOUT_DIRECTION_RTL
             navigation.updatePaddingRelative(start = if (rtl) bars.right else bars.left)
+            val safe = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            val density = resources.displayMetrics.density
+            val reserved = (16 * density).toInt() + safe.bottom
+            binding.bottomNavigation.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = (12 * density).toInt() + safe.bottom
+                leftMargin = (16 * density).toInt() + safe.left
+                rightMargin = (16 * density).toInt() + safe.right
+            }
+            bottomContentInset = reserved
+            val scene = currentMainFragment
+            binding.fragmentHolder.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = if (scene is NoctwadeHomeFragment || scene is NoctwadeServersFragment || scene is SettingsFragment) 0 else reserved
+            }
+            binding.navigationScrim.updateLayoutParams<ViewGroup.LayoutParams> { height = reserved + (88 * density).toInt() }
+            binding.stats.updateLayoutParams<ViewGroup.MarginLayoutParams> { bottomMargin = reserved }
             insets
         }
         // The drawer's surface runs under the status bar: the icons follow it while the drawer is mostly open.
@@ -119,21 +164,23 @@ class MainActivity : ThemedActivity(),
                 if ((slideOffset > 0.5f) == overDrawer) return
                 overDrawer = !overDrawer
                 WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
-                    if (overDrawer) !Theme.usingNightMode() else lightStatusBar
+                    if (overDrawer) !Theme.usingNightMode() else if (currentMainFragment is NoctwadeHomeFragment || currentMainFragment is NoctwadeServersFragment) false else lightStatusBar
             }
         })
 
         if (savedInstanceState == null) {
-            displayFragmentWithId(R.id.nav_configuration)
+            displayFragmentWithId(R.id.nav_home)
         } else {
             currentMainFragment =
                 supportFragmentManager.findFragmentById(R.id.fragment_holder) as? ToolbarFragment
         }
         onBackPressedDispatcher.addCallback {
-            if (supportFragmentManager.findFragmentById(R.id.fragment_holder) is ConfigurationFragment) {
+            if (binding.drawerLayout.isOpen) {
+                binding.drawerLayout.closeDrawers()
+            } else if (supportFragmentManager.findFragmentById(R.id.fragment_holder) is NoctwadeHomeFragment) {
                 moveTaskToBack(true)
             } else {
-                displayFragmentWithId(R.id.nav_configuration)
+                displayFragmentWithId(R.id.nav_home)
             }
         }
 
@@ -342,8 +389,18 @@ class MainActivity : ThemedActivity(),
 
     @SuppressLint("CommitTransaction")
     fun displayFragment(fragment: ToolbarFragment) {
+        // The menu sits to the left of Home (it opens from the left, like a drawer); lists to the right.
+        fun position(value:Any?)=when(value){is NoctwadeHomeFragment->0;is NoctwadeServersFragment,is ConfigurationFragment,is GroupFragment->1;is SettingsFragment->-1;else->2}
+        val previous=currentMainFragment
+        val forward=position(fragment)>=position(previous)
         currentMainFragment = fragment
-        supportFragmentManager.beginTransaction()
+        val transaction = supportFragmentManager.beginTransaction()
+        if (previous!=null && NoctwadeMotion.enabled(this)) {
+            if(forward) transaction.setCustomAnimations(R.anim.nw_slide_in_right,R.anim.nw_slide_out_left)
+            else transaction.setCustomAnimations(R.anim.nw_slide_in_left,R.anim.nw_slide_out_right)
+        }
+        transaction
+            .setReorderingAllowed(true)
             .replace(R.id.fragment_holder, fragment)
             .commitAllowingStateLoss()
         binding.drawerLayout.closeDrawers()
@@ -356,7 +413,22 @@ class MainActivity : ThemedActivity(),
         showWhenConnected: Boolean,
         animate: Boolean,
     ) {
+        when (fragment) {
+            is NoctwadeHomeFragment -> binding.bottomNavigation.select(0, animate)
+            is NoctwadeServersFragment, is ConfigurationFragment, is GroupFragment -> binding.bottomNavigation.select(1, animate)
+            is SettingsFragment -> binding.bottomNavigation.select(2, animate)
+        }
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = if (fragment is NoctwadeHomeFragment || fragment is NoctwadeServersFragment) false else lightStatusBar
+            isAppearanceLightNavigationBars = false
+        }
+        val immersive = fragment is NoctwadeHomeFragment || fragment is NoctwadeServersFragment
+        binding.navigationBackdrop.visibility = if (immersive) View.GONE else View.VISIBLE
+        binding.fragmentHolder.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = if (immersive || fragment is SettingsFragment) 0 else bottomContentInset.takeIf { it > 0 } ?: (16 * resources.displayMetrics.density).toInt()
+        }
         val showControls = fragment is ConfigurationFragment
+        binding.stats.visibility = if (showControls) View.VISIBLE else View.GONE
         binding.stats.useExternalScrollDriver = fragment is ConfigurationFragment
         binding.stats.syncMainControls(
             showControls,
@@ -368,8 +440,9 @@ class MainActivity : ThemedActivity(),
         if (showControls) {
             binding.fab.show()
             // a start error shown on another screen sits at the bottom, where the FAB now comes back
-            errorBar?.takeIf { it.isShown && it.anchorView == null }?.anchorAboveFab()
+            errorBar?.takeIf { it.isShown }?.anchorAboveFab()
         } else {
+            errorBar?.takeIf { it.isShown }?.anchorView = null
             binding.fab.hideProgress()
             binding.fabProgress.hide()
             binding.fabProgress.visibility = View.INVISIBLE
@@ -391,21 +464,28 @@ class MainActivity : ThemedActivity(),
         binding.stats.onListScrolled(scrollDy)
     }
 
+    fun displayServers(groupId: Long = 0L) {
+        displayFragment(NoctwadeServersFragment.forGroup(groupId))
+        navigation.menu.findItem(R.id.nav_servers).isChecked = true
+    }
+
     fun displayFragmentWithId(@IdRes id: Int): Boolean {
         when (id) {
+            R.id.nav_home -> displayFragment(NoctwadeHomeFragment())
+            R.id.nav_servers -> displayFragment(NoctwadeServersFragment())
             R.id.nav_configuration -> {
                 displayFragment(ConfigurationFragment())
             }
 
             R.id.nav_group -> displayFragment(GroupFragment())
-            R.id.nav_route -> displayFragment(RouteFragment())
+            R.id.nav_route -> displayFragment(SettingsFragment.forScreen(io.nekohasekai.sagernet.ui.noctwade.NoctwadeRoutingFragment::class.java.name, getString(R.string.menu_route)))
             R.id.nav_settings -> displayFragment(SettingsFragment())
             R.id.nav_traffic -> displayFragment(DashboardFragment())
             R.id.nav_tools -> displayFragment(ToolsFragment())
             R.id.nav_logcat -> displayFragment(LogcatFragment())
             R.id.nav_live_graphs -> displayFragment(LiveGraphsFragment())
             R.id.nav_faq -> {
-                launchCustomTab("https://throneproj.github.io")
+                launchCustomTab("https://github.com/nockwade/Noctwade")
                 return false
             }
 
@@ -424,11 +504,29 @@ class MainActivity : ThemedActivity(),
         animateControls: Boolean = animate,
     ) {
         DataStore.serviceState = state
+        io.nekohasekai.sagernet.ui.noctwade.ConnectionClock.onState(this, state)
+        val runningId=DataStore.currentProfile.takeIf{it>0}?:DataStore.selectedProxy
+        if(connectionPingGate.update(state.connected,runningId)){
+            automaticPing?.cancel()
+            automaticPing=lifecycleScope.launch {
+                val client=io.nekohasekai.sagernet.ui.test.TestSessionClient
+                if(!(client.state.value.running && client.state.value.testCurrent)){
+                    client.state.first{!it.running}
+                    if(DataStore.serviceState.connected && (DataStore.currentProfile.takeIf{it>0}?:DataStore.selectedProxy)==runningId)
+                        client.startCurrent(io.nekohasekai.sagernet.bg.test.TestSpec.KIND_URL)
+                }
+            }
+        }else if(!state.connected){automaticPing?.cancel();automaticPing=null}
         refreshConfigurationProfileState()
         when (val fragment = currentMainFragment ?: supportFragmentManager.findFragmentById(R.id.fragment_holder)) {
+            is NoctwadeHomeFragment -> fragment.renderState(state)
+            is NoctwadeServersFragment -> fragment.refreshProfileState()
             is RouteFragment -> fragment.onServiceStateChanged()
+            is SettingsFragment -> (fragment.childFragmentManager.findFragmentById(R.id.settings) as? RouteFragment)?.onServiceStateChanged()
             is DashboardFragment -> fragment.onServiceStateChanged()
         }
+
+        if (!state.connected) homeSpeed = SpeedDisplayData()
 
         binding.fab.changeState(state, DataStore.serviceState, animate)
         binding.stats.changeState(state)
@@ -491,6 +589,7 @@ class MainActivity : ThemedActivity(),
     override fun snackbarInternal(text: CharSequence): Snackbar {
         return Snackbar.make(binding.coordinator, text, Snackbar.LENGTH_LONG).apply {
             if (binding.fab.visibility == View.VISIBLE) anchorAboveFab()
+            else anchorView = null
         }
     }
 
@@ -527,7 +626,8 @@ class MainActivity : ThemedActivity(),
     private val firstStart = FirstStartPrompts(this)
     private val wifiFlow = WifiPermissionFlow(this)
 
-    private fun toggleService() {
+    fun toggleService() {
+        if (DataStore.serviceState == BaseService.State.Stopping) return
         if (DataStore.serviceState.canStop) SagerNet.stopService() else startFromUi()
     }
 
@@ -566,6 +666,8 @@ class MainActivity : ThemedActivity(),
     // may NOT called when app is in background
     // ONLY do UI update here, write DB in bg process
     override fun cbSpeedUpdate(stats: SpeedDisplayData) {
+        homeSpeed = stats
+        (currentMainFragment as? NoctwadeHomeFragment)?.renderSpeed(stats)
         binding.stats.updateSpeed(stats.txRateProxy, stats.rxRateProxy)
     }
 
@@ -578,6 +680,8 @@ class MainActivity : ThemedActivity(),
         DataStore.selectedProxy = id
         DataStore.currentProfile = id
         refreshConfigurationProfileState()
+        (currentMainFragment as? NoctwadeHomeFragment)?.refreshProfile()
+        (currentMainFragment as? NoctwadeServersFragment)?.refreshProfileState()
         runOnDefaultDispatcher {
             ProfileManager.postUpdate(old, true)
             ProfileManager.postUpdate(id, true)
@@ -586,6 +690,10 @@ class MainActivity : ThemedActivity(),
 
     override fun onPreferenceDataStoreChanged(store: PreferenceDataStore, key: String) {
         when (key) {
+            Key.PROFILE_ID, Key.PROFILE_CURRENT -> binding.root.post {
+                (currentMainFragment as? NoctwadeHomeFragment)?.refreshProfile()
+                (currentMainFragment as? NoctwadeServersFragment)?.refreshProfileState()
+            }
             Key.SERVICE_MODE -> onBinderDied()
             // The JSON editors of custom_inbound and dns_object write here from their own activity.
             Key.PROXY_APPS, Key.BYPASS_MODE, Key.INDIVIDUAL,

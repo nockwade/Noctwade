@@ -689,7 +689,7 @@
     <string name="listen_port">Порт праслухоўвання</string>
     <string name="location_settings">Налады месцазнаходжання</string>
     <string name="log_buffer_size">Памер буфера журнала (кб)</string>
-    <string name="log_crash_title">Throne вылецеў</string>
+    <string name="log_crash_title">Noctwade вылецеў</string>
     <string name="log_export_failed">Экспарт журнала прайграў: %s</string>
     <string name="log_hide_destinations">Схаваць прызначэнні</string>
     <string name="log_hide_sensitive">Схаваць канфідэнцыйныя дадзеныя</string>

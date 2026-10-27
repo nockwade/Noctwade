@@ -48,7 +48,7 @@ data class RouteProfileEntity(
         it.inner_hop_endpoint_ids = innerHopEndpointIds
         it.dns = dnsFromJson(dnsJson)
         it.custom_dns = customDns && it.dns != null
-        it.rules = rules.sortedBy { r -> r.ruleOrder }.mapTo(ArrayList<RouteRule>()) { r -> r.toModel() }
+        it.rules = rules.sortedBy { r -> r.ruleOrder }.mapTo(ArrayList<RouteRule>()) { r -> r.toModel().apply { normalizeActionOptions() } }
     }
 
     companion object {

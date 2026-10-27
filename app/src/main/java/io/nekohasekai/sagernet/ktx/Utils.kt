@@ -84,9 +84,16 @@ val shortAnimTime by lazy {
 }
 
 fun View.crossFadeFrom(other: View) {
+    // Drop the listener first: cancelling a running fade-out would fire its onAnimationEnd and hide this view again,
+    // and a listener left from an earlier call would hide it after the fade-in.
+    animate().setListener(null).cancel()
+    other.animate().setListener(null).cancel()
     clearAnimation()
     other.clearAnimation()
-    if (isVisible && other.isGone) return
+    if (isVisible && other.isGone) {
+        alpha = 1F
+        return
+    }
     alpha = 0F
     visibility = View.VISIBLE
     animate().alpha(1F).duration = shortAnimTime

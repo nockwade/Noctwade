@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Noctwade: routing screens -->
+<resources>
+    <string name="nw_routing_profiles_title">ROUTING PROFILES</string>
+    <string name="nw_routing_create">Create profile</string>
+    <string name="nw_routing_create_hint">Your rules, DNS and default outbound</string>
+    <string name="nw_routing_presets">Ready-made profiles</string>
+    <string name="nw_routing_import_hint">Import a routing profile from clipboard</string>
+    <string name="nw_routing_apps_bypass">Selected apps bypass VPN · %1$d</string>
+    <string name="nw_routing_more">Import and sources</string>
+    <string name="nw_routing_more_hint">Files, QR codes, remote profiles and rule sets</string>
+    <string name="nw_routing_order_hint">Tap a profile to activate it; use the pencil to edit. Hold for copy, export and delete. Rules are checked from top to bottom; the first match wins.</string>
+    <string name="nw_routing_profile_info">%1$d of %2$d rules enabled</string>
+    <string name="nw_routing_edit_profile">Edit profile: %1$s</string>
+    <string name="nw_routing_my_profile">My profile</string>
+    <string name="nw_routing_configure">Configure</string>
+    <string name="nw_routing_edit">Edit</string>
+    <string name="nw_routing_duplicate">Duplicate profile</string>
+    <string name="nw_routing_copy">Copy</string>
+    <string name="nw_routing_last_profile">Keep at least one routing profile</string>
+    <string name="nw_routing_dns_expand">DNS settings</string>
+    <string name="nw_routing_rules_hint">First match wins. Drag the handle to reorder; tap a rule to edit.</string>
+    <string name="nw_routing_apps_enable">Route apps separately</string>
+    <string name="nw_routing_apps_enable_hint">Off: all apps use the VPN</string>
+    <string name="nw_routing_apps_bypass_toggle">Selected apps bypass VPN</string>
+    <string name="nw_routing_apps_bypass_hint">Off: only selected apps use the VPN</string>
+    <string name="nw_routing_tab_rules">Rules</string>
+    <string name="nw_routing_tab_apps">Applications</string>
+    <string name="nw_apps_access_title">Installed applications access</string>
+    <string name="nw_apps_access_hint">Allow access to the installed applications list to choose which apps use the VPN.</string>
+    <string name="nw_apps_allow">Allow</string>
+    <string name="nw_apps_system">System apps</string>
+    <string name="nw_apps_auto">Auto select</string>
+    <string name="nw_routing_tab_dns" translatable="false">DNS</string>
+    <string name="nw_dns_hint">One DNS server for all routing profiles. A change applies right away.</string>
+    <string name="nw_dns_cloudflare" translatable="false">Cloudflare</string>
+    <string name="nw_dns_cloudflare_sum" translatable="false">1.1.1.1 · DNS over HTTPS</string>
+    <string name="nw_dns_google" translatable="false">Google</string>
+    <string name="nw_dns_google_sum" translatable="false">8.8.8.8 · DNS over HTTPS</string>
+    <string name="nw_dns_quad9" translatable="false">Quad9</string>
+    <string name="nw_dns_quad9_sum" translatable="false">9.9.9.9 · DNS over HTTPS</string>
+    <string name="nw_dns_manual">Manual</string>
+    <string name="nw_dns_manual_sum">Servers, FakeIP, cache, predefined answers and the DNS object</string>
+    <string name="nw_dns_manual_current">Remote DNS: %1$s</string>
+    <string name="nw_tpl_rulesets">Runet rule sets</string>
+    <string name="nw_tpl_rs_ads">Block ads</string>
+    <string name="nw_tpl_rs_blocked">Blocked in Russia — via VPN</string>
+    <string name="nw_tpl_rs_russia">Russian sites — direct</string>
+    <string name="nw_tpl_rulesets_source">Lists: runetfreedom/russia-v2ray-rules-dat, updated by the core every day. Downloads go through the VPN.</string>
+    <string name="nw_domain_strategy">Domain strategy</string>
+</resources>

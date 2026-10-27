@@ -166,10 +166,34 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     val allowLanAccess: Boolean
         get() = !SettingsRegistry.isLoopbackAddress(inboundAddress)
 
+    /**
+     * Noctwade: an open SOCKS/HTTP port on localhost lets any app on the phone detect the VPN and send
+     * traffic through it, bypassing per-app routing. Once per install, unless the user already set
+     * credentials or exposes the proxy as the system HTTP proxy (other apps cannot authenticate
+     * there), the mixed inbound gets a random username and password. The app's own clients already
+     * send them (Nets.kt, SocksAuthenticator); the setting stays editable.
+     */
+    fun protectLocalProxy() {
+        val key = "nw_local_proxy_protected"
+        if (configurationStore.getBoolean(key, false)) return
+        configurationStore.putBoolean(key, true)
+        // Only the plain VPN setup: proxy-only mode and LAN sharing are used by other apps/devices on purpose.
+        if (serviceMode != Key.MODE_VPN || allowLanAccess || disableMixedInbound) return
+        if (inboundAuth || appendHttpProxy || inboundUser.isNotBlank()) return
+        val random = java.security.SecureRandom()
+        fun token(n: Int) =
+            (1..n).map { "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"[random.nextInt(57)] }
+                .joinToString("")
+        inboundUser = "nw-" + token(8)
+        inboundPass = token(24)
+        inboundAuth = true
+    }
+
     fun initGlobal() {
         if (!configurationStore.contains(SettingsRegistry.INBOUND_SOCKS_PORT.key)) {
             inboundSocksPort = inboundSocksPort
         }
+        protectLocalProxy()
     }
 
     // tun

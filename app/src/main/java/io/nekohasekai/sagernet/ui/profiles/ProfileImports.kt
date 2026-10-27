@@ -8,6 +8,11 @@ import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import io.nekohasekai.sagernet.database.GroupRepo
+import io.nekohasekai.sagernet.database.ProxyGroup
+import io.nekohasekai.sagernet.ktx.onMainDispatcher
+import io.nekohasekai.sagernet.ktx.runOnDefaultDispatcher
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.database.ProfileManager
@@ -19,7 +24,6 @@ import io.nekohasekai.sagernet.ktx.startFilesForResult
 import io.nekohasekai.sagernet.outbound.Outbound
 import io.nekohasekai.sagernet.outbound.`import`.ImportReport
 import io.nekohasekai.sagernet.outbound.`import`.ProfileImport
-import io.nekohasekai.sagernet.ui.ConfigurationFragment
 import io.nekohasekai.sagernet.ui.ScannerActivity
 import io.nekohasekai.sagernet.ui.SubscribeFlows
 import io.nekohasekai.sagernet.ui.SubscriptionReportDialog
@@ -50,8 +54,13 @@ import io.nekohasekai.sagernet.ui.profile.WireGuardSettingsActivity
 import io.nekohasekai.sagernet.ui.profile.XrayVlessSettingsActivity
 import java.util.zip.ZipInputStream
 
-/** The "+" menu: scan, clipboard, file and the new-profile editors. Imports go to the current tab's group. */
-class ProfileImports(private val host: ConfigurationFragment) {
+/** The "+" menu: scan, clipboard, file and the new-profile editors. Every import creates a new group. */
+class ProfileImports(private val host: Fragment) {
+    private val currentGroupId = -1L // Every import creates a fresh group, including the advanced profile screen.
+
+    private suspend fun onUi(block: Fragment.() -> Unit) {
+        onMainDispatcher { if (host.isAdded && host.view != null) host.block() }
+    }
 
     private val importFile = host.registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) importFile(uri)
@@ -78,29 +87,29 @@ class ProfileImports(private val host: ConfigurationFragment) {
         return true
     }
 
-    /** import_or_handle_deeplink: links, documents, deep links and subscription URLs, into the current tab's group. */
+    /** import_or_handle_deeplink: links, documents, deep links and subscription URLs, into a new group. */
     private fun importClipboard() {
         val text = SagerNet.getClipboardText()
         if (text.isBlank()) {
             host.snackbar(R.string.clipboard_empty).show()
         } else {
-            SubscribeFlows.importText(host.requireActivity(), text, host.currentGroupId)
+            SubscribeFlows.importText(host.requireActivity(), text, currentGroupId)
         }
     }
 
     /** importFromFiles for a text file; a zip (Android extra) holds one document per entry (WireGuard / OpenVPN). */
     private fun importFile(uri: Uri) {
-        val groupId = host.currentGroupId
+        val groupId = currentGroupId
         val activity = host.requireActivity()
         val resolver = activity.contentResolver
-        host.launchIo {
+        runOnDefaultDispatcher {
             try {
                 val fileName = resolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use {
                     if (it.moveToFirst()) it.getString(0) else null
                 }
                 if (fileName?.endsWith(".zip", true) != true) {
-                    host.onUi { SubscribeFlows.importUri(activity, uri, groupId) }
-                    return@launchIo
+                    onUi { SubscribeFlows.importUri(activity, uri, groupId) }
+                    return@runOnDefaultDispatcher
                 }
                 val outbounds = mutableListOf<Outbound>()
                 val report = ImportReport()
@@ -117,9 +126,16 @@ class ProfileImports(private val host: ConfigurationFragment) {
                         zip.closeEntry()
                     }
                 }
-                if (outbounds.isNotEmpty()) ProfileManager.addProfileBatch(outbounds, groupId)
+                if (outbounds.isNotEmpty()) {
+                    val target = if (groupId > 0) groupId else {
+                        GroupRepo.ensureDefault()
+                        GroupRepo.add(ProxyGroup(name = fileName?.substringBeforeLast('.')?.takeIf(String::isNotBlank)
+                            ?: activity.getString(R.string.nw_import_group))).id.also(GroupRepo::setCurrent)
+                    }
+                    ProfileManager.addProfileBatch(outbounds, target)
+                }
                 report.setImported(outbounds.size)
-                host.onUi {
+                onUi {
                     when {
                         // The import box already says how many were imported.
                         report.hasProblems() ->
@@ -130,7 +146,7 @@ class ProfileImports(private val host: ConfigurationFragment) {
                 }
             } catch (e: Exception) {
                 Logs.w(e)
-                host.onUi { snackbar(e.readableMessage).show() }
+                onUi { snackbar(e.readableMessage).show() }
             }
         }
     }

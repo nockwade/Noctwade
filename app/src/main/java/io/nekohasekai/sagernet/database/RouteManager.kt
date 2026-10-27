@@ -32,12 +32,6 @@ object RouteManager {
     })
 
     /**
-     * GetCustomDns (RoutesRepo.cpp): the profile's ActiveDns without loading its rules; null when it follows the
-     * global DNS settings or does not exist.
-     */
-    fun customDns(id: Long): RouteDns? = RouteProfileEntity.dnsFromJson(dao.customDnsJson(id))
-
-    /**
      * The profile named by current_route_id; a missing or raw one falls back to the first profile Android can use
      * (a new Default one when only raw profiles exist) and fixes the setting.
      */
@@ -53,6 +47,7 @@ object RouteManager {
 
     /** Inserts when [p] has no id (and assigns it), else upserts the row; the rules are replaced in list order. */
     fun save(p: RouteProfile): Long {
+        p.rules.forEach { it.normalizeActionOptions() }
         SagerDatabase.instance.runInTransaction {
             val entity = RouteProfileEntity.of(p)
             if (p.id <= 0L) {
@@ -129,6 +124,15 @@ object RouteManager {
             catalog = RouteRepo.readAsset(RouteRepo.SRS_LIST)?.let { RuleSetCatalog.parseSrsList(it) }
                 ?: RuleSetCatalog(emptyList())
         }
+        val resolved = requireNotNull(catalog)
+        // Bundled snapshots only add names the list lacks (oisd, torrent, whitelist); the rest keep their live URL.
+        catalog =
+            RuleSetCatalog(
+                resolved.names().map { it to resolved.urlOf(it)!! } +
+                    io.nekohasekai.sagernet.route.RuleSets.bundledFiles.keys
+                        .filter { resolved.urlOf(it) == null }
+                        .map { tag -> tag to "bundled:$tag" }
+            )
         catalogCache = stamp to catalog
         return catalog
     }

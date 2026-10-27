@@ -767,7 +767,7 @@
     <string name="listen_port">منفذ الاستماع</string>
     <string name="location_settings">إعدادات الموقع</string>
     <string name="log_buffer_size">حجم مخزن السجل (كيلوبايت)</string>
-    <string name="log_crash_title">تعطل Throne</string>
+    <string name="log_crash_title">تعطل Noctwade</string>
     <string name="log_export_failed">فشل تصدير السجل: %s</string>
     <string name="log_hide_destinations">إخفاء الوجهات</string>
     <string name="log_hide_sensitive">إخفاء البيانات الحساسة</string>

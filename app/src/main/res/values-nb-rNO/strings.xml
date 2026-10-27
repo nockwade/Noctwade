@@ -1510,7 +1510,7 @@
     <string name="log_hide_destinations">Skjul destinasjoner</string>
     <string name="log_saved">Logger lagret</string>
     <string name="log_export_failed">Loggeksport mislyktes: %s</string>
-    <string name="log_crash_title">Throne krasjet</string>
+    <string name="log_crash_title">Noctwade krasjet</string>
     <string name="not_now">Ikke nå</string>
     <string name="channel_warnings">Advarsler</string>
     <string name="wifi_permission_title">Wi-Fi-regler</string>

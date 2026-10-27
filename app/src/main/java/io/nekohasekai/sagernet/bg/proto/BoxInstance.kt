@@ -122,7 +122,13 @@ abstract class BoxInstance(
     override fun close() {
         try {
             boxOrNull?.let(CoreRuntime::detachRunning)
-            boxOrNull?.close()
+            try {
+                boxOrNull?.close()
+            } catch (error: Throwable) {
+                // The core's API listener (e.g. 127.0.0.1:9091) is already gone when it is closed twice; that is not a failure.
+                if (error.message?.contains("use of closed network connection") != true) throw error
+                Logs.i("box close: ignored already-closed listener: ${error.message}")
+            }
         } finally {
             ports.close()
         }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shared top bar for Home and Servers: logo (opens the menu), wordmark, add button. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <!-- Opens the menu (three bars, no plate); Servers swaps it for a back arrow to Home. -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/header_menu"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="-10dp"
+        android:background="@drawable/nw_action_button"
+        android:contentDescription="@string/nw_menu"
+        android:padding="10dp"
+        android:src="@drawable/nw_menu_bars" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="@font/nw_wordmark"
+        android:includeFontPadding="false"
+        android:letterSpacing="0.08"
+        android:maxLines="1"
+        android:text="@string/nw_brand"
+        android:textColor="?attr/nwText"
+        android:textSize="15sp" />
+
+    <io.nekohasekai.sagernet.widget.noctwade.GlassIconButton
+        android:id="@+id/header_add"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:contentDescription="@string/nw_add"
+        android:padding="11dp"
+        android:src="@drawable/nw_plus" />
+</LinearLayout>

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.database.GroupRepo
+import io.nekohasekai.sagernet.database.ProxyGroup
 import io.nekohasekai.sagernet.databinding.LayoutRouteRemotePromptBinding
 import io.nekohasekai.sagernet.databinding.LayoutSubscribeChoiceBinding
 import io.nekohasekai.sagernet.group.SubscriptionClient
@@ -173,7 +175,7 @@ object SubscribeFlows {
             .show()
         binding.addProfiles.setOnClickListener {
             dialog.dismiss()
-            runOnDefaultDispatcher { SubscriptionClient.importUrl(url, gid) }
+            runOnDefaultDispatcher { SubscriptionClient.importUrl(url, importGroup(gid, hostOf(url))) }
         }
         binding.newGroup.setOnClickListener {
             dialog.dismiss()
@@ -200,7 +202,9 @@ object SubscribeFlows {
     private fun importInto(activity: FragmentActivity, content: String, gid: Long) {
         runOnDefaultDispatcher {
             val message = try {
-                val result = SubscriptionClient.importText(content, gid)
+                val target = importGroup(gid, activity.getString(R.string.nw_import_group))
+                val result = SubscriptionClient.importText(content, target)
+                if (gid <= 0 && result.count == 0) GroupRepo.delete(target)
                 if (result.reported && activity is MainActivity) return@runOnDefaultDispatcher
                 activity.getString(R.string.grp_imported_count, result.count)
             } catch (e: Exception) {
@@ -219,6 +223,12 @@ object SubscribeFlows {
         } else {
             Toast.makeText(activity, text, Toast.LENGTH_LONG).show()
         }
+    }
+
+    private suspend fun importGroup(gid: Long, name: String): Long {
+        if (gid > 0) return gid
+        GroupRepo.ensureDefault()
+        return GroupRepo.add(ProxyGroup(name = name)).id.also(GroupRepo::setCurrent)
     }
 
     private fun hostOf(url: String): String = Uri.parse(url).host.orEmpty()

@@ -41,6 +41,7 @@ abstract class ThemedActivity : AppCompatActivity {
         } else {
             Theme.applyDialog(this)
         }
+        io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.apply(this)
         Theme.applyNightTheme()
         if (!isDialog) enableEdgeToEdge(statusBarStyle(), navigationBarStyle())
 

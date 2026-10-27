@@ -265,10 +265,9 @@ class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItem
             } else {
                 getString(R.string.route_import_clipboard_profile, RouteImports.nameOf(activity, profile))
             }
-            val prompt = RouteImports.withDnsNote(activity, what, profile)
             MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.route_import_clipboard_title)
-                .setMessage(RouteImports.withNotes(activity, prompt, imported.warnings))
+                .setMessage(RouteImports.withNotes(activity, what, imported.warnings))
                 .setPositiveButton(R.string.yes) { _, _ -> applyImported(profile, imported.legacyArray) }
                 .setNegativeButton(R.string.no) { _, _ -> pasteDialog() }
                 .show()
@@ -311,7 +310,7 @@ class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItem
                     return@launch
                 }
                 dialog.dismiss()
-                val notes = listOfNotNull(RouteImports.dnsNote(activity, profile), imported.warnings.joinToString("\n").ifEmpty { null })
+                val notes = listOfNotNull(imported.warnings.joinToString("\n").ifEmpty { null })
                 if (notes.isNotEmpty()) {
                     RouteImports.showMessage(activity, R.string.route_import_warnings_title, notes.joinToString("\n\n"))
                 }

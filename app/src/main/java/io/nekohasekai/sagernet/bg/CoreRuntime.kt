@@ -51,6 +51,7 @@ object CoreRuntime {
     private var logLevel = Mobile.LogLevelTrace
 
     fun setup(app: Application) {
+        NoctwadeRuleAssets.install(app)
         Seq.setContext(app)
         CoreLog.newSession()
         logLevel = runCatching { levelOf(DataStore.logLevel) }.getOrDefault(Mobile.LogLevelWarn)

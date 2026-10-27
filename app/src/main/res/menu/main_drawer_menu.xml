@@ -3,9 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/nw_home"
+            android:title="@string/nw_home" />
+        <item
             android:id="@+id/nav_configuration"
             android:icon="@drawable/ic_action_description"
             android:title="@string/menu_configuration" />
+        <item
+            android:id="@+id/nav_servers"
+            android:icon="@drawable/nw_servers"
+            android:title="@string/nw_servers" />
 
         <item
             android:id="@+id/nav_group"

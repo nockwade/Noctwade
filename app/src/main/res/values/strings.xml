@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Throne</string>
-    <string name="app_name_long" translatable="false">Throne for Android</string>
+    <string name="app_name" translatable="false">Noctwade</string>
+    <string name="app_name_long" translatable="false">Noctwade for Android</string>
     <string name="app_desc">The universal proxy toolchain for Android, written in Kotlin.</string>
     <string name="project">Project</string>
     <string name="github">Source code</string>
@@ -513,7 +513,7 @@
     <string name="throne_link">Throne link</string>
     <string name="edit_as_json">Edit as JSON</string>
     <string name="raw_json_invalid">The JSON is not a valid profile of this type</string>
-    <string name="project_website">Project website</string>
+    <string name="project_website">Upstream project</string>
     <string name="tri_state_default">Keep default</string>
     <string name="tri_state_on">On</string>
     <string name="tri_state_off">Off</string>
@@ -1764,7 +1764,7 @@
     <string name="log_hide_destinations">Hide destinations</string>
     <string name="log_saved">Logs saved</string>
     <string name="log_export_failed">Log export failed: %s</string>
-    <string name="log_crash_title">Throne crashed</string>
+    <string name="log_crash_title">Noctwade crashed</string>
 
     <!-- platform: Wi-Fi rules, notification, battery, widgets, package pickers -->
     <string name="not_now">Not now</string>

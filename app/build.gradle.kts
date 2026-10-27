@@ -16,6 +16,7 @@ val generateRootLicenseAsset by tasks.registering(Copy::class) {
 }
 
 android {
+    testOptions { unitTests.isIncludeAndroidResources = true }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
@@ -55,19 +56,19 @@ dependencies {
 
     implementation(fileTree("libs"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.activity:activity-ktx:1.10.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.6")
-    implementation("androidx.browser:browser:1.5.0")
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.work:work-runtime-ktx:2.8.1")
-    implementation("androidx.work:work-multiprocess:2.8.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    implementation("androidx.browser:browser:1.8.0")
+    implementation("androidx.preference:preference-ktx:1.2.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+    implementation("androidx.work:work-multiprocess:2.9.1")
 
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 
     implementation("com.github.jenly1314:zxing-lite:2.1.1")
     // 0.24.x is built with Kotlin 2.2 (unreadable for the Kotlin 2.0 compiler/KSP) and 0.24.5+ needs compileSdk 36;
@@ -76,12 +77,13 @@ dependencies {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
     }
 
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
-    implementation("org.yaml:snakeyaml:1.30")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.yaml:snakeyaml:2.3")
     implementation("com.github.daniel-stoneuk:material-about-library:3.2.0-rc01")
     implementation("com.jakewharton:process-phoenix:2.1.2")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("org.json:json:20231013")
 
     implementation("com.simplecityapps:recyclerview-fastscroll:2.0.1") {

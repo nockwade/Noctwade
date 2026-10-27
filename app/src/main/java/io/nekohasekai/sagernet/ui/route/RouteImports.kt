@@ -88,7 +88,7 @@ object RouteImports {
                 return@launch
             }
             profile.name = nameOf(activity, profile)
-            val prompt = withDnsNote(activity, activity.getString(R.string.route_import_prompt, profile.name), profile)
+            val prompt = activity.getString(R.string.route_import_prompt, profile.name)
             MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.route_import_title)
                 .setMessage(withNotes(activity, prompt, imported.warnings))
@@ -103,16 +103,6 @@ object RouteImports {
                 .show()
         }
     }
-
-    /**
-     * manageRoutesDnsNote (dialog_manage_routes.cpp): an imported profile's own DNS servers would see every query made
-     * while it is in use, so the prompt names them; null when it follows the global settings.
-     */
-    fun dnsNote(context: Context, p: RouteProfile): String? =
-        p.activeDns()?.let { context.getString(R.string.route_dns_own_servers, it.remoteDns, it.directDns) }
-
-    fun withDnsNote(context: Context, prompt: String, p: RouteProfile): String =
-        dnsNote(context, p)?.let { prompt + "\n\n" + it } ?: prompt
 
     /** [prompt] followed by the desktop's "Note:" block when there are warnings. */
     fun withNotes(context: Context, prompt: String, warnings: List<String>): String =

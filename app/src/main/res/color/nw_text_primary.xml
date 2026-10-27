@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material NavigationView requires text colors to resolve to a resource ID. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:alpha="0.38" android:color="?attr/nwText"/>
+    <item android:color="?attr/nwText"/>
+</selector>

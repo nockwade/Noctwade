@@ -1,0 +1,1551 @@
+{
+  "repository": "https://github.com/lipis/flag-icons",
+  "commit": "ac7e0eb3259eb62aa6100c435607e2fe03896a97",
+  "license": "MIT",
+  "rasterizer": "resvg-py 0.5.0",
+  "size": "144x144",
+  "files": [
+    {
+      "code": "AD",
+      "file": "nw_country_ad.webp",
+      "sha256": "2b5b2f4d398de2a84db4a32b9fe745efb863f342653217e8bbeff6e0716109a7",
+      "bytes": 3158
+    },
+    {
+      "code": "AE",
+      "file": "nw_country_ae.webp",
+      "sha256": "f7c47ba43de39cef81629820c90eca939156d2bd83e11de96857d8d670ec52ab",
+      "bytes": 100
+    },
+    {
+      "code": "AF",
+      "file": "nw_country_af.webp",
+      "sha256": "8e4d11eb4cb5df91c345a1b01d282d4b86bd2ccd15e8c8a325773d7f679aeb95",
+      "bytes": 3036
+    },
+    {
+      "code": "AG",
+      "file": "nw_country_ag.webp",
+      "sha256": "6f0f35aaec578a0510af1f06fc1e752fce48fc6d30b4395a840a716473ecff16",
+      "bytes": 1272
+    },
+    {
+      "code": "AI",
+      "file": "nw_country_ai.webp",
+      "sha256": "4d9118b726dcc00c3a6fbad2cfc0a6126733f8df010622448d8cb6f9ad2d22d6",
+      "bytes": 1436
+    },
+    {
+      "code": "AL",
+      "file": "nw_country_al.webp",
+      "sha256": "d567695d03cef3500f1538deae576a282f9e31d7d03f159d5c48308af3ab70d5",
+      "bytes": 1680
+    },
+    {
+      "code": "AM",
+      "file": "nw_country_am.webp",
+      "sha256": "71c6e90b5f1a1f25c224fa6dd0a863c231b2e2b5c454aff6cd59139035039acc",
+      "bytes": 72
+    },
+    {
+      "code": "AO",
+      "file": "nw_country_ao.webp",
+      "sha256": "ce69439bbe3e0b64ef8025a26fb76545246eaa9c095b74443751ffbd2d23af65",
+      "bytes": 1264
+    },
+    {
+      "code": "AQ",
+      "file": "nw_country_aq.webp",
+      "sha256": "5eb060993429b4788ec31e99a9e58eceaebdd100172f808c717ad12c0fb44d09",
+      "bytes": 850
+    },
+    {
+      "code": "AR",
+      "file": "nw_country_ar.webp",
+      "sha256": "fb737f4dbb2ac152c80b28edf377fce1aebe313ebfd5b5e7030e9e3cca9d0d1e",
+      "bytes": 2714
+    },
+    {
+      "code": "AS",
+      "file": "nw_country_as.webp",
+      "sha256": "e2105299931420337879e5873d730f2c25aa18d50faf106ca7a42faeeafdaa1b",
+      "bytes": 4334
+    },
+    {
+      "code": "AT",
+      "file": "nw_country_at.webp",
+      "sha256": "c79959303dd0d6af497a6069a289b8a823860335ad2e9fb342c0bb2671bbb6f4",
+      "bytes": 52
+    },
+    {
+      "code": "AU",
+      "file": "nw_country_au.webp",
+      "sha256": "a0160fe53c0a5451d87b4dbbc91aa4bea844cfe6f0f2044eb78e6d7b572af255",
+      "bytes": 1362
+    },
+    {
+      "code": "AW",
+      "file": "nw_country_aw.webp",
+      "sha256": "1957b22f260172956b63beecbc2f2183737ffef01d9e113b1eb1acebc56f31e1",
+      "bytes": 804
+    },
+    {
+      "code": "AX",
+      "file": "nw_country_ax.webp",
+      "sha256": "d5921972d18122ce9ef2acc70d476442bb3d9084e62ba45a3f5076c4a80b9ba8",
+      "bytes": 164
+    },
+    {
+      "code": "AZ",
+      "file": "nw_country_az.webp",
+      "sha256": "d8be62358befb269af47d80cc28d623a344de2a63ac0425860e5420fb4fa265f",
+      "bytes": 552
+    },
+    {
+      "code": "BA",
+      "file": "nw_country_ba.webp",
+      "sha256": "4ab3ef68f1b1a1399220f4f4bddfbdc16d83cf1ecf16fd6509a9f4cd200353ce",
+      "bytes": 1252
+    },
+    {
+      "code": "BB",
+      "file": "nw_country_bb.webp",
+      "sha256": "9e5a8212d5871163ece4a7e7ddcf5150b97c756eed5a3adee88b52f03c6a09fc",
+      "bytes": 404
+    },
+    {
+      "code": "BD",
+      "file": "nw_country_bd.webp",
+      "sha256": "3db7b7ec349a2843890c13935b1cf24c5c0b23bf0196dda18dbfab45df8adbbe",
+      "bytes": 520
+    },
+    {
+      "code": "BE",
+      "file": "nw_country_be.webp",
+      "sha256": "4f348e4500d3704de47b4c94cb0eee08e86e84b08cc282d05efb3dbe6e1c94de",
+      "bytes": 72
+    },
+    {
+      "code": "BF",
+      "file": "nw_country_bf.webp",
+      "sha256": "677ded74fe027fb64e14b92919fb94c6a56521dcb7f94f4b8de2c2d09dfd0133",
+      "bytes": 378
+    },
+    {
+      "code": "BG",
+      "file": "nw_country_bg.webp",
+      "sha256": "76526979d2415764225bf0c666bf45a4faef84d9127ca2cb7c0e4de50243900a",
+      "bytes": 72
+    },
+    {
+      "code": "BH",
+      "file": "nw_country_bh.webp",
+      "sha256": "b25a6c54ea2c10499ec296ebd57c8e150c4b83be2c790b5c346e8f805d822981",
+      "bytes": 596
+    },
+    {
+      "code": "BI",
+      "file": "nw_country_bi.webp",
+      "sha256": "00ccf7b7432dd502aa5f64b02a762c18527f172e676db602c2320932dce7fe46",
+      "bytes": 1144
+    },
+    {
+      "code": "BJ",
+      "file": "nw_country_bj.webp",
+      "sha256": "377fe90972ff1a9fe758244fe30ad58a8a9adc5bc75633be9b3fe640d2f2999a",
+      "bytes": 102
+    },
+    {
+      "code": "BL",
+      "file": "nw_country_bl.webp",
+      "sha256": "1934773f07098e6dcac48f3281bac9bff19ecdd9dfea59ede623dc2c7ac1a5c1",
+      "bytes": 74
+    },
+    {
+      "code": "BM",
+      "file": "nw_country_bm.webp",
+      "sha256": "df56cfb244e3d9bf8eb85638145173d097af1a15988f91865e0e7289e5b621e8",
+      "bytes": 4900
+    },
+    {
+      "code": "BN",
+      "file": "nw_country_bn.webp",
+      "sha256": "4f2fba06cc14f52ef1bb581680876ee71d7c0041c237bb4847dc3e6c2894558e",
+      "bytes": 3066
+    },
+    {
+      "code": "BO",
+      "file": "nw_country_bo.webp",
+      "sha256": "c71d5ca8c0ffa38b7c9f5dc173d99e6271faa6d5de3868bf41ea3971b23066a4",
+      "bytes": 3402
+    },
+    {
+      "code": "BQ",
+      "file": "nw_country_bq.webp",
+      "sha256": "c6e4680a6fbce60a62f6cabdd7bda485bb5edbe2c68b30a5305e87fd320f5ad7",
+      "bytes": 70
+    },
+    {
+      "code": "BR",
+      "file": "nw_country_br.webp",
+      "sha256": "4514876471f477fb16b4f2ecd28b01e7b0050700665517df49fd82c6439d57f2",
+      "bytes": 1666
+    },
+    {
+      "code": "BS",
+      "file": "nw_country_bs.webp",
+      "sha256": "8627e22a8745d814fa557be9c56162eccd31f2818e85ea49d432ce5f13e2ce16",
+      "bytes": 698
+    },
+    {
+      "code": "BT",
+      "file": "nw_country_bt.webp",
+      "sha256": "accfdcb77cc6f682945a379923cfce3656698a27288cbd47cfa13504e544c139",
+      "bytes": 8144
+    },
+    {
+      "code": "BV",
+      "file": "nw_country_bv.webp",
+      "sha256": "c85fa5421d2a5b84e872cdb61fd35f1a07f6fbd8e00de6bad30e0e53ed50fda6",
+      "bytes": 194
+    },
+    {
+      "code": "BW",
+      "file": "nw_country_bw.webp",
+      "sha256": "e07c44804fcb49a895191dc3d46143abf333167db7e75c2be0cac461abf2461d",
+      "bytes": 80
+    },
+    {
+      "code": "BY",
+      "file": "nw_country_by.webp",
+      "sha256": "5cd09a01d75a3a02e73db2fb9a0a64e3d81668e36b62d5a96a2b16899218fdc7",
+      "bytes": 1306
+    },
+    {
+      "code": "BZ",
+      "file": "nw_country_bz.webp",
+      "sha256": "2603dbb0be21070282d2772f1dc5426296d2bd0a5afc3121f40a177d6f5b6cdd",
+      "bytes": 12772
+    },
+    {
+      "code": "CA",
+      "file": "nw_country_ca.webp",
+      "sha256": "20e7c8b9b55062222d39eaf91312d6ef3b0a4bbfe392208a851cd7ff1187ed7a",
+      "bytes": 654
+    },
+    {
+      "code": "CC",
+      "file": "nw_country_cc.webp",
+      "sha256": "ea17dd596476cc7a4349afb18ec0a60561c43223b4a64ae54620bae97d030fb1",
+      "bytes": 1096
+    },
+    {
+      "code": "CD",
+      "file": "nw_country_cd.webp",
+      "sha256": "a095a9cb66774d7f9e789147ab53d23dca3b7c2b1feaa82cf9f832dc40759f35",
+      "bytes": 706
+    },
+    {
+      "code": "CF",
+      "file": "nw_country_cf.webp",
+      "sha256": "3a131edecaf8b076997675c5ba8cd5ad38ee749c2947809ab6214a96652e9eaa",
+      "bytes": 408
+    },
+    {
+      "code": "CG",
+      "file": "nw_country_cg.webp",
+      "sha256": "c666293072a72d97b37856cdfacd79f84c07d1003c76a5f26c53b3e8ead2ccb0",
+      "bytes": 356
+    },
+    {
+      "code": "CH",
+      "file": "nw_country_ch.webp",
+      "sha256": "e807f6af88e0dc2ff812bf813364d0d8c8d2925526c3ede1e2afd899a6f69852",
+      "bytes": 108
+    },
+    {
+      "code": "CI",
+      "file": "nw_country_ci.webp",
+      "sha256": "e2de3f0b33ae0da6d2f4ba787b60bb14f749b5f91827bbd3e0ce99f482099788",
+      "bytes": 72
+    },
+    {
+      "code": "CK",
+      "file": "nw_country_ck.webp",
+      "sha256": "0f4eb37f6f605cee62d640f5f8e2ae96167184c111590c053a67b0735e615521",
+      "bytes": 1710
+    },
+    {
+      "code": "CL",
+      "file": "nw_country_cl.webp",
+      "sha256": "9ae3ad89cb2fd3513b84e9ce0d3ed2fb6dbc13f4fccb12b09d2ddf8ce785f8a8",
+      "bytes": 306
+    },
+    {
+      "code": "CM",
+      "file": "nw_country_cm.webp",
+      "sha256": "8d494a7375fe3bc2aa095d8946a9ab74d269baedc892df3d8170450f371e19ec",
+      "bytes": 262
+    },
+    {
+      "code": "CN",
+      "file": "nw_country_cn.webp",
+      "sha256": "58a258533a6ed142056ecec6bf3ad093a99cb961a72c74b0a509afd25bb5cde9",
+      "bytes": 566
+    },
+    {
+      "code": "CO",
+      "file": "nw_country_co.webp",
+      "sha256": "e493ae052ebfe0a32976565cab418e6e3e3e33695bd45e75dff49d2a74c22662",
+      "bytes": 72
+    },
+    {
+      "code": "CP",
+      "file": "nw_country_cp.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "CR",
+      "file": "nw_country_cr.webp",
+      "sha256": "0eb392249dc59dd183ec6224c642f3c2027764e27d3eb40f243a83c4f05549bb",
+      "bytes": 100
+    },
+    {
+      "code": "CU",
+      "file": "nw_country_cu.webp",
+      "sha256": "7e71a80d2c34afb35de8bc77c6653176ecd2ac61c3c5ff57974d970848657c50",
+      "bytes": 1010
+    },
+    {
+      "code": "CV",
+      "file": "nw_country_cv.webp",
+      "sha256": "573f2dd3bac7c6488749dceabed42a240666b120cef29d0f3dff6775ca2d85e1",
+      "bytes": 1018
+    },
+    {
+      "code": "CW",
+      "file": "nw_country_cw.webp",
+      "sha256": "42ebb86bed99502199700ee7723743289653f92a8d6351f12c4695193745e8c2",
+      "bytes": 378
+    },
+    {
+      "code": "CX",
+      "file": "nw_country_cx.webp",
+      "sha256": "5ee1263742ecd03514570bb81a06f58ff9c23b8e886c7403676cb73175f5771f",
+      "bytes": 1378
+    },
+    {
+      "code": "CY",
+      "file": "nw_country_cy.webp",
+      "sha256": "8cca5383e7e5c46a4bf14647f4a1e0e830649922389e6d97d08e7f7edfb353ff",
+      "bytes": 1220
+    },
+    {
+      "code": "CZ",
+      "file": "nw_country_cz.webp",
+      "sha256": "44dc014d2834d723ec8b81ace6bfd8d3510fcad7af96797f96714a51f9dc1315",
+      "bytes": 376
+    },
+    {
+      "code": "DE",
+      "file": "nw_country_de.webp",
+      "sha256": "5d36ab91e16bab6bbae68eaeb97634eb111b9b0ad08f672fa1f9d0c5f38e2191",
+      "bytes": 56
+    },
+    {
+      "code": "DG",
+      "file": "nw_country_dg.webp",
+      "sha256": "66c2b68f655ac406553720d1ddd6faea38cf59e4477273b762f147ee1ad748ed",
+      "bytes": 8136
+    },
+    {
+      "code": "DJ",
+      "file": "nw_country_dj.webp",
+      "sha256": "c1b92d85ba55ec468704c625bf7af623ba8418b84b564813e42dec9325a4d0f7",
+      "bytes": 658
+    },
+    {
+      "code": "DK",
+      "file": "nw_country_dk.webp",
+      "sha256": "c6912954881c2a6276b6621a1d04a291476b97571e5ed4a7bb3bad59e5c15109",
+      "bytes": 124
+    },
+    {
+      "code": "DM",
+      "file": "nw_country_dm.webp",
+      "sha256": "85f083344f997ef6098bffe8db0b10d488449bdc38503e66b1abe20d3bf6bfa4",
+      "bytes": 3540
+    },
+    {
+      "code": "DO",
+      "file": "nw_country_do.webp",
+      "sha256": "e4d3b5ee3afb6de3b50a5a0631a32b8b450ceecdb3852bc54c564f33aa2992e1",
+      "bytes": 2042
+    },
+    {
+      "code": "DZ",
+      "file": "nw_country_dz.webp",
+      "sha256": "0104ba7a8c54fa35e100c10052791f071a5e17435fb09017b983dc74168dced2",
+      "bytes": 790
+    },
+    {
+      "code": "EC",
+      "file": "nw_country_ec.webp",
+      "sha256": "ce67d57cbd473c1445463daf024bd3a57348242807ab2000a83d44b241a49409",
+      "bytes": 5378
+    },
+    {
+      "code": "EE",
+      "file": "nw_country_ee.webp",
+      "sha256": "136704814dee7ecc1e0738c0991aa31afbff3098fec759301188be532f340ae6",
+      "bytes": 68
+    },
+    {
+      "code": "EG",
+      "file": "nw_country_eg.webp",
+      "sha256": "42b2a17dcee8fd7cf1ef78faaf49f4c51bdad1f148c03081dfcc89ff1c004f07",
+      "bytes": 2230
+    },
+    {
+      "code": "EH",
+      "file": "nw_country_eh.webp",
+      "sha256": "e8df243be86d3b7b85133c15dae14c6d7962e17c3d34b45d6a7f16a5ea874389",
+      "bytes": 776
+    },
+    {
+      "code": "ER",
+      "file": "nw_country_er.webp",
+      "sha256": "96070894abccb21d46a66faf7d5cea6b9157807615ba504767705f6932aa70e4",
+      "bytes": 1880
+    },
+    {
+      "code": "ES",
+      "file": "nw_country_es.webp",
+      "sha256": "8ef7caa78bf336e397b8dae3a860ef4aa87f616f62a34b788672f0d79f512dd1",
+      "bytes": 4596
+    },
+    {
+      "code": "ET",
+      "file": "nw_country_et.webp",
+      "sha256": "d8dcddd376ebfb1c99f42986d49f794fb18f496656b90c24e4637ce2d865e433",
+      "bytes": 1156
+    },
+    {
+      "code": "EU",
+      "file": "nw_country_eu.webp",
+      "sha256": "2f77a5a89c5818f855dcb6ef7822b3889ff34e2d9aaa1229747c256d4cc4e627",
+      "bytes": 1130
+    },
+    {
+      "code": "FI",
+      "file": "nw_country_fi.webp",
+      "sha256": "d2cc25d747eac86fd29e48d413ce7869ef5169cb3585e4a03f24b04288891289",
+      "bytes": 122
+    },
+    {
+      "code": "FJ",
+      "file": "nw_country_fj.webp",
+      "sha256": "ccf44429f587af040d3ed7ec9b66435a8a1bb3b71a7fd6dec5b3f448858cc6d2",
+      "bytes": 4316
+    },
+    {
+      "code": "FK",
+      "file": "nw_country_fk.webp",
+      "sha256": "f20605ce432111658b84999f0ee53a56913b185afd8b95cf40e02557c76acc69",
+      "bytes": 7110
+    },
+    {
+      "code": "FM",
+      "file": "nw_country_fm.webp",
+      "sha256": "b08b4ede74d17b7caef291a3a83076a412ca7331fe2cff2c25f72c2221e765db",
+      "bytes": 650
+    },
+    {
+      "code": "FO",
+      "file": "nw_country_fo.webp",
+      "sha256": "dff962e8d39d25387cebd79d6e4a32fcc7333d0dec7bde97928179c9943f36ed",
+      "bytes": 126
+    },
+    {
+      "code": "FR",
+      "file": "nw_country_fr.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "GA",
+      "file": "nw_country_ga.webp",
+      "sha256": "b676fd602ea45f26146df42c1f17c16e5340e9ab15ec1bacf3afe047f9e24b70",
+      "bytes": 66
+    },
+    {
+      "code": "GB",
+      "file": "nw_country_gb.webp",
+      "sha256": "924f398ac80725700316f669354c0c5ca0f74eb421d61fdc3f514d9ca6e071e0",
+      "bytes": 786
+    },
+    {
+      "code": "GD",
+      "file": "nw_country_gd.webp",
+      "sha256": "4ee4a198ea033118db02653d324293fbb9cfc0c374f88885b64cc12d8fbb9877",
+      "bytes": 1796
+    },
+    {
+      "code": "GE",
+      "file": "nw_country_ge.webp",
+      "sha256": "7ff3b55481068458c1e38f45703fa1ca82ffae62ef732471744908ce279f53d7",
+      "bytes": 534
+    },
+    {
+      "code": "GF",
+      "file": "nw_country_gf.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "GG",
+      "file": "nw_country_gg.webp",
+      "sha256": "12311a01d9187fdded06e4f3ae37a724b945afd7aada1c9be65a076a422e6a3c",
+      "bytes": 298
+    },
+    {
+      "code": "GH",
+      "file": "nw_country_gh.webp",
+      "sha256": "04bc887096efbe0524bff5ec17005ad473a4d2b121a3699d2141b5ff72264b19",
+      "bytes": 366
+    },
+    {
+      "code": "GI",
+      "file": "nw_country_gi.webp",
+      "sha256": "8ced8f3be74749d32d78061a08c68037e8e0d89f65effe5815d5a0b25ead244a",
+      "bytes": 3582
+    },
+    {
+      "code": "GL",
+      "file": "nw_country_gl.webp",
+      "sha256": "ba31ec65848b804d43fd862507f6eabcf7f5e557087ea871933c76ee33bb6bc7",
+      "bytes": 520
+    },
+    {
+      "code": "GM",
+      "file": "nw_country_gm.webp",
+      "sha256": "395ce1fde1f99e94fc4d8fcc450ba7a32f74e97930a427526cd68858299bcb2b",
+      "bytes": 76
+    },
+    {
+      "code": "GN",
+      "file": "nw_country_gn.webp",
+      "sha256": "47eb6e2f4926c8685cf8db49c441f83537ab35e226dee58845af5ddd18cb6896",
+      "bytes": 64
+    },
+    {
+      "code": "GP",
+      "file": "nw_country_gp.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "GQ",
+      "file": "nw_country_gq.webp",
+      "sha256": "b8d16c557e1c8173ee41d55eb4ac2ac7ab5b1be3a3a9fca9f45c143307f51b44",
+      "bytes": 2206
+    },
+    {
+      "code": "GR",
+      "file": "nw_country_gr.webp",
+      "sha256": "0ba7557bee13085b1fe36f592f5ab65d98c34b0bb6ca3a2d349cade1a1977596",
+      "bytes": 166
+    },
+    {
+      "code": "GS",
+      "file": "nw_country_gs.webp",
+      "sha256": "fee6fe8492d372fae0daceffc65e2768a225cc57bb40abebadca7a59d1631218",
+      "bytes": 8742
+    },
+    {
+      "code": "GT",
+      "file": "nw_country_gt.webp",
+      "sha256": "f7a4ecdbc5a2f2cee4bf9e7924f5243a3889d48ea14bc0bc9ef636920eea991d",
+      "bytes": 2756
+    },
+    {
+      "code": "GU",
+      "file": "nw_country_gu.webp",
+      "sha256": "21af81bb031545e868f59db5fe65f41c7afe86fddc9a302b89989dc86681837f",
+      "bytes": 2088
+    },
+    {
+      "code": "GW",
+      "file": "nw_country_gw.webp",
+      "sha256": "4b36544b62aa44aa8362018e8b2947d0f8240a121192d8a208d870a543d0d094",
+      "bytes": 332
+    },
+    {
+      "code": "GY",
+      "file": "nw_country_gy.webp",
+      "sha256": "1532cab2f8de6bb538dee70406f93118dd24b181db41f46b434235f45785c684",
+      "bytes": 1474
+    },
+    {
+      "code": "HK",
+      "file": "nw_country_hk.webp",
+      "sha256": "9509fb33dee49215ecdbe2001b3f01ab0c5bdd79daf74746338ef4cbab5e6650",
+      "bytes": 1096
+    },
+    {
+      "code": "HM",
+      "file": "nw_country_hm.webp",
+      "sha256": "a0160fe53c0a5451d87b4dbbc91aa4bea844cfe6f0f2044eb78e6d7b572af255",
+      "bytes": 1362
+    },
+    {
+      "code": "HN",
+      "file": "nw_country_hn.webp",
+      "sha256": "f45f73f0e9d10c7e1bc952da6b830e0cc7cb71c16518a0ab4d28cb0c31b36340",
+      "bytes": 452
+    },
+    {
+      "code": "HR",
+      "file": "nw_country_hr.webp",
+      "sha256": "3ce9e3f3cfd30bca319dcaad64a1dbb0674116e816e134b8592c5d7bff8e8c10",
+      "bytes": 2324
+    },
+    {
+      "code": "HT",
+      "file": "nw_country_ht.webp",
+      "sha256": "cf32b6f107ff836a79c63ebb9a47e77a1989eb5846026089a7e2027f3a0e9595",
+      "bytes": 3176
+    },
+    {
+      "code": "HU",
+      "file": "nw_country_hu.webp",
+      "sha256": "f5d640d5a45f865b6b94c4f6f5ea6deba5bce5b5aa8b52c5aa91e89b46bb4ba9",
+      "bytes": 70
+    },
+    {
+      "code": "IC",
+      "file": "nw_country_ic.webp",
+      "sha256": "f287d16f4e0cf1d5699b8acd62309efe077acaba931f3845465be3e7fafc54d4",
+      "bytes": 74
+    },
+    {
+      "code": "ID",
+      "file": "nw_country_id.webp",
+      "sha256": "e6ac9e2da0b69b3d4a08c0b0e54da498e94a96d73c175bfc0c957be23947c8a8",
+      "bytes": 50
+    },
+    {
+      "code": "IE",
+      "file": "nw_country_ie.webp",
+      "sha256": "14e7df8d59abbfb6b33ab15087540483cfa4be1b5eae7aaa84ccdc292e7f8d61",
+      "bytes": 72
+    },
+    {
+      "code": "IL",
+      "file": "nw_country_il.webp",
+      "sha256": "4807ce96ebffd4125533d98dc6fefe09800c866dd8ebea8213830d5a6c41638a",
+      "bytes": 812
+    },
+    {
+      "code": "IM",
+      "file": "nw_country_im.webp",
+      "sha256": "033e1310fb3c51b9966dd658c9bffaa7063a655ead55ee8d46ce3c5501dd5805",
+      "bytes": 4862
+    },
+    {
+      "code": "IN",
+      "file": "nw_country_in.webp",
+      "sha256": "23dae6f41a7eb5e1cf4b60150afb6afa7d30c5e4832cb7886f798c2186a24818",
+      "bytes": 876
+    },
+    {
+      "code": "IO",
+      "file": "nw_country_io.webp",
+      "sha256": "66c2b68f655ac406553720d1ddd6faea38cf59e4477273b762f147ee1ad748ed",
+      "bytes": 8136
+    },
+    {
+      "code": "IQ",
+      "file": "nw_country_iq.webp",
+      "sha256": "f487b5312e192df58e1f2f503a2dc873e4fc0ddd4b33a392b9d75108aedec960",
+      "bytes": 446
+    },
+    {
+      "code": "IR",
+      "file": "nw_country_ir.webp",
+      "sha256": "1726c8eaaf2d01063c424b7fe53df00065c1e0b3570b1b9b07ceb8b0cfa1b040",
+      "bytes": 1752
+    },
+    {
+      "code": "IS",
+      "file": "nw_country_is.webp",
+      "sha256": "a2371153dfd923935b9fa5783ff1cec0c3a3202f038623c7829926c6f2fad621",
+      "bytes": 132
+    },
+    {
+      "code": "IT",
+      "file": "nw_country_it.webp",
+      "sha256": "37cca353f1ecbd35b1441d9bf79462058c258063e1f3e9d9f4bf48f169cd07e4",
+      "bytes": 76
+    },
+    {
+      "code": "JE",
+      "file": "nw_country_je.webp",
+      "sha256": "0e0faa7963b93a5283a45f22d2c428786c08f45e9e55ba8532e3c08d24fdc2b5",
+      "bytes": 3492
+    },
+    {
+      "code": "JM",
+      "file": "nw_country_jm.webp",
+      "sha256": "9150920b84535a4d4bb3cf8b02b5d7366d575819fc9e8ed69c28bff7025d3d1f",
+      "bytes": 446
+    },
+    {
+      "code": "JO",
+      "file": "nw_country_jo.webp",
+      "sha256": "4ebc00662c75226148dd2d701f9499e243941536ac9e1df9a367a39d667537f4",
+      "bytes": 544
+    },
+    {
+      "code": "JP",
+      "file": "nw_country_jp.webp",
+      "sha256": "78cd14d6bf2eb6b0c78d8728ebd3a84036727f391b0ecfde36d442d5ab54810a",
+      "bytes": 498
+    },
+    {
+      "code": "KE",
+      "file": "nw_country_ke.webp",
+      "sha256": "e69d7f6181e063559e9806a9b8835da1e2062b3632443e1e6182b7c02e963878",
+      "bytes": 1618
+    },
+    {
+      "code": "KG",
+      "file": "nw_country_kg.webp",
+      "sha256": "a848aa234abf0a8755f9d152ebc6dab2924f6959018a81ad1020519b363cb9ff",
+      "bytes": 2504
+    },
+    {
+      "code": "KH",
+      "file": "nw_country_kh.webp",
+      "sha256": "92c0ec96c63fb130a5dea1bf6c06d28778f966f02d3cd2539e94b2928739054d",
+      "bytes": 3366
+    },
+    {
+      "code": "KI",
+      "file": "nw_country_ki.webp",
+      "sha256": "b188cdd61e7219993ddbd08dd8eef8d1a433c353dc2076f80952950eb4e3bd65",
+      "bytes": 4288
+    },
+    {
+      "code": "KM",
+      "file": "nw_country_km.webp",
+      "sha256": "7b2482ab9678f66ab6b30d3e0f37358e9276051443a4036ccd348c70a3a15485",
+      "bytes": 1164
+    },
+    {
+      "code": "KN",
+      "file": "nw_country_kn.webp",
+      "sha256": "b422dc800ccf5aef3feced73bdd6194f556977f832d903dc03ef93cfba58fc97",
+      "bytes": 1368
+    },
+    {
+      "code": "KP",
+      "file": "nw_country_kp.webp",
+      "sha256": "4c5ab28b502c07023ad5635875f22efca868876fa5aa57583d37319d75c07a00",
+      "bytes": 780
+    },
+    {
+      "code": "KR",
+      "file": "nw_country_kr.webp",
+      "sha256": "213bc5e99c0401c240fae3731c5f36a645f6fca8a0f52574b8d408efed8c9de1",
+      "bytes": 1626
+    },
+    {
+      "code": "KW",
+      "file": "nw_country_kw.webp",
+      "sha256": "b31a312f2b1ad0318dc9a5e68219139d82946a2ea19e472ae90e019fda1a27bd",
+      "bytes": 444
+    },
+    {
+      "code": "KY",
+      "file": "nw_country_ky.webp",
+      "sha256": "0bcfe7cf21b7369a5816f9622df914b3376a11b588681c4c7871414eea543ca5",
+      "bytes": 6642
+    },
+    {
+      "code": "KZ",
+      "file": "nw_country_kz.webp",
+      "sha256": "cc04119524d104d116791c12117dddb93d7485d86c2eb82c4b8fe2d93da2aaf9",
+      "bytes": 3028
+    },
+    {
+      "code": "LA",
+      "file": "nw_country_la.webp",
+      "sha256": "a7fcba7eb65245d44c9c724f0698fd1fe3c4ce1f4c4aa1e70a6b927bc7d31f5b",
+      "bytes": 408
+    },
+    {
+      "code": "LB",
+      "file": "nw_country_lb.webp",
+      "sha256": "bd5f1edd421bfaa543b08f3da6c6f61a929ba39ad66175995c610d3bbb0ab4f9",
+      "bytes": 1478
+    },
+    {
+      "code": "LC",
+      "file": "nw_country_lc.webp",
+      "sha256": "69f4f8c5b9d79911cc38a719ba4a93d1528fd544dd73b64a77e862b8f99e2c89",
+      "bytes": 1186
+    },
+    {
+      "code": "LI",
+      "file": "nw_country_li.webp",
+      "sha256": "481b4700632d9ebbd4349fccf06ae2cce8006ea8e163f94b780a693b0f810fb9",
+      "bytes": 2688
+    },
+    {
+      "code": "LK",
+      "file": "nw_country_lk.webp",
+      "sha256": "d737cb5f1907ddd29b9d3d721e59020b209d8535183eba33c5dde255802bfe12",
+      "bytes": 2486
+    },
+    {
+      "code": "LR",
+      "file": "nw_country_lr.webp",
+      "sha256": "aeb138aa68bec4c7c224ceec40d7aa85c4721f12eb17b81bf75653698d1b4d76",
+      "bytes": 440
+    },
+    {
+      "code": "LS",
+      "file": "nw_country_ls.webp",
+      "sha256": "41bc5014017346ee8c1ad5ca97232cebba960cca94195376a15a4fff0e200848",
+      "bytes": 846
+    },
+    {
+      "code": "LT",
+      "file": "nw_country_lt.webp",
+      "sha256": "8921ef4de10020153d3a433bbe03a233cc421e6d27e810565a8e9dbc66a6670d",
+      "bytes": 90
+    },
+    {
+      "code": "LU",
+      "file": "nw_country_lu.webp",
+      "sha256": "73e0ae308dbd7a5d386611349b0a6ac60552cbe27498c9cfdf10e6cc0617ddb7",
+      "bytes": 70
+    },
+    {
+      "code": "LV",
+      "file": "nw_country_lv.webp",
+      "sha256": "416a36c8e70723070d168efafc440ddac67adeb2c39452d96551cc650c50c50f",
+      "bytes": 78
+    },
+    {
+      "code": "LY",
+      "file": "nw_country_ly.webp",
+      "sha256": "605ddcd477223ab554c9675b4d000ba08a754c0a7e2665b981c88a6a3a91d6ba",
+      "bytes": 424
+    },
+    {
+      "code": "MA",
+      "file": "nw_country_ma.webp",
+      "sha256": "c9251a2f35b52e506158b89d1d428ea19c8326fcb4b9d95b394099f32a557ffb",
+      "bytes": 424
+    },
+    {
+      "code": "MC",
+      "file": "nw_country_mc.webp",
+      "sha256": "eec464b7796150cb6c79642e091a34f061822a842038f750117d451baa101f5b",
+      "bytes": 52
+    },
+    {
+      "code": "MD",
+      "file": "nw_country_md.webp",
+      "sha256": "6b165cc2c2b55880751b657f6ec7f252a3ed2c99685e161486e721fc6a13a06a",
+      "bytes": 5092
+    },
+    {
+      "code": "ME",
+      "file": "nw_country_me.webp",
+      "sha256": "66ee376870d92782d3547d43d042bd99be379dd97b8cf08b4a8a26064b1df909",
+      "bytes": 4714
+    },
+    {
+      "code": "MF",
+      "file": "nw_country_mf.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "MG",
+      "file": "nw_country_mg.webp",
+      "sha256": "0d81431a01e7a17dee1f13f108ddedbe38f2aa79cb48c92dc044b8cc79b1c068",
+      "bytes": 78
+    },
+    {
+      "code": "MH",
+      "file": "nw_country_mh.webp",
+      "sha256": "5e6d1338d6013e4fa12878024272c28c3f448b5a681c46447bd9a29ce003d923",
+      "bytes": 2074
+    },
+    {
+      "code": "MK",
+      "file": "nw_country_mk.webp",
+      "sha256": "5bb9e099eabd1b05403287f8a1cb920a193814a92891dd1661caa2be404ffa5d",
+      "bytes": 1308
+    },
+    {
+      "code": "ML",
+      "file": "nw_country_ml.webp",
+      "sha256": "1c726714f219911cc2ab82a6b73d99ae9b4b6e890ce11a839ce04d790c6f438c",
+      "bytes": 64
+    },
+    {
+      "code": "MM",
+      "file": "nw_country_mm.webp",
+      "sha256": "ad62b9871504e52d89ab9b28f801b3e2c8905260315a7ec1b8ecf5be61ba4a9a",
+      "bytes": 788
+    },
+    {
+      "code": "MN",
+      "file": "nw_country_mn.webp",
+      "sha256": "56b91eb0bcb289752405d5d502851ebebb37509aaddc578530f815220310b3f8",
+      "bytes": 608
+    },
+    {
+      "code": "MO",
+      "file": "nw_country_mo.webp",
+      "sha256": "933473ec8d9b3f9b5ebdf315c372a93408b6b9926c7d8432ff53396f30d008d7",
+      "bytes": 1290
+    },
+    {
+      "code": "MP",
+      "file": "nw_country_mp.webp",
+      "sha256": "5c590266da60b432a09c666d048c54411687e265f2f77e410c1045309a954b65",
+      "bytes": 14166
+    },
+    {
+      "code": "MQ",
+      "file": "nw_country_mq.webp",
+      "sha256": "4a24e732a2a8715eef6b10fec18c18a7cb76a17b6b9a4079803601a15abd90b4",
+      "bytes": 322
+    },
+    {
+      "code": "MR",
+      "file": "nw_country_mr.webp",
+      "sha256": "87b76286c75beffaf3305926d529b40f0cc7fcaf22d56c712d5f36d6aa633212",
+      "bytes": 746
+    },
+    {
+      "code": "MS",
+      "file": "nw_country_ms.webp",
+      "sha256": "5c56e5749a4fcc09bd20b230c7f48a3169c3f18a8367081c75307f69c6e52cc5",
+      "bytes": 3570
+    },
+    {
+      "code": "MT",
+      "file": "nw_country_mt.webp",
+      "sha256": "e337cabf1a056e4a19a8b6015312d144b36764e2e46c9d4e403eea0bebb39646",
+      "bytes": 776
+    },
+    {
+      "code": "MU",
+      "file": "nw_country_mu.webp",
+      "sha256": "a538ec7ef3df65e1a4a507bec85b3f3b58a200012e2382586590939e4241d47f",
+      "bytes": 78
+    },
+    {
+      "code": "MV",
+      "file": "nw_country_mv.webp",
+      "sha256": "e8a348386519e6303692d6f7b0dc464200b7103f68672f47daae680bb46bcf45",
+      "bytes": 366
+    },
+    {
+      "code": "MW",
+      "file": "nw_country_mw.webp",
+      "sha256": "2c8d4584e3a7f14354fad21efb9bb7265f5a189909f644d44c965522a11c6f22",
+      "bytes": 1288
+    },
+    {
+      "code": "MX",
+      "file": "nw_country_mx.webp",
+      "sha256": "861b75be32f3eedc247281ef3b9d525d6dbd4dc067fba01c9226416abdad9b70",
+      "bytes": 2278
+    },
+    {
+      "code": "MY",
+      "file": "nw_country_my.webp",
+      "sha256": "6ac3e2fad850cd2e20f2467d3f17aa6abfb7e51150371429b741b79554129965",
+      "bytes": 724
+    },
+    {
+      "code": "MZ",
+      "file": "nw_country_mz.webp",
+      "sha256": "46cd7ec435cdf29710941f385353adc6c7a8ea8c54e6a6bdec92d88f63eec468",
+      "bytes": 2356
+    },
+    {
+      "code": "NA",
+      "file": "nw_country_na.webp",
+      "sha256": "fa9a7de5f7b3dac6f42f1f4fbe69e73f6c61b1cc060c8cc63e5b456225d3a84e",
+      "bytes": 1444
+    },
+    {
+      "code": "NC",
+      "file": "nw_country_nc.webp",
+      "sha256": "c161845a510bcbe1355eca6d42ba6c7e1139a121a598bddc785e66845fb638db",
+      "bytes": 1258
+    },
+    {
+      "code": "NE",
+      "file": "nw_country_ne.webp",
+      "sha256": "10dc2334a09a4db2d8296f17c64e56e35f4bc23ce68e9c5d58164ec45ae8faad",
+      "bytes": 300
+    },
+    {
+      "code": "NF",
+      "file": "nw_country_nf.webp",
+      "sha256": "88d163a358dd4c3587a5374a6446e8055174c6a685b11c3dd6dc8c876059b2c7",
+      "bytes": 3364
+    },
+    {
+      "code": "NG",
+      "file": "nw_country_ng.webp",
+      "sha256": "601b6eb0e581ec74f2ad8a6b22f02fe4dc33c9f604764cb547ca12d731cafa98",
+      "bytes": 52
+    },
+    {
+      "code": "NI",
+      "file": "nw_country_ni.webp",
+      "sha256": "f5e5c5ab892dc8bca3f42f76051b99d1d86ee87304fabd869a574f82b9c90d85",
+      "bytes": 1726
+    },
+    {
+      "code": "NL",
+      "file": "nw_country_nl.webp",
+      "sha256": "c6e4680a6fbce60a62f6cabdd7bda485bb5edbe2c68b30a5305e87fd320f5ad7",
+      "bytes": 70
+    },
+    {
+      "code": "NO",
+      "file": "nw_country_no.webp",
+      "sha256": "9a514b163d5d86feb6624ddb6c4fb26a89dc24ce6d6cb2919c0879d1e9c2b43a",
+      "bytes": 102
+    },
+    {
+      "code": "NP",
+      "file": "nw_country_np.webp",
+      "sha256": "179ead63613da8c86fac911520612e6662e3efdda208875e0dd75e30b166dd0a",
+      "bytes": 1328
+    },
+    {
+      "code": "NR",
+      "file": "nw_country_nr.webp",
+      "sha256": "89964c708ba647aad9caee2ab2a390f53caf366dcf6804bd04385567ca32fcac",
+      "bytes": 556
+    },
+    {
+      "code": "NU",
+      "file": "nw_country_nu.webp",
+      "sha256": "81ab1cef3f3933d8b60885dbd44f2c228b2e0254c565892ec91b45e12c5fc746",
+      "bytes": 1230
+    },
+    {
+      "code": "NZ",
+      "file": "nw_country_nz.webp",
+      "sha256": "45cd2a22ef70e14cadecc461353d5cbb11e4eac2944736c38194af18b2f17774",
+      "bytes": 1486
+    },
+    {
+      "code": "OM",
+      "file": "nw_country_om.webp",
+      "sha256": "b8761216e5a3c3de9bd7bc81c005c5c5e31529e87e008e3363bcedd643265486",
+      "bytes": 958
+    },
+    {
+      "code": "PA",
+      "file": "nw_country_pa.webp",
+      "sha256": "d006b6de7343ad94dc6163ac37478ec54d517b235acc71ae1a2fced71d2bbc55",
+      "bytes": 616
+    },
+    {
+      "code": "PC",
+      "file": "nw_country_pc.webp",
+      "sha256": "4e62d82bb8115612c6c9497e56580264a8787944bf4a6f9cf2a602ff0410a1ea",
+      "bytes": 1668
+    },
+    {
+      "code": "PE",
+      "file": "nw_country_pe.webp",
+      "sha256": "ca3eb40628c68a7f16b54c1e9389e09814ae0cbd20d01eadc8dee87b3e5d6c17",
+      "bytes": 52
+    },
+    {
+      "code": "PF",
+      "file": "nw_country_pf.webp",
+      "sha256": "55c5ee936cc1903fef0e5d36684c67c616558ef3982262808a798b2505906839",
+      "bytes": 2560
+    },
+    {
+      "code": "PG",
+      "file": "nw_country_pg.webp",
+      "sha256": "8888833399c943a2768f80ec124c71f820f6a32da2448168fbdddcd56fd1287f",
+      "bytes": 1832
+    },
+    {
+      "code": "PH",
+      "file": "nw_country_ph.webp",
+      "sha256": "c31bac238b556e65b1b13865d36c037694c88f6df9b86a6e2d1677c5cd72e92f",
+      "bytes": 1738
+    },
+    {
+      "code": "PK",
+      "file": "nw_country_pk.webp",
+      "sha256": "80bdf3263ff76f4135c36b8d552331dfe28b20ad626726872367939f4723d5fe",
+      "bytes": 610
+    },
+    {
+      "code": "PL",
+      "file": "nw_country_pl.webp",
+      "sha256": "9340abc3c61afc3fe394f0ecff0d714c844c822e2db7dc90ff5a99e98a19675f",
+      "bytes": 52
+    },
+    {
+      "code": "PM",
+      "file": "nw_country_pm.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "PN",
+      "file": "nw_country_pn.webp",
+      "sha256": "e99a28249fe2a24a76fb26819311fe1ea7c7cc5be5a0f61dbb0bfaf96a436901",
+      "bytes": 6450
+    },
+    {
+      "code": "PR",
+      "file": "nw_country_pr.webp",
+      "sha256": "d11cf8a47b5c14c88a9455b8874ae8f94e0f03dbb2c5fb601d8546da94c13668",
+      "bytes": 994
+    },
+    {
+      "code": "PS",
+      "file": "nw_country_ps.webp",
+      "sha256": "101d1503f965bb18fbe2a9d1d73a1efe6aaf060e496c73029438036e98d7e41a",
+      "bytes": 612
+    },
+    {
+      "code": "PT",
+      "file": "nw_country_pt.webp",
+      "sha256": "6946e584ea79d5dc2e1f0af70bcb12cca20b3270f36b6e078b893166286adc33",
+      "bytes": 4928
+    },
+    {
+      "code": "PW",
+      "file": "nw_country_pw.webp",
+      "sha256": "a388c7dbe1de30e39c81fc9defaf45c4b41c407d8c682f6b00e0455e185dab94",
+      "bytes": 500
+    },
+    {
+      "code": "PY",
+      "file": "nw_country_py.webp",
+      "sha256": "78cf549d5e7d78c2ce92ed349315d6c664b36889edc82b35aee77556badd1861",
+      "bytes": 1756
+    },
+    {
+      "code": "QA",
+      "file": "nw_country_qa.webp",
+      "sha256": "eb84fef57008035b3317558f07b0e5c013741747a38da4fc79af228d6d908bbf",
+      "bytes": 380
+    },
+    {
+      "code": "RE",
+      "file": "nw_country_re.webp",
+      "sha256": "1934773f07098e6dcac48f3281bac9bff19ecdd9dfea59ede623dc2c7ac1a5c1",
+      "bytes": 74
+    },
+    {
+      "code": "RO",
+      "file": "nw_country_ro.webp",
+      "sha256": "c7a5643104c1ef8768afbef3940d6e3a20dd315b26dd740c53254f04844161ee",
+      "bytes": 74
+    },
+    {
+      "code": "RS",
+      "file": "nw_country_rs.webp",
+      "sha256": "d73afa5c1c1b7dd06baabdb2dfad09e0b8f96b1aca6205c347792d65a0994669",
+      "bytes": 7386
+    },
+    {
+      "code": "RU",
+      "file": "nw_country_ru.webp",
+      "sha256": "a43126e9b6ffe1be8a1c83376145b23c9289c0add28cb02d2762a3f2f0e69e50",
+      "bytes": 70
+    },
+    {
+      "code": "RW",
+      "file": "nw_country_rw.webp",
+      "sha256": "0816035de2304b8bc49bf8ee1fe3bad849071d87bf8cc28b3611125947fdc2b7",
+      "bytes": 984
+    },
+    {
+      "code": "SA",
+      "file": "nw_country_sa.webp",
+      "sha256": "eafae72899d77e57573efd72432266b35816022d3b8f56df9c8801faac421db1",
+      "bytes": 1894
+    },
+    {
+      "code": "SB",
+      "file": "nw_country_sb.webp",
+      "sha256": "36b01828ce97ae0deeaef755039a88669660088439fc382460c32497dd2959f1",
+      "bytes": 1024
+    },
+    {
+      "code": "SC",
+      "file": "nw_country_sc.webp",
+      "sha256": "20f2757258289677083a604a248b4a40b567762001ccda51dbad101dae0d01f8",
+      "bytes": 842
+    },
+    {
+      "code": "SD",
+      "file": "nw_country_sd.webp",
+      "sha256": "316178c15aedfd679eca6043a3d849434531d8bd3c46c2ab38a8b52d0d4f7a8b",
+      "bytes": 620
+    },
+    {
+      "code": "SE",
+      "file": "nw_country_se.webp",
+      "sha256": "e370a6232b8dee4bf69f31e6e017a258dc7fbcd615051aad4e1071372bad6af4",
+      "bytes": 116
+    },
+    {
+      "code": "SG",
+      "file": "nw_country_sg.webp",
+      "sha256": "31d42ab64cd379f2fc998fbf9d721701b09cfb8a1500aa5fe27090e576f440fa",
+      "bytes": 602
+    },
+    {
+      "code": "SH",
+      "file": "nw_country_sh.webp",
+      "sha256": "924f398ac80725700316f669354c0c5ca0f74eb421d61fdc3f514d9ca6e071e0",
+      "bytes": 786
+    },
+    {
+      "code": "SI",
+      "file": "nw_country_si.webp",
+      "sha256": "314082acf6b6f5d8b1416b58eb400d822fd41ce6e3035ddd7853997f41a1bb9b",
+      "bytes": 956
+    },
+    {
+      "code": "SJ",
+      "file": "nw_country_sj.webp",
+      "sha256": "a9317bf4635a98e53e1454e166cdc3f591ad93044acef258a88d931d3a63a877",
+      "bytes": 102
+    },
+    {
+      "code": "SK",
+      "file": "nw_country_sk.webp",
+      "sha256": "a663b693c4dc487c4c4c2935a8a0a20eee29fc9df05ef9148b3b317f04987dc2",
+      "bytes": 986
+    },
+    {
+      "code": "SL",
+      "file": "nw_country_sl.webp",
+      "sha256": "e81a9347964c66749080288d3d882dc944247b25a4ea30d5f98f0836238c1ae7",
+      "bytes": 118
+    },
+    {
+      "code": "SM",
+      "file": "nw_country_sm.webp",
+      "sha256": "72591ad256f1ec28f580bcf384b35afba2945408500ed40578b191b736a2bcc6",
+      "bytes": 9626
+    },
+    {
+      "code": "SN",
+      "file": "nw_country_sn.webp",
+      "sha256": "a9cd8bea9ecfec0f8290544451f39c36770c97b76c2395870aab7284863416aa",
+      "bytes": 326
+    },
+    {
+      "code": "SO",
+      "file": "nw_country_so.webp",
+      "sha256": "0103854e4343f766dd2912f7530c38c885bb2812a574cfb7a4468b682bd73064",
+      "bytes": 450
+    },
+    {
+      "code": "SR",
+      "file": "nw_country_sr.webp",
+      "sha256": "2d61f3cbbf2803ed5e9377fbef28d3cb835e31e349c805b3d471b2403d9490d1",
+      "bytes": 428
+    },
+    {
+      "code": "SS",
+      "file": "nw_country_ss.webp",
+      "sha256": "bda3cc03b5fbee467bcc9d6bc09a5652bf29e86db8b5547df06e80f282933043",
+      "bytes": 1096
+    },
+    {
+      "code": "ST",
+      "file": "nw_country_st.webp",
+      "sha256": "d0be932c45bf9c5cfb4d146e9d657d534789615779fb346c9803ae1afffbba25",
+      "bytes": 1020
+    },
+    {
+      "code": "SV",
+      "file": "nw_country_sv.webp",
+      "sha256": "1ab34fd8a67f82bd9a84daf3bd7b6a118f958ce364c779c7d98a1c1489d3898a",
+      "bytes": 3118
+    },
+    {
+      "code": "SX",
+      "file": "nw_country_sx.webp",
+      "sha256": "b7a5b289f3abc5445d37104e80f59c07e40fefcda4fe28171e59403ebb80388d",
+      "bytes": 3656
+    },
+    {
+      "code": "SY",
+      "file": "nw_country_sy.webp",
+      "sha256": "d4fdc65d86b8a3afa2f1bb00e3ec1353e60001154bd4fb876bf48aae11792a74",
+      "bytes": 602
+    },
+    {
+      "code": "SZ",
+      "file": "nw_country_sz.webp",
+      "sha256": "80400616cfd0ea86949a9b320d9c9a91a328146941bed2e817a2f85c3791c700",
+      "bytes": 2238
+    },
+    {
+      "code": "TC",
+      "file": "nw_country_tc.webp",
+      "sha256": "0c65f8850faffc90eaa9d0b2d15fe2bf05e234216f1951ed43835e74d49f7aad",
+      "bytes": 4840
+    },
+    {
+      "code": "TD",
+      "file": "nw_country_td.webp",
+      "sha256": "bddc2780e5184b867a1ec11be9cf775e2ff37a635cee6e6648e4005f5bf86c03",
+      "bytes": 98
+    },
+    {
+      "code": "TF",
+      "file": "nw_country_tf.webp",
+      "sha256": "027f8fa25f410f7e553c878abaf31d46d95af2b5f4826b7724a2a16ec6b8acac",
+      "bytes": 830
+    },
+    {
+      "code": "TG",
+      "file": "nw_country_tg.webp",
+      "sha256": "cd7e78d52958a839437751a74013d5fbbee7c749900dae3f2d6679203ccfc7ca",
+      "bytes": 388
+    },
+    {
+      "code": "TH",
+      "file": "nw_country_th.webp",
+      "sha256": "1fa35a905d2e2e90285cf825fa371bb50176358622af4b2bfdf178586662f6dc",
+      "bytes": 102
+    },
+    {
+      "code": "TJ",
+      "file": "nw_country_tj.webp",
+      "sha256": "31d7a64041ee95825a4ef646472a0f7ab95969fe7c585620c228df788ffe7491",
+      "bytes": 830
+    },
+    {
+      "code": "TK",
+      "file": "nw_country_tk.webp",
+      "sha256": "51d497c40caa87ec545b7156d143ba2b4f86249357511273b04ea8eaaf15f065",
+      "bytes": 726
+    },
+    {
+      "code": "TL",
+      "file": "nw_country_tl.webp",
+      "sha256": "1b1321b88c6640b1a1d910eaf86ca8d50cbc91b669baf54a701ab707fc84ebfb",
+      "bytes": 1096
+    },
+    {
+      "code": "TM",
+      "file": "nw_country_tm.webp",
+      "sha256": "bfbb6fc04779de447324587e4a4edd124927792e83e6b5758823281fe72415e1",
+      "bytes": 7718
+    },
+    {
+      "code": "TN",
+      "file": "nw_country_tn.webp",
+      "sha256": "ea47919fe709d2a35ce69b26542f4b9a77e227faa0cf69a9c4188b8ca68c35d6",
+      "bytes": 808
+    },
+    {
+      "code": "TO",
+      "file": "nw_country_to.webp",
+      "sha256": "005db1bdb458c91a99d83657da02aeb998c3cb78f7f4ad0380360e339dc97c55",
+      "bytes": 150
+    },
+    {
+      "code": "TR",
+      "file": "nw_country_tr.webp",
+      "sha256": "3dae35fe07604e47640333dea3cbfcc116bb7bc00669cd27422b630a6313a3ee",
+      "bytes": 778
+    },
+    {
+      "code": "TT",
+      "file": "nw_country_tt.webp",
+      "sha256": "957768aa77e079d056089ecb718911d1e6f4a34e2d9f6bb8c695a194e77ea835",
+      "bytes": 784
+    },
+    {
+      "code": "TV",
+      "file": "nw_country_tv.webp",
+      "sha256": "267748f96d2b623d571f612d8768c9b3bc224426b6492cfc1d9b772386961cf9",
+      "bytes": 1426
+    },
+    {
+      "code": "TW",
+      "file": "nw_country_tw.webp",
+      "sha256": "4e69bca6f910b67b489c14b9f768e879f301a760538a49bae6a5af0fac051e55",
+      "bytes": 674
+    },
+    {
+      "code": "TZ",
+      "file": "nw_country_tz.webp",
+      "sha256": "890c419f73db89f03d99807c51409054a41bef76cf92e4701332914c479b3fdf",
+      "bytes": 532
+    },
+    {
+      "code": "UA",
+      "file": "nw_country_ua.webp",
+      "sha256": "9a227d06e73039b512f1674dbb8c82b26c35b0ba6b48e3201e00572b6e9781c3",
+      "bytes": 50
+    },
+    {
+      "code": "UG",
+      "file": "nw_country_ug.webp",
+      "sha256": "b3804f2137d37ec8cf770d78f3a183ccaf45f20c5844699e633bf94b54ec06a2",
+      "bytes": 1786
+    },
+    {
+      "code": "UM",
+      "file": "nw_country_um.webp",
+      "sha256": "75590bf5ab726bf5efe9bc8d0f0fdf0ab15b21da3a8b8a69c4e3289ccca1e5d6",
+      "bytes": 1820
+    },
+    {
+      "code": "UN",
+      "file": "nw_country_un.webp",
+      "sha256": "5dfe7439fc8d4e6187c5fd07db48c579c0325f9cbbda14783d520b2076d73b0d",
+      "bytes": 2442
+    },
+    {
+      "code": "US",
+      "file": "nw_country_us.webp",
+      "sha256": "75590bf5ab726bf5efe9bc8d0f0fdf0ab15b21da3a8b8a69c4e3289ccca1e5d6",
+      "bytes": 1820
+    },
+    {
+      "code": "UY",
+      "file": "nw_country_uy.webp",
+      "sha256": "a00fe5cde73bf95a8a529ff16123c703b05c2c99c9bc534c9e3ac48e68c8041c",
+      "bytes": 3376
+    },
+    {
+      "code": "UZ",
+      "file": "nw_country_uz.webp",
+      "sha256": "0af333f4b851d6e81b58637d52be39995e67e10d3e3f0a7df2255e4cb199433a",
+      "bytes": 804
+    },
+    {
+      "code": "VA",
+      "file": "nw_country_va.webp",
+      "sha256": "3d6dd1754c2259ea9fd4b4cfdd2a611534b9e9caf7acdb31d1b83e87c34fb7a1",
+      "bytes": 4538
+    },
+    {
+      "code": "VC",
+      "file": "nw_country_vc.webp",
+      "sha256": "c81ea63cd0730354ae403baf810acb3943af8fae1c8ae018615cba22b2c32fe9",
+      "bytes": 658
+    },
+    {
+      "code": "VE",
+      "file": "nw_country_ve.webp",
+      "sha256": "0914f1d54b10c9c3960ede38c0c9b090c2cfdfebc723eeff6716e2ac8555e17a",
+      "bytes": 744
+    },
+    {
+      "code": "VG",
+      "file": "nw_country_vg.webp",
+      "sha256": "5bf8d540adcce5f4d976b00a9247f105249c228c042ab349f50ca0b16be65983",
+      "bytes": 6680
+    },
+    {
+      "code": "VI",
+      "file": "nw_country_vi.webp",
+      "sha256": "afd10cac33d171d133e7fd1738455848222ad0098197a455e7b412803d420ca8",
+      "bytes": 8796
+    },
+    {
+      "code": "VN",
+      "file": "nw_country_vn.webp",
+      "sha256": "bdcc55ab30fe74eedb5ff5a9a6194a2b1925bf1289a2026bb0aee458283272b1",
+      "bytes": 522
+    },
+    {
+      "code": "VU",
+      "file": "nw_country_vu.webp",
+      "sha256": "536a3ee820a1a83dd43dbf4461d33ae54c8b42837cd9ee7780039c4ddf699f4c",
+      "bytes": 1218
+    },
+    {
+      "code": "WF",
+      "file": "nw_country_wf.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "WS",
+      "file": "nw_country_ws.webp",
+      "sha256": "07c31067452fc171ea8525884e16074a239b6d050deebfe63525ef75d0ee60a1",
+      "bytes": 438
+    },
+    {
+      "code": "XK",
+      "file": "nw_country_xk.webp",
+      "sha256": "fcb22476fbe870de673c8c44393b96b4361c5da67e9aaf41f60842025f0b4d51",
+      "bytes": 836
+    },
+    {
+      "code": "XX",
+      "file": "nw_country_xx.webp",
+      "sha256": "0d52b1be4151683b5101ea988336f0225806dc43b88a512c3b2e682b638c05d6",
+      "bytes": 548
+    },
+    {
+      "code": "YE",
+      "file": "nw_country_ye.webp",
+      "sha256": "8d8555a7db0c049d5732c9150f47026df6fea5d3883ad58ef7ced16d98e1b3a7",
+      "bytes": 64
+    },
+    {
+      "code": "YT",
+      "file": "nw_country_yt.webp",
+      "sha256": "b8a1766f78199e18db617f7d07c225c90f935d7be9b1feb62262fa15875e65a2",
+      "bytes": 72
+    },
+    {
+      "code": "ZA",
+      "file": "nw_country_za.webp",
+      "sha256": "a6000a8edca966645b56691d86823e57607b82189c3eb307a8cb9a7c078aed7f",
+      "bytes": 1314
+    },
+    {
+      "code": "ZM",
+      "file": "nw_country_zm.webp",
+      "sha256": "b370d4dcb72e13d112ebde8d56068a9653303c7fb04332a98274d213a05f269f",
+      "bytes": 2144
+    },
+    {
+      "code": "ZW",
+      "file": "nw_country_zw.webp",
+      "sha256": "b2ebce72369195004707fe76f76f6cc6da85678ca7bc9bb6f9b531d805bc696b",
+      "bytes": 1818
+    }
+  ]
+}

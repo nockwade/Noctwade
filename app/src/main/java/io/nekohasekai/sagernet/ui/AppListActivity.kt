@@ -228,7 +228,7 @@ class AppListActivity : ThemedActivity() {
         supportActionBar?.apply {
             setTitle(R.string.select_apps)
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24)
+            setHomeAsUpIndicator(R.drawable.nw_back)
         }
 
         val initial = savedInstanceState?.getStringArrayList(STATE_SELECTED)

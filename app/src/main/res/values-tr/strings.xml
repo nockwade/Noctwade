@@ -1512,7 +1512,7 @@
     <string name="log_hide_destinations">Hedefleri gizle</string>
     <string name="log_saved">Günlükler kaydedildi</string>
     <string name="log_export_failed">Günlük dışa aktarma başarısız: %s</string>
-    <string name="log_crash_title">Throne çöktü</string>
+    <string name="log_crash_title">Noctwade çöktü</string>
     <string name="not_now">Şimdi değil</string>
     <string name="channel_warnings">Uyarılar</string>
     <string name="wifi_permission_title">Wi-Fi kuralları</string>

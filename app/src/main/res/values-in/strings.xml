@@ -1510,7 +1510,7 @@
     <string name="log_hide_destinations">Sembunyikan tujuan</string>
     <string name="log_saved">Log disimpan</string>
     <string name="log_export_failed">Ekspor log gagal: %s</string>
-    <string name="log_crash_title">Throne mengalami kerusakan</string>
+    <string name="log_crash_title">Noctwade mengalami kerusakan</string>
     <string name="not_now">Tidak sekarang</string>
     <string name="channel_warnings">Peringatan</string>
     <string name="wifi_permission_title">Aturan Wi-Fi</string>

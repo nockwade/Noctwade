@@ -824,7 +824,7 @@
     <string name="listen_port">Порт прослушивания</string>
     <string name="location_settings">Настройки местоположения</string>
     <string name="log_buffer_size">Размер буфера журнала (КБ)</string>
-    <string name="log_crash_title">Throne аварийно завершился</string>
+    <string name="log_crash_title">Noctwade аварийно завершился</string>
     <string name="log_export_failed">Не удалось экспортировать журнал: %s</string>
     <string name="log_hide_destinations">Скрывать назначения</string>
     <string name="log_hide_sensitive">Скрывать конфиденциальные данные</string>
@@ -953,7 +953,7 @@
     <string name="profiles_test_stop">Остановить тест</string>
     <string name="profiles_test_url">URL-тест</string>
     <string name="profiles_update_subscription">Обновить подписку</string>
-    <string name="project_website">Сайт проекта</string>
+    <string name="project_website">Оригинальный проект</string>
     <string name="quic_idle_timeout">Тайм-аут простоя</string>
     <string name="quic_initial_packet_size">Начальный размер пакета</string>
     <string name="quic_keep_alive_period">Период keep-alive</string>

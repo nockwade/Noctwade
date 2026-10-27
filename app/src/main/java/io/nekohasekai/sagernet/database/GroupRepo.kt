@@ -99,6 +99,10 @@ object GroupRepo {
         return group
     }
 
+    suspend fun rename(id: Long, name: String) {
+        if (dao.rename(id, name.trim()) > 0) postUpdate(id)
+    }
+
     suspend fun save(group: ProxyGroup) {
         dao.update(group)
         notify { groupUpdated(group) }

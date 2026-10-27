@@ -40,6 +40,7 @@ import io.nekohasekai.sagernet.utils.PackageCache
 import io.nekohasekai.sagernet.utils.WifiStateAccess
 import io.nekohasekai.sagernet.validation.Severity
 import io.nekohasekai.sagernet.widget.ListListener
+import io.nekohasekai.sagernet.widget.applyListInsets
 import io.nekohasekai.sagernet.widget.StringLinesPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,8 +84,8 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
 
         /** The members inside the collapsed group. */
         private val ADVANCED_KEYS = listOf(
-            "domain_keyword", "domain_regex", "ip_is_private", "source_ip_cidr", "source_ip_is_private", "port",
-            "port_range", "source_port", "source_port_range", "network", "protocol", "ip_version", "inbound", "invert",
+            "domain_keyword", "domain_regex", "ip_is_private", "source_ip_cidr", "source_ip_is_private",
+            "source_port", "source_port_range", "ip_version", "inbound", "invert",
             "override_address", "override_port", "tls_fragment", "tls_fragment_fallback_delay", "tls_record_fragment",
             "no_drop", "package_name_regex", "process_name", "process_path", "process_path_regex",
             "network_is_expensive", "wifi_ssid", "wifi_bssid",
@@ -133,11 +134,15 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
         supportActionBar?.apply {
             setTitle(R.string.route_rule_title)
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_navigation_close)
+            setHomeAsUpIndicator(R.drawable.nw_back)
         }
         rule = RouteJson.ruleFromJson(intent.getStringExtra(EXTRA_RULE))
         index = intent.getIntExtra(EXTRA_INDEX, -1)
         advancedExpanded = savedInstanceState?.getBoolean(STATE_ADVANCED) ?: false
+        findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).apply {
+            setNavigationOnClickListener { close() }
+            navigationIcon?.setTint(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(context))
+        }
         onBackPressedDispatcher.addCallback(this) { close() }
 
         val fresh = savedInstanceState == null
@@ -185,6 +190,7 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
     private fun editedRule(): RouteRule = rule.copy().also {
         pbm.fromCacheAll(it)
         it.name = it.name.trim()
+        it.normalizeActionOptions()
     }
 
     /** RouteRule::validate of [editedRule], kept until the next change in the cache store. */
@@ -342,6 +348,7 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
                 }
             }
             findPreference<StringLinesPreference>("package_name")!!.apply {
+                isVisible=false
                 summaryProvider = Preference.SummaryProvider<StringLinesPreference> { p ->
                     val packages = p.values
                     if (packages.size > 5) getString(R.string.apps_message, packages.size)
@@ -448,7 +455,9 @@ class RouteRuleActivity : ThemedActivity(R.layout.layout_config_settings), OnPre
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
             listView.layoutManager = FixedLinearLayoutManager(listView)
-            ViewCompat.setOnApplyWindowInsetsListener(listView, ListListener)
+            listView.applyListInsets()
+            io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.routeRows(preferenceScreen)
+            io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.list(this)
         }
 
         override fun onResume() {

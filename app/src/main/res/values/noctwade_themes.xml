@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <!-- softened gradients -->
+    <attr name="nwAccent" format="color" />
+    <attr name="nwSurface" format="color" />
+    <attr name="nwSurfaceHigh" format="color" />
+    <attr name="nwStroke" format="color" />
+    <attr name="nwText" format="color" />
+    <attr name="nwMuted" format="color" />
+    <attr name="nwBackground" format="color" />
+    <attr name="nwSelected" format="color" />
+    <attr name="nwGlassStart" format="color" />
+    <attr name="nwGlassEnd" format="color" />
+    <style name="ThemeOverlay.Noctwade.Default" parent="">
+        <item name="nwAccent">#CE9CFF</item>
+        <item name="nwSurface">#14111D</item>
+        <item name="nwSurfaceHigh">#21172F</item>
+        <item name="nwStroke">#493259</item>
+        <item name="nwText">#F8F3FF</item>
+        <item name="nwMuted">#B2A4C9</item>
+        <item name="nwBackground">#08070D</item>
+        <item name="nwSelected">#322045</item>
+        <item name="nwGradientStart">#201936</item>
+        <item name="nwGradientEnd">#17182F</item>
+        <item name="nwAccentSecondary">#83BFFF</item>
+        <item name="nwRipple">#26CE9CFF</item>
+        <item name="nwGlassStart">#C827203C</item>
+        <item name="nwGlassEnd">#C817182F</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Sakura" parent="">
+        <item name="nwAccent">#FFABCB</item>
+        <item name="nwSurface">#23151F</item>
+        <item name="nwSurfaceHigh">#36202E</item>
+        <item name="nwStroke">#785064</item>
+        <item name="nwText">#FFF4F8</item>
+        <item name="nwMuted">#C7A6B8</item>
+        <item name="nwBackground">#100B13</item>
+        <item name="nwSelected">#4B293F</item>
+        <item name="nwGradientStart">#2F1C35</item>
+        <item name="nwGradientEnd">#241F3A</item>
+        <item name="nwAccentSecondary">#B4BEFF</item>
+        <item name="nwRipple">#26FFABCB</item>
+        <item name="nwGlassStart">#C835233B</item>
+        <item name="nwGlassEnd">#C8241F3A</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.China" parent="">
+        <item name="nwAccent">#F6C177</item>
+        <item name="nwSurface">#241516</item>
+        <item name="nwSurfaceHigh">#3A2020</item>
+        <item name="nwStroke">#785247</item>
+        <item name="nwText">#FFF4E5</item>
+        <item name="nwMuted">#CAB3A0</item>
+        <item name="nwBackground">#100C0D</item>
+        <item name="nwSelected">#533026</item>
+        <item name="nwGradientStart">#3C1E27</item>
+        <item name="nwGradientEnd">#362233</item>
+        <item name="nwAccentSecondary">#F49B9E</item>
+        <item name="nwRipple">#26F6C177</item>
+        <item name="nwGlassStart">#C842252E</item>
+        <item name="nwGlassEnd">#C8362233</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Max" parent="">
+        <item name="nwAccent">#A6A1FF</item>
+        <item name="nwSurface">#242244</item>
+        <item name="nwSurfaceHigh">#393469</item>
+        <item name="nwStroke">#554D86</item>
+        <item name="nwText">#F8F8FA</item>
+        <item name="nwMuted">#BBB6DE</item>
+        <item name="nwBackground">#0D0C1C</item>
+        <item name="nwSelected">#493D80</item>
+        <item name="nwGradientStart">#2E2960</item>
+        <item name="nwGradientEnd">#412A67</item>
+        <item name="nwAccentSecondary">#65CFFF</item>
+        <item name="nwRipple">#26A6A1FF</item>
+        <item name="nwGlassStart">#C8343065</item>
+        <item name="nwGlassEnd">#C8412A67</item>
+    </style>
+    <style name="NwAccent.Violet" parent="">
+        <item name="nwAccent">#CE9CFF</item>
+    </style>
+    <style name="NwAccent.Rose" parent="">
+        <item name="nwAccent">#FFABCB</item>
+    </style>
+    <style name="NwAccent.Blue" parent="">
+        <item name="nwAccent">#82CFFF</item>
+    </style>
+    <style name="NwAccent.Mint" parent="">
+        <item name="nwAccent">#72DDB7</item>
+    </style>
+    <style name="NwAccent.Gold" parent="">
+        <item name="nwAccent">#F6C177</item>
+    </style>
+    <style name="NwAccent.Coral" parent="">
+        <item name="nwAccent">#FF9D91</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Aurora" parent="">
+        <item name="nwAccent">#78E5CA</item>
+        <item name="nwSurface">#101F25</item>
+        <item name="nwSurfaceHigh">#173039</item>
+        <item name="nwStroke">#355B60</item>
+        <item name="nwText">#F1FFFA</item>
+        <item name="nwMuted">#A5C9C4</item>
+        <item name="nwBackground">#071114</item>
+        <item name="nwSelected">#1F4243</item>
+        <item name="nwGradientStart">#192C3C</item>
+        <item name="nwGradientEnd">#232542</item>
+        <item name="nwAccentSecondary">#A59DFF</item>
+        <item name="nwRipple">#2678E5CA</item>
+        <item name="nwGlassStart">#C8203242</item>
+        <item name="nwGlassEnd">#C8232542</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Ocean" parent="">
+        <item name="nwAccent">#7BC9FF</item>
+        <item name="nwSurface">#101C2D</item>
+        <item name="nwSurfaceHigh">#162C43</item>
+        <item name="nwStroke">#325773</item>
+        <item name="nwText">#F1F8FF</item>
+        <item name="nwMuted">#A5BED3</item>
+        <item name="nwBackground">#07111E</item>
+        <item name="nwSelected">#213D5B</item>
+        <item name="nwGradientStart">#152A45</item>
+        <item name="nwGradientEnd">#1C2648</item>
+        <item name="nwAccentSecondary">#A5A9FF</item>
+        <item name="nwRipple">#267BC9FF</item>
+        <item name="nwGlassStart">#C81C314B</item>
+        <item name="nwGlassEnd">#C81C2648</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Sunset" parent="">
+        <item name="nwAccent">#FFB18B</item>
+        <item name="nwSurface">#26191D</item>
+        <item name="nwSurfaceHigh">#382329</item>
+        <item name="nwStroke">#78504D</item>
+        <item name="nwText">#FFF5EE</item>
+        <item name="nwMuted">#D4B2A9</item>
+        <item name="nwBackground">#140C12</item>
+        <item name="nwSelected">#4D2F30</item>
+        <item name="nwGradientStart">#3C212C</item>
+        <item name="nwGradientEnd">#3D2725</item>
+        <item name="nwAccentSecondary">#FFD28D</item>
+        <item name="nwRipple">#26FFB18B</item>
+        <item name="nwGlassStart">#C8422832</item>
+        <item name="nwGlassEnd">#C83D2725</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Prism" parent="">
+        <item name="nwAccent">#C3A5FF</item>
+        <item name="nwSurface">#191526</item>
+        <item name="nwSurfaceHigh">#292039</item>
+        <item name="nwStroke">#514162</item>
+        <item name="nwText">#FBF5FF</item>
+        <item name="nwMuted">#BEB0D0</item>
+        <item name="nwBackground">#0D0916</item>
+        <item name="nwSelected">#3D2C57</item>
+        <item name="nwGradientStart">#282442</item>
+        <item name="nwGradientEnd">#1D2C3B</item>
+        <item name="nwAccentSecondary">#79E1D9</item>
+        <item name="nwRipple">#26C3A5FF</item>
+        <item name="nwGlassStart">#C82F2B48</item>
+        <item name="nwGlassEnd">#C81D2C3B</item>
+    </style>
+    <attr name="nwGradientStart" format="color" />
+    <attr name="nwGradientEnd" format="color" />
+    <attr name="nwAccentSecondary" format="color" />
+    <attr name="nwRipple" format="color" />
+    <style name="ThemeOverlay.Noctwade.Cyber" parent="">
+        <item name="nwAccent">#A6AEFF</item>
+        <item name="nwSurface">#11182D</item>
+        <item name="nwSurfaceHigh">#232844</item>
+        <item name="nwStroke">#3F4A72</item>
+        <item name="nwText">#F3F5FF</item>
+        <item name="nwMuted">#ACB9D8</item>
+        <item name="nwBackground">#070B17</item>
+        <item name="nwSelected">#2F3157</item>
+        <item name="nwGradientStart">#1C2448</item>
+        <item name="nwGradientEnd">#281D4B</item>
+        <item name="nwAccentSecondary">#69D3FF</item>
+        <item name="nwRipple">#26A6AEFF</item>
+        <item name="nwGlassStart">#C8232B4E</item>
+        <item name="nwGlassEnd">#C8281D4B</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Panther" parent="">
+        <item name="nwAccent">#AA9EFF</item>
+        <item name="nwSurface">#131327</item>
+        <item name="nwSurfaceHigh">#292047</item>
+        <item name="nwStroke">#494267</item>
+        <item name="nwText">#F4F1FF</item>
+        <item name="nwMuted">#B9ADD6</item>
+        <item name="nwBackground">#090819</item>
+        <item name="nwSelected">#31274D</item>
+        <item name="nwGradientStart">#211F46</item>
+        <item name="nwGradientEnd">#2B1B48</item>
+        <item name="nwAccentSecondary">#63B8FF</item>
+        <item name="nwRipple">#26AA9EFF</item>
+        <item name="nwGlassStart">#C828264B</item>
+        <item name="nwGlassEnd">#C82B1B48</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Dubai" parent="">
+        <item name="nwAccent">#CAA3FF</item>
+        <item name="nwSurface">#19162D</item>
+        <item name="nwSurfaceHigh">#312445</item>
+        <item name="nwStroke">#554369</item>
+        <item name="nwText">#FAF4FF</item>
+        <item name="nwMuted">#C6B3D7</item>
+        <item name="nwBackground">#0B0A1B</item>
+        <item name="nwSelected">#413253</item>
+        <item name="nwGradientStart">#292246</item>
+        <item name="nwGradientEnd">#352143</item>
+        <item name="nwAccentSecondary">#FFCF9F</item>
+        <item name="nwRipple">#26CAA3FF</item>
+        <item name="nwGlassStart">#C830294B</item>
+        <item name="nwGlassEnd">#C8352143</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Orbit" parent="">
+        <item name="nwAccent">#E3B3FF</item>
+        <item name="nwSurface">#1D1530</item>
+        <item name="nwSurfaceHigh">#3A2545</item>
+        <item name="nwStroke">#604267</item>
+        <item name="nwText">#FFF4FF</item>
+        <item name="nwMuted">#CDB4D5</item>
+        <item name="nwBackground">#0F0A1D</item>
+        <item name="nwSelected">#4E345B</item>
+        <item name="nwGradientStart">#342344</item>
+        <item name="nwGradientEnd">#2B2146</item>
+        <item name="nwAccentSecondary">#FFCAA5</item>
+        <item name="nwRipple">#26E3B3FF</item>
+        <item name="nwGlassStart">#C83A2A49</item>
+        <item name="nwGlassEnd">#C82B2146</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Planet" parent="">
+        <item name="nwAccent">#BBADFF</item>
+        <item name="nwSurface">#14192E</item>
+        <item name="nwSurfaceHigh">#292446</item>
+        <item name="nwStroke">#46466B</item>
+        <item name="nwText">#F7F5FF</item>
+        <item name="nwMuted">#BDB5D8</item>
+        <item name="nwBackground">#080A1B</item>
+        <item name="nwSelected">#383254</item>
+        <item name="nwGradientStart">#28264B</item>
+        <item name="nwGradientEnd">#332249</item>
+        <item name="nwAccentSecondary">#FFDBA1</item>
+        <item name="nwRipple">#26BBADFF</item>
+        <item name="nwGlassStart">#C82E2D51</item>
+        <item name="nwGlassEnd">#C8332249</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Alpine" parent="">
+        <item name="nwAccent">#9FBCFF</item>
+        <item name="nwSurface">#121C33</item>
+        <item name="nwSurfaceHigh">#292B48</item>
+        <item name="nwStroke">#3D506F</item>
+        <item name="nwText">#F3F7FF</item>
+        <item name="nwMuted">#AFBFDA</item>
+        <item name="nwBackground">#080D20</item>
+        <item name="nwSelected">#2C3B57</item>
+        <item name="nwGradientStart">#1D284A</item>
+        <item name="nwGradientEnd">#292548</item>
+        <item name="nwAccentSecondary">#D8A2FF</item>
+        <item name="nwRipple">#269FBCFF</item>
+        <item name="nwGlassStart">#C8242E4F</item>
+        <item name="nwGlassEnd">#C8292548</item>
+    </style>
+</resources>

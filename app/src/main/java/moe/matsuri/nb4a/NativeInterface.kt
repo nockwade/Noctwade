@@ -250,7 +250,7 @@ class NativeInterface : PlatformInterface {
             )
         }
         val builder = NotificationCompat.Builder(app, channel)
-            .setSmallIcon(R.drawable.ic_throne_tile)
+            .setSmallIcon(R.drawable.nw_notification)
             .setContentTitle(notification.title)
             .setContentText(listOf(notification.subtitle, notification.body).filter { it.isNotBlank() }.joinToString("\n"))
             .setAutoCancel(true)

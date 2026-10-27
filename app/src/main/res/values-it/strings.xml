@@ -1506,7 +1506,7 @@
     <string name="log_hide_destinations">Nascondi destinazioni</string>
     <string name="log_saved">Log salvati</string>
     <string name="log_export_failed">Esportazione del log fallita: %s</string>
-    <string name="log_crash_title">Throne è andato in crash</string>
+    <string name="log_crash_title">Noctwade è andato in crash</string>
     <string name="not_now">Non ora</string>
     <string name="channel_warnings">Avvisi</string>
     <string name="wifi_permission_title">Regole Wi-Fi</string>

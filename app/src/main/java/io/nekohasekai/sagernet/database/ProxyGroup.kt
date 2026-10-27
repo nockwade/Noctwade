@@ -117,6 +117,9 @@ data class ProxyGroup(
         @Query("UPDATE `groups` SET `display_order` = :order WHERE `id` = :groupId")
         fun setDisplayOrder(groupId: Long, order: Long)
 
+        @Query("UPDATE `groups` SET `name` = :name WHERE `id` = :groupId")
+        fun rename(groupId: Long, name: String): Int
+
         /** Group::SetSort without rewriting the rest of the row; 0 when nothing changed. */
         @Query(
             "UPDATE `groups` SET `sort_method` = :method, `sort_descending` = :descending " +

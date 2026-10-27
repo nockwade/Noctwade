@@ -1,15 +1,11 @@
 package io.nekohasekai.sagernet.ui.settings
 
-import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.SwitchPreference
 import io.nekohasekai.sagernet.R
-import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.database.DnsServerHistory
-import io.nekohasekai.sagernet.database.RouteManager
-import io.nekohasekai.sagernet.database.SagerDatabase
 import io.nekohasekai.sagernet.database.SettingValidators
 import io.nekohasekai.sagernet.database.SettingsRegistry
 import io.nekohasekai.sagernet.ktx.needReload
@@ -18,9 +14,6 @@ import io.nekohasekai.sagernet.validation.Empty
 import io.nekohasekai.sagernet.validation.Rule
 import io.nekohasekai.sagernet.validation.Validation
 import io.nekohasekai.sagernet.validation.vtr
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moe.matsuri.nb4a.ui.EditConfigPreference
 
 /** Routing Settings › DNS: the simple settings, predefined answers and the custom DNS object. */
@@ -108,24 +101,6 @@ class DnsSettingsFragment : SettingsScreenFragment(R.xml.settings_dns) {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        showRouteOverride()
-    }
-
-    /** The current routing profile's own DNS replaces the servers and behaviour here (RouteDns::Current). */
-    private fun showRouteOverride() {
-        val note = findPreference<Preference>(KEY_ROUTE_OVERRIDE) ?: return
-        lifecycleScope.launch {
-            val name = withContext(Dispatchers.IO) {
-                val id = DataStore.currentRouteId
-                if (RouteManager.customDns(id) == null) null else SagerDatabase.routeDao.getProfile(id)?.name
-            }
-            note.summary = name?.let { getString(R.string.dns_route_override_note, it) }
-            note.isVisible = name != null
-        }
-    }
-
     /** dns-local resolves the other servers' names, so it cannot depend on one itself. */
     private fun localDnsProblem(text: String): String {
         if (text.isEmpty()) return ""
@@ -139,7 +114,6 @@ class DnsSettingsFragment : SettingsScreenFragment(R.xml.settings_dns) {
         const val KEY_SERVERS = "dnsServers"
         const val KEY_BEHAVIOUR = "dnsBehaviour"
         const val KEY_ADVANCED = "dnsAdvanced"
-        const val KEY_ROUTE_OVERRIDE = "dnsRouteOverride"
     }
 }
 

@@ -1506,7 +1506,7 @@
     <string name="log_hide_destinations">Ocultar destinos</string>
     <string name="log_saved">Registros guardados</string>
     <string name="log_export_failed">La exportación del registro falló: %s</string>
-    <string name="log_crash_title">Throne se bloqueó</string>
+    <string name="log_crash_title">Noctwade se bloqueó</string>
     <string name="not_now">Ahora no</string>
     <string name="channel_warnings">Advertencias</string>
     <string name="wifi_permission_title">Reglas Wi-Fi</string>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/nwBackground">
+
+    <io.nekohasekai.sagernet.widget.noctwade.SpaceBackdropView
+        android:id="@+id/servers_backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/servers_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <include
+            android:id="@+id/servers_header"
+            layout="@layout/layout_noctwade_header" />
+
+        <Space
+            android:id="@+id/servers_hero_space"
+            android:layout_width="1dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="52dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/NwText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/nw_servers"
+                android:textSize="28sp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/servers_search_toggle"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/nw_circle"
+                android:contentDescription="@string/nw_search"
+                android:padding="11dp"
+                android:src="@drawable/nw_search" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/servers_query"
+            style="@style/NwText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/nw_input_field"
+            android:hint="@string/nw_search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="textFilter"
+            android:minHeight="48dp"
+            android:singleLine="true"
+            android:textColorHint="?attr/nwMuted"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/servers_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="14dp" />
+    </LinearLayout>
+</FrameLayout>

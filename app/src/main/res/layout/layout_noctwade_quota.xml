@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subscription traffic: subscription name, used amount, meter, expiry. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/nw_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingStart="18dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/quota_name"
+            style="@style/NwCaption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="13sp" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/quota_refresh"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="-8dp"
+            android:background="@drawable/nw_action_button"
+            android:contentDescription="@string/nw_refresh_group"
+            android:padding="9dp"
+            android:src="@drawable/nw_refresh"
+            android:tint="?attr/nwMuted" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:contentDescription="@null"
+            android:src="@drawable/nw_chevron"
+            android:tint="?attr/nwMuted" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/quota_amount"
+            style="@style/NwText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/quota_allowance"
+            style="@style/NwCaption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/quota_meter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:indeterminate="false"
+        android:max="100"
+        app:indicatorColor="?attr/nwAccent"
+        app:trackColor="@color/nw_track"
+        app:trackCornerRadius="3dp"
+        app:trackThickness="6dp" />
+
+    <TextView
+        android:id="@+id/quota_detail"
+        style="@style/NwCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp" />
+</LinearLayout>

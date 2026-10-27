@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subscription group: name; "24 servers · traffic" below; ping, refresh, actions and expand on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/nw_group_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="6dp"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/group_name"
+            style="@style/NwText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/group_count"
+                style="@style/NwCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:textColor="?attr/nwAccent"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/group_detail"
+                style="@style/NwCaption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/group_ping"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/nw_action_button"
+        android:contentDescription="@string/nw_ping_group"
+        android:padding="10dp"
+        android:src="@drawable/nw_ping_all"
+        android:tint="?attr/nwMuted" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/group_refresh"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/nw_action_button"
+        android:contentDescription="@string/nw_refresh_group"
+        android:padding="10dp"
+        android:src="@drawable/nw_refresh"
+        android:tint="?attr/nwMuted" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/group_actions"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/nw_action_button"
+        android:contentDescription="@string/nw_group_actions"
+        android:padding="10dp"
+        android:src="@drawable/nw_more"
+        android:tint="?attr/nwMuted" />
+
+    <ImageView
+        android:id="@+id/group_arrow"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:contentDescription="@null"
+        android:padding="9dp"
+        android:src="@drawable/nw_chevron"
+        android:tint="?attr/nwText" />
+</LinearLayout>

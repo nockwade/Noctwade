@@ -118,7 +118,7 @@ class AboutFragment : ToolbarFragment(R.layout.layout_about) {
                                 .text(R.string.github)
                                 .setOnClickAction {
                                     requireContext().launchCustomTab(
-                                        "https://github.com/throneproj/ThroneForAndroid"
+                                        "https://github.com/nockwade/Noctwade"
 
                                     )
                                 }
@@ -127,9 +127,10 @@ class AboutFragment : ToolbarFragment(R.layout.layout_about) {
                             MaterialAboutActionItem.Builder()
                                 .icon(R.drawable.baseline_public_24)
                                 .text(R.string.project_website)
+                                .subText("Based on throneproj/ThroneForAndroid (GPL-3.0)")
                                 .setOnClickAction {
                                     requireContext().launchCustomTab(
-                                        "https://throneproj.github.io"
+                                        "https://github.com/throneproj/ThroneForAndroid"
                                     )
                                 }
                                 .build())

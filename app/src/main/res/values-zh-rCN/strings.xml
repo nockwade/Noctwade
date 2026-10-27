@@ -845,7 +845,7 @@
     <string name="listen_port">监听端口</string>
     <string name="location_settings">定位设置</string>
     <string name="log_buffer_size">日志缓冲区大小（kb）</string>
-    <string name="log_crash_title">Throne 已崩溃</string>
+    <string name="log_crash_title">Noctwade 已崩溃</string>
     <string name="log_export_failed">日志导出失败：%s</string>
     <string name="log_hide_destinations">隐藏目标地址</string>
     <string name="log_hide_sensitive">隐藏敏感数据</string>

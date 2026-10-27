@@ -84,6 +84,8 @@ class SagerNet : Application(),
         }
 
         if (isMainProcess) {
+            // First launch of this version: protect the localhost proxy port from other apps.
+            runOnDefaultDispatcher { io.nekohasekai.sagernet.database.DataStore.protectLocalProxy() }
             Theme.apply(this)
             Theme.applyNightTheme()
             AppLocale.apply()
@@ -122,11 +124,10 @@ class SagerNet : Application(),
 
     // Enqueueing (RemoteWorkManagerService) and SystemJobService live in the main process, so the reschedule after a
     // reboot, force-stop or update (ForceStopRunnable, default process only) must run there too; workers hop to :bg.
-    override fun getWorkManagerConfiguration(): WorkConfiguration {
-        return WorkConfiguration.Builder()
+    override val workManagerConfiguration: WorkConfiguration
+        get() = WorkConfiguration.Builder()
             .setDefaultProcessName(BuildConfig.APPLICATION_ID)
             .build()
-    }
 
     @SuppressLint("InlinedApi")
     companion object {

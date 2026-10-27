@@ -1,0 +1,85 @@
+{
+  "retrieved_utc": "2026-10-22T09:15:46.032143+00:00",
+  "rules": "User improved rules supplied on 2026-10-22; providers from test_config.yaml",
+  "oisd_domains": 234382,
+  "sources": [
+    {
+      "name": "big.yaml",
+      "url": "https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/main/oisd/big.yaml",
+      "bytes": 6044021,
+      "sha256": "b411cebc97464ef32c3d2581f1d0254cb16bcb93b4e2ba5c674dfaf507cef528"
+    },
+    {
+      "name": "wld.list",
+      "url": "https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/main/other/wld.list",
+      "bytes": 896,
+      "sha256": "396b01af9f4d3e7394d03aca9f06f00df0379a360cdac9090d26053600affbf0"
+    },
+    {
+      "name": "wldc.yaml",
+      "url": "https://raw.githubusercontent.com/legiz-ru/mihomo-rule-sets/main/other/wldc.yaml",
+      "bytes": 2041,
+      "sha256": "05f9dcaabec6791212d19337e6e94d9b9bbc5dace521b3d10ff0ea4ad9e07370"
+    },
+    {
+      "name": "meta-private.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/private.srs",
+      "bytes": 717,
+      "sha256": "112364970a8b0901c4cf2dcf839accc661b5b443d2d75c2d2a8e955d68ca3995"
+    },
+    {
+      "name": "meta-category-ads-all.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ads-all.srs",
+      "bytes": 7387,
+      "sha256": "262cf1f0c4306145c05de7fda3c3fa5e65a716f6bda46dda59b0300712f8953b"
+    },
+    {
+      "name": "meta-win-spy.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/win-spy.srs",
+      "bytes": 2262,
+      "sha256": "866365ab7f93db348218e25fe70dd967b0b622e5da9f952ee629551ebaf8097a"
+    },
+    {
+      "name": "meta-category-ru.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ru.srs",
+      "bytes": 8272,
+      "sha256": "ce7dcbbf355594f7f13dd59f3747da602c28db4877713e4d65676425de3c4947"
+    },
+    {
+      "name": "meta-microsoft.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/microsoft.srs",
+      "bytes": 6935,
+      "sha256": "5eb7acbd3deec3fa22ee04d0bfff18250ea8201d76bd80e7be1ce9fd1cae6937"
+    },
+    {
+      "name": "meta-steam.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/steam.srs",
+      "bytes": 800,
+      "sha256": "f9d7c11577f86eeaa315b188742cc40db1ef45994e29cb773c6268166b04c7bc"
+    },
+    {
+      "name": "meta-private-ips.srs",
+      "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geoip/private.srs",
+      "bytes": 144,
+      "sha256": "aa5331117805821ed6c4bcf30d4e844e73af4a1b3c8ad9bc8e67b1c26e3a75a7"
+    },
+    {
+      "name": "roscom-whitelist.srs",
+      "url": "https://raw.githubusercontent.com/hydraponique/roscomvpn-geosite/release/sing-box/whitelist.srs",
+      "bytes": 3210,
+      "sha256": "6e77a9baec718977e46006cbbf1cc6aac5148339123dd0bb834e9c54731d1fc3"
+    },
+    {
+      "name": "roscom-torrent.srs",
+      "url": "https://raw.githubusercontent.com/hydraponique/roscomvpn-geosite/release/sing-box/torrent.srs",
+      "bytes": 4891,
+      "sha256": "e9f7d7b618041780c488fd6a0d9f3a3dc1a7f4fe5f91a7bad0f9806da51e39af"
+    }
+  ],
+  "compiled_oisd": {
+    "file": "oisd-big.srs",
+    "bytes": 2018502,
+    "sha256": "dbe3968a3327ccb7400ccca5d45e33ecbc60e3067dee16b23978305bc8f5e607",
+    "compiler": "Pinned ThroneCore sing-box common/srs; version 1; roundtrip decoded successfully"
+  }
+}

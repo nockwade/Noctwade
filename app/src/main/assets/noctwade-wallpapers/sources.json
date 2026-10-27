@@ -1,0 +1,156 @@
+[
+  {
+    "key": "noctwade",
+    "title_ru": "Noctwade",
+    "title_en": "Noctwade",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "4b11158f6844108a5e18b736707cf38632acea8ad35911745dd3576c2022bf88",
+    "bytes": 18248,
+    "resource": "nw_wallpaper_noctwade",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "sakura",
+    "title_ru": "Сакура",
+    "title_en": "Sakura",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "b940be4a26dc595af1bacdaa318525f9cb75612f83270931a042dcd2cea5b96b",
+    "bytes": 17216,
+    "resource": "nw_wallpaper_sakura",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "china",
+    "title_ru": "Багряный Китай",
+    "title_en": "Crimson China",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "dccf13c43a4b847f8b6845e7f71568caacc4c2ccb29426e0841abeb78dfba2de",
+    "bytes": 16616,
+    "resource": "nw_wallpaper_china",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "max",
+    "title_ru": "MAX",
+    "title_en": "MAX",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "9e29c71affea58681dca6f7899ba6047213ad9b520b78c6d3a17365130490806",
+    "bytes": 17560,
+    "resource": "nw_wallpaper_max",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "aurora",
+    "title_ru": "Аврора",
+    "title_en": "Aurora",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "538afbdbc027e4e2564b555c5609e158f68ef7e0bcb9fdabb6acdefd10980991",
+    "bytes": 17056,
+    "resource": "nw_wallpaper_aurora",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "ocean",
+    "title_ru": "Океан",
+    "title_en": "Ocean",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "c4558e5a64a4b0c5267ef81119f7487da184c9e0a79dec10d15069a24287f830",
+    "bytes": 17160,
+    "resource": "nw_wallpaper_ocean",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "sunset",
+    "title_ru": "Закат",
+    "title_en": "Sunset",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "322457809a6a3ac071545f59c73957550876c5e664360db00890c6706afd2259",
+    "bytes": 17492,
+    "resource": "nw_wallpaper_sunset",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "prism",
+    "title_ru": "Спектр",
+    "title_en": "Prism",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "9284a9cab3787a1939c2891e1c95816827b94795dbd42c39080aa505ebdff411",
+    "bytes": 14496,
+    "resource": "nw_wallpaper_prism",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "cyber",
+    "title_ru": "Киберщит",
+    "title_en": "Cyber Shield",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "33f974677b9fc413f47ff143183fba6b0a15c2f9013aea59d81f08d0c6bcddc4",
+    "bytes": 41756,
+    "resource": "nw_wallpaper_cyber",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "panther",
+    "title_ru": "Лунная пантера",
+    "title_en": "Moon Panther",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "979042e7781f40b27ff8fedba62da634c1bd0eff12b75101953fe3ffd92a85a7",
+    "bytes": 14780,
+    "resource": "nw_wallpaper_panther",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "dubai",
+    "title_ru": "Неоновый Дубай",
+    "title_en": "Neon Dubai",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "b1a77d8f0f6cb1d86bab370d5d5eb7c4a8191992fe4a50effddb487c3bbaa974",
+    "bytes": 14880,
+    "resource": "nw_wallpaper_dubai",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "orbit",
+    "title_ru": "Орбита",
+    "title_en": "Orbit",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "8f8f7fb1294c77f3dfcbae4c995cbc2b7c0f77e2bcebd29b4ff6118e8773c106",
+    "bytes": 19924,
+    "resource": "nw_wallpaper_orbit",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "planet",
+    "title_ru": "Пульс планеты",
+    "title_en": "Planet Pulse",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "22022406dbc0e1c3e228a6e6f68b7263c77efbf632d14853f12eb6d6227365ce",
+    "bytes": 15152,
+    "resource": "nw_wallpaper_planet",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  },
+  {
+    "key": "alpine",
+    "title_ru": "Альпийская ночь",
+    "title_en": "Alpine Night",
+    "width": 1080,
+    "height": 2400,
+    "webp_sha256": "6d63023f4948e567740ddd92c0c33be9fc32d6e210b7e8829ae7c293e634aa24",
+    "bytes": 16762,
+    "resource": "nw_wallpaper_alpine",
+    "origin": "Procedurally drawn for Noctwade (minimal)"
+  }
+]

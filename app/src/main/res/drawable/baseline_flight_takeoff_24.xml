@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lucide "plane-takeoff" (ISC, see assets/licenses/lucide.txt), Noctwade outline style. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
@@ -5,6 +7,17 @@
     android:viewportHeight="24"
     android:tint="?attr/colorControlNormal">
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M2.5,19h19v2h-19V19zM22.07,9.64c-0.21,-0.8 -1.04,-1.28 -1.84,-1.06L14.92,10l-6.9,-6.43L6.09,4.08l4.14,7.17l-4.97,1.33l-1.97,-1.54l-1.45,0.39l2.59,4.49c0,0 7.12,-1.9 16.57,-4.43C21.81,11.26 22.28,10.44 22.07,9.64z" />
+        android:pathData="M 2 22 h 20"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M 6.36 17.4 L 4 17 l -2 -4 l 1.1 -.55 a 2 2 0 0 1 1.8 0 l .17 .1 a 2 2 0 0 0 1.8 0 L 8 12 L 5 6 l .9 -.45 a 2 2 0 0 1 2.09 .2 l 4.02 3 a 2 2 0 0 0 2.1 .2 l 4.19 -2.06 a 2.41 2.41 0 0 1 1.73 -.17 L 21 7 a 1.4 1.4 0 0 1 .87 1.99 l -.38 .76 c -.23 .46 -.6 .84 -1.07 1.08 L 7.58 17.2 a 2 2 0 0 1 -1.22 .18 Z"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>

@@ -3,6 +3,7 @@ package io.nekohasekai.sagernet.outbound.import
 import io.nekohasekai.sagernet.outbound.json.JsonArray
 import io.nekohasekai.sagernet.outbound.json.JsonNull
 import io.nekohasekai.sagernet.outbound.json.JsonObject
+import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.SafeConstructor
 import java.math.BigDecimal
@@ -25,10 +26,13 @@ object ClashYaml {
     /** [proxies] with what Parser::clash reports about a document without proxies. YAML errors propagate as exceptions. */
     @JvmStatic
     fun document(text: String): Document {
-        val root = Yaml(SafeConstructor()).load<Any?>(sanitize(text)) as? Map<*, *> ?: return Document(null, false, false)
+        val root = Yaml(SafeConstructor(loaderOptions())).load<Any?>(sanitize(text)) as? Map<*, *> ?: return Document(null, false, false)
         val proxies = (root["proxies"] as? List<*>)?.map { (convert(it) as? JsonObject) ?: JsonObject() }
         return Document(proxies, true, root.containsKey("proxy-providers"))
     }
+
+    // SnakeYAML 2 caps documents at 3 MB by default; big subscriptions are larger.
+    private fun loaderOptions() = LoaderOptions().apply { codePointLimit = 64 * 1024 * 1024 }
 
     // sanitizeClashYaml (SubscriptionParser.cpp:242-247): NULs and a leading BOM confuse the YAML reader.
     private fun sanitize(text: String): String {

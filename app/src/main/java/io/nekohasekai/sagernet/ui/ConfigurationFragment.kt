@@ -353,7 +353,7 @@ class ConfigurationFragment : ToolbarFragment(R.layout.layout_group_list),
                 if (selection.active) {
                     selection.finish()
                 } else {
-                    (activity as? MainActivity)?.binding?.drawerLayout?.openDrawer(GravityCompat.START)
+                    (activity as? MainActivity)?.displayFragmentWithId(R.id.nav_settings)
                 }
             }
         }
@@ -640,7 +640,7 @@ class ConfigurationFragment : ToolbarFragment(R.layout.layout_group_list),
                 setNavigationIcon(R.drawable.ic_navigation_close, R.string.navigation_cancel_selection)
                 toolbar.title = resources.getQuantityString(R.plurals.profiles_selected, selection.count, selection.count)
             } else {
-                setNavigationIcon(R.drawable.ic_navigation_menu, R.string.navigation_open_drawer)
+                setNavigationIcon(R.drawable.nw_back, R.string.navigation_back)
                 toolbar.setTitle(R.string.app_name)
             }
         }

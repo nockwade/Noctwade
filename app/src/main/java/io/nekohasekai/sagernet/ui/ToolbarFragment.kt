@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
@@ -24,17 +23,13 @@ open class ToolbarFragment : Fragment {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<AppBarLayout>(R.id.appbar)?.applyTopInset()
         toolbar = view.findViewById(R.id.toolbar)
-        toolbar?.setNavigationIcon(R.drawable.ic_navigation_menu)
-        toolbar?.setNavigationContentDescription(R.string.navigation_open_drawer)
-        // White theme: the toolbar is white, so the menu, title and navigation icon turn dark
-        if (Theme.isWhiteTheme()) {
-            toolbar?.apply {
-                setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                navigationIcon?.setTint(ContextCompat.getColor(requireContext(), R.color.black))
-            }
-        }
+        toolbar?.setNavigationIcon(R.drawable.nw_back)
+        toolbar?.setNavigationContentDescription(R.string.navigation_back)
+        toolbar?.setTitleTextColor(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(requireContext()))
+        toolbar?.navigationIcon?.setTint(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.text(requireContext()))
         toolbar?.setNavigationOnClickListener {
-            (activity as? MainActivity)?.binding?.drawerLayout?.openDrawer(GravityCompat.START)
+            if(parentFragmentManager.backStackEntryCount>0) parentFragmentManager.popBackStack()
+            else (activity as? MainActivity)?.displayFragmentWithId(R.id.nav_settings)
         }
     }
 

@@ -142,7 +142,7 @@ fun Project.setupAppCommon() {
 
 fun Project.setupApp() {
     val metadata = requireMetadata()
-    val pkgName = metadata.getProperty("PACKAGE_NAME")
+    val pkgName = providers.gradleProperty("throne.applicationId").orElse(metadata.getProperty("PACKAGE_NAME")).get()
     val baseVersion = metadata.getProperty("VERSION_NAME")
     val versionIndex = metadata.getProperty("VERSION_CODE").toInt()
     val coreRef = metadata.getProperty("THRONE_CORE_REF")
@@ -177,9 +177,12 @@ fun Project.setupApp() {
             reset()
             isEnable = true
             isUniversalApk = false
-            include("armeabi-v7a")
-            include("arm64-v8a")
-            include("x86_64")
+            val requestedAbis = providers.gradleProperty("throne.abis")
+                .orElse("armeabi-v7a,arm64-v8a,x86_64").get().split(",").map(String::trim)
+            require(requestedAbis.isNotEmpty() && requestedAbis.all { it in setOf("armeabi-v7a", "arm64-v8a", "x86_64") }) {
+                "throne.abis contains an unsupported ABI"
+            }
+            include(*requestedAbis.toTypedArray())
         }
 
         flavorDimensions += "vendor"

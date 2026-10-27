@@ -263,8 +263,20 @@ class ConfigGenerator @JvmOverloads constructor(
                 if (entry.isEmpty()) continue
                 val tag = RuleSets.tagFor(entry)
                 if (sets.containsKey(tag)) continue
+                RuleSets.bundledFile(entry)?.let { local ->
+                    // Original names the list knows stay live (daily core updates) and start from the
+                    // bundled snapshot; the rest are local-only.
+                    val live =
+                        routing.catalog.urlOf(RuleSets.canonicalName(entry))?.takeIf {
+                            it.startsWith("http")
+                        }
+                    sets[tag] = live?.let { RuleSets.mirrorLink(it, settings.rulesetMirror) } ?: local
+                }
+                if (sets.containsKey(tag)) continue
                 if (RuleSets.isUrl(entry)) {
-                    sets[tag] = entry
+                    // Same tag as the stored link; only the download address is brought up to date
+                    // (e.g. RoscomVPN's main -> master branch rename).
+                    sets[tag] = RuleSets.currentUrl(entry)
                     continue
                 }
                 val listed = if (entry == RuleSets.ADBLOCK_TAG) RuleSets.ADBLOCK_URL else routing.catalog.urlOf(entry)
@@ -525,7 +537,9 @@ class ConfigGenerator @JvmOverloads constructor(
                 "listen" to settings.mixedListen,
                 "listen_port" to settings.mixedPort,
             )
-            if (settings.mixedAuth) {
+            // The system HTTP proxy (append HTTP proxy) is used by other apps, which cannot send
+            // credentials; there the port has to stay open.
+            if (settings.mixedAuth && !(settings.vpnMode && settings.httpProxyEnabled)) {
                 mixed["users"] = JsonArray.of(jsonObjectOf("username" to settings.mixedUsername, "password" to settings.mixedPassword))
             }
             inbounds.add(mixed)
@@ -1129,16 +1143,31 @@ class ConfigGenerator @JvmOverloads constructor(
     private fun buildRuleSetArray(state: BuildState): JsonArray {
         val out = JsonArray()
         val sets = state.prerequisites.ruleSets
-        for ((tag, url) in sets) out.add(remoteRuleSet(tag, url))
+        for ((tag, url) in sets) {
+            val local = RuleSets.bundledFile(tag)
+            out.add(
+                when {
+                    local == null -> remoteRuleSet(tag, url)
+                    !url.startsWith("http") ->
+                        jsonObjectOf("type" to "local", "tag" to tag, "format" to "binary", "path" to local)
+                    else -> remoteRuleSet(tag, url, initialPath = local)
+                }
+            )
+        }
         if (settings.adblockEnable && !sets.containsKey(RuleSets.ADBLOCK_TAG)) {
             out.add(remoteRuleSet(RuleSets.ADBLOCK_TAG, RuleSets.mirrorLink(RuleSets.ADBLOCK_URL, settings.rulesetMirror)))
         }
         return out
     }
 
-    private fun remoteRuleSet(tag: String, url: String): JsonObject {
+    private fun remoteRuleSet(tag: String, url: String, initialPath: String? = null): JsonObject {
         val ruleSet = jsonObjectOf("type" to "remote", "tag" to tag, "format" to "binary", "url" to url)
-        if (settings.deferRuleSets) {
+        if (initialPath != null) {
+            // Bundled snapshot: no fetch at start, so a blocked host cannot fail it; the core then
+            // keeps the list fresh through the tunnel.
+            ruleSet["initial_path"] = initialPath
+            ruleSet["http_client"] = jsonObjectOf("detour" to Tags.PROXY)
+        } else if (settings.deferRuleSets) {
             // StartContext reads initial_path only without a cached copy, instead of failing the start on a fetch
             // (rule_set_remote.go:97-140); the updater then fetches such a set right away (rule_set_updater.go:45-50).
             ruleSet["initial_path"] = EMPTY_RULE_SET_PATH

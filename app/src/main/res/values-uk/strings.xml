@@ -787,7 +787,7 @@
     <string name="listen_port">Порт прослуховування</string>
     <string name="location_settings">Налаштування розташування</string>
     <string name="log_buffer_size">Розмір буфера журналу (КБ)</string>
-    <string name="log_crash_title">Throne аварійно завершився</string>
+    <string name="log_crash_title">Noctwade аварійно завершився</string>
     <string name="log_export_failed">Не вдалося експортувати журнал: %s</string>
     <string name="log_hide_destinations">Ховати призначення</string>
     <string name="log_hide_sensitive">Ховати конфіденційні дані</string>

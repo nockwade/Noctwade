@@ -11,7 +11,7 @@ import android.service.quicksettings.TileService as BaseTileService
 
 @RequiresApi(24)
 class TileService : BaseTileService(), SagerConnection.Callback {
-    private val tileIcon by lazy { Icon.createWithResource(this, R.drawable.ic_throne_tile) }
+    private val tileIcon by lazy { Icon.createWithResource(this, R.drawable.nw_notification) }
     private var tapPending = false
 
     private val connection = SagerConnection(SagerConnection.CONNECTION_ID_TILE)

@@ -1506,7 +1506,7 @@
     <string name="log_hide_destinations">Bestemmingen verbergen</string>
     <string name="log_saved">Logs opgeslagen</string>
     <string name="log_export_failed">Logexport mislukt: %s</string>
-    <string name="log_crash_title">Throne is gecrasht</string>
+    <string name="log_crash_title">Noctwade is gecrasht</string>
     <string name="not_now">Niet nu</string>
     <string name="channel_warnings">Waarschuwingen</string>
     <string name="wifi_permission_title">Wi-Fi-regels</string>

@@ -1,6 +1,8 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.SagerNet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorSurfaceContainerHigh">?attr/colorSurface</item>
+        <item name="colorSurfaceContainerHighest">?attr/colorSurface</item>
         <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Solid</item>
         <item name="actionModeCloseDrawable">@drawable/ic_navigation_close</item>
         <item name="colorButtonNormal">?colorAccent</item>
@@ -124,6 +126,9 @@
     <!-- Every alert dialog: MaterialAlertDialogBuilder, and AppCompat's builder (the preference dialogs) through
          ThemeOverlay.SagerNet.AlertDialog. The Material 3 layout keeps the buttons on the 24dp content margins. -->
     <style name="ThemeOverlay.MaterialComponents.MaterialAlertDialog.SagerNet">
+        <!-- Material 1.12 Material3 dialogs tint with colorSurfaceContainer*; MaterialComponents themes lack them. -->
+        <item name="colorSurfaceContainerHigh">?attr/colorSurface</item>
+        <item name="colorSurfaceContainerHighest">?attr/colorSurface</item>
         <item name="alertDialogStyle">@style/MaterialAlertDialog.SagerNet</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.SagerNet.Dialog</item>
         <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.SagerNet.Title.Text</item>

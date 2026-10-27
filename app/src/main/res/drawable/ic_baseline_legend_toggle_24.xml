@@ -1,10 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lucide "activity" (ISC, see assets/licenses/lucide.txt), Noctwade outline style. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24"
     android:tint="?attr/colorControlNormal">
-  <path
-      android:fillColor="@android:color/white"
-      android:pathData="M20,15H4v-2h16V15zM20,17H4v2h16V17zM15,11l5,-3.55L20,5l-5,3.55L10,5L4,8.66L4,11l5.92,-3.61L15,11z"/>
+    <path
+        android:pathData="M 22 12 h -2.48 a 2 2 0 0 0 -1.93 1.46 l -2.35 8.36 a .25 .25 0 0 1 -.48 0 L 9.24 2.18 a .25 .25 0 0 0 -.48 0 l -2.35 8.36 A 2 2 0 0 1 4.49 12 H 2"
+        android:fillColor="#00000000"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.75"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>
