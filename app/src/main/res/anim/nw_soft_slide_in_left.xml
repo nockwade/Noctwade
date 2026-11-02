@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Soft shared axis: the new screen fades in over the old one while it settles into place. -->
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:interpolator="@android:interpolator/linear_out_slow_in"><alpha android:fromAlpha="0" android:toAlpha="1" android:duration="320"/><translate android:fromXDelta="-5%" android:toXDelta="0" android:duration="420"/></set>

@@ -41,4 +41,11 @@
     <string name="nw_tpl_rs_russia">Российские сайты — напрямую</string>
     <string name="nw_tpl_rulesets_source">Списки: runetfreedom/russia-v2ray-rules-dat, ядро обновляет их каждый день. Загрузка идёт через VPN.</string>
     <string name="nw_domain_strategy">Доменная стратегия</string>
+    <string name="nw_routing_import_file">Импорт из файла</string>
+    <string name="nw_routing_import_file_hint">Добавить профиль маршрутизации из JSON-файла</string>
+    <string name="nw_routing_export_json">Копировать как JSON</string>
+    <string name="nw_routing_export_file">Экспорт в JSON-файл</string>
+    <string name="nw_apps_export_file">Экспорт в JSON-файл</string>
+    <string name="nw_apps_import_file">Импорт из JSON-файла</string>
+    <string name="nw_apps_import_bad">Файл не похож на список маршрутизации по приложениям</string>
 </resources>

@@ -45,9 +45,11 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
                 io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.rows(it.preferenceScreen)
                 io.nekohasekai.sagernet.ui.noctwade.NoctwadePreferenceStyle.list(it)
                 f.arguments?.getString("searchKey")?.let{key->it.listView.post{if(f.view!=null && it.findPreference<Preference>(key)!=null)it.scrollToPreference(key)}}
-
+                io.nekohasekai.sagernet.ui.noctwade.TileTransition.track(it.listView)
             }
             io.nekohasekai.sagernet.ui.noctwade.DockScrollContent.apply(v)
+            // A screen opened from a menu tile grows out of it.
+            io.nekohasekai.sagernet.ui.noctwade.TileTransition.expand(f, v)
         }
     }
 
@@ -96,7 +98,15 @@ class SettingsFragment : ToolbarFragment(R.layout.layout_config_settings),
         }
         childFragmentManager.beginTransaction()
             .setReorderingAllowed(true)
-            .apply { if(io.nekohasekai.sagernet.widget.noctwade.NoctwadeMotion.enabled(requireContext())) setCustomAnimations(R.anim.nw_slide_in_right,R.anim.nw_slide_out_left,R.anim.nw_slide_in_left,R.anim.nw_slide_out_right) }
+            .apply {
+                val c = requireContext()
+                if (io.nekohasekai.sagernet.widget.noctwade.NoctwadeMotion.enabled(c)) {
+                    // From a tapped tile the screen grows out of it; from search and links it slides in.
+                    if (io.nekohasekai.sagernet.ui.noctwade.TileTransition.take(fragment))
+                        setCustomAnimations(0, R.anim.nw_tile_exit, R.anim.nw_tile_pop_enter, R.anim.nw_tile_pop_exit)
+                    else io.nekohasekai.sagernet.widget.noctwade.NoctwadeMotion.run { setCustomAnimations(slideInRight(c),slideOutLeft(c),slideInLeft(c),slideOutRight(c)) }
+                }
+            }
             .replace(R.id.settings, fragment)
             .addToBackStack(null)
             .commitAllowingStateLoss()

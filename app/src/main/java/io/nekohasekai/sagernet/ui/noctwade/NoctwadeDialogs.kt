@@ -61,6 +61,125 @@ internal object NoctwadeDialogs {
         popup.setOnDismissListener { owner.lifecycle.removeObserver(observer) }
         popup.show()
     }
+    /**
+     * Single choice in a soft card: the title, then one row per option; the chosen row is a tinted
+     * pill with a check. Picking an option moves the highlight, then closes. Used for every list
+     * setting instead of the stock grey radio dialog.
+     */
+    fun choice(
+        context: android.content.Context,
+        title: CharSequence?,
+        labels: Array<out CharSequence>,
+        selected: Int,
+        pick: (Int) -> Unit,
+    ) {
+        fun dp(n: Int) = (n * context.resources.displayMetrics.density).toInt()
+        val accent = NoctwadeTheme.accent(context)
+        val text = NoctwadeTheme.text(context)
+        val card =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(dp(10), dp(20), dp(10), dp(10))
+                background =
+                    GradientDrawable(
+                            GradientDrawable.Orientation.TOP_BOTTOM,
+                            intArrayOf(NoctwadeTheme.gradientStart(context), NoctwadeTheme.gradientEnd(context)),
+                        )
+                        .apply {
+                            cornerRadius = dp(28).toFloat()
+                            setStroke(dp(1), NoctwadeTheme.stroke(context))
+                        }
+            }
+        if (!title.isNullOrBlank())
+            card.addView(
+                android.widget.TextView(context).apply {
+                    this.text = title
+                    textSize = 18f
+                    typeface = android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL)
+                    setTextColor(text)
+                    setPadding(dp(14), 0, dp(14), dp(12))
+                }
+            )
+        val dialog =
+            MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Noctwade_Dialog_Soft)
+                .setView(card)
+                .create()
+        val rows = ArrayList<android.widget.TextView>()
+        fun paint(current: Int) {
+            rows.forEachIndexed { index, row ->
+                val on = index == current
+                row.setTextColor(if (on) accent else text)
+                row.typeface =
+                    android.graphics.Typeface.create(
+                        if (on) "sans-serif-medium" else "sans-serif",
+                        android.graphics.Typeface.NORMAL,
+                    )
+                row.background =
+                    android.graphics.drawable.RippleDrawable(
+                        android.content.res.ColorStateList.valueOf(NoctwadeTheme.color(context, R.attr.nwRipple)),
+                        if (on)
+                            GradientDrawable().apply {
+                                cornerRadius = dp(18).toFloat()
+                                setColor(androidx.core.graphics.ColorUtils.setAlphaComponent(accent, 36))
+                            }
+                        else null,
+                        GradientDrawable().apply {
+                            cornerRadius = dp(18).toFloat()
+                            setColor(android.graphics.Color.WHITE)
+                        },
+                    )
+                row.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    null,
+                    null,
+                    if (on)
+                        ContextCompat.getDrawable(context, R.drawable.nw_check)?.mutate()?.apply {
+                            setTint(accent)
+                            setBounds(0, 0, dp(20), dp(20))
+                        }
+                    else null,
+                    null,
+                )
+            }
+        }
+        labels.forEachIndexed { index, label ->
+            val row =
+                android.widget.TextView(context).apply {
+                    this.text = label
+                    textSize = 16f
+                    gravity = Gravity.CENTER_VERTICAL
+                    minHeight = dp(52)
+                    setPadding(dp(16), dp(10), dp(16), dp(10))
+                    compoundDrawablePadding = dp(12)
+                    isClickable = true
+                    isFocusable = true
+                    setOnClickListener {
+                        paint(index)
+                        // Let the highlight land before the card closes.
+                        postDelayed(
+                            {
+                                if (dialog.isShowing) dialog.dismiss()
+                                if (index != selected) pick(index)
+                            },
+                            if (NoctwadeMotion.enabled(context)) 160L else 0L,
+                        )
+                    }
+                }
+            rows.add(row)
+            card.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(2) })
+        }
+        paint(selected)
+        dialog.window?.apply {
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            setDimAmount(.32f)
+            setWindowAnimations(if (NoctwadeMotion.enabled(context)) R.style.NwSoftDialogAnimation else 0)
+        }
+        dialog.show()
+        dialog.window?.setLayout(
+            minOf(context.resources.displayMetrics.widthPixels - dp(48), dp(400)),
+            WindowManager.LayoutParams.WRAP_CONTENT,
+        )
+    }
+
     fun groupName(host: Fragment, initial: String, save: (String) -> Unit) {
         val context = host.requireContext()
         fun dp(n: Int) = (n * context.resources.displayMetrics.density).toInt()

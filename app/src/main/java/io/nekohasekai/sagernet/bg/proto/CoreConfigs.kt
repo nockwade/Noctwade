@@ -15,12 +15,13 @@ import io.nekohasekai.sagernet.outbound.config.ProfileProvider
 import io.nekohasekai.sagernet.outbound.config.RoutingInput
 import io.nekohasekai.sagernet.outbound.config.TestCandidate
 import io.nekohasekai.sagernet.route.RouteDns
+import io.nekohasekai.sagernet.route.RouteProfile
 
 /**
  * The config generator wired to the app: profiles come from the profile table, the settings and the build-time
- * globals from DataStore through [SettingsMapper], the current route profile and the rule-set list from
- * RouteManager (main configs only; test configs read only the profile's own DNS), the landing / front proxy from the
- * profile's group.
+ * globals from DataStore through [SettingsMapper], the route profile of the profile's group and the rule-set list from
+ * RouteManager (main configs only; test configs read only the current profile's own DNS), the landing / front proxy
+ * from the profile's group.
  */
 object CoreConfigs {
 
@@ -40,12 +41,18 @@ object CoreConfigs {
     /**
      * The main config of [profile]; throws with the generator's message when it cannot be built. [deferRuleSets]
      * is GeneratorSettings.deferRuleSets, for a start the user let go without its rule-sets. A config that will run
-     * leases its bridge ports to [ports] (ConfigGenerator.build). The DNS is that of the very profile routed.
+     * leases its bridge ports to [ports] (ConfigGenerator.build). [route] is the routing profile of the profile's group
+     * (RouteIdFor, generate.cpp:2834), and the DNS is that very profile's.
      */
-    fun buildMain(profile: ProxyEntity, deferRuleSets: Boolean = false, ports: PortLease? = null): GeneratedConfig {
+    fun buildMain(
+        profile: ProxyEntity,
+        deferRuleSets: Boolean = false,
+        ports: PortLease? = null,
+        route: RouteProfile = RouteManager.routeFor(profile.groupId),
+    ): GeneratedConfig {
         val (landing, front, groupName) = groupProxies(profile.groupId)
-        val routing = SettingsMapper.routingInput()
-        // DNS is one global setting for every routing profile (Routing › DNS).
+        // The group's own routing profile (upstream 2.0.5); DNS stays one global setting (Routing › DNS).
+        val routing = SettingsMapper.routingInput(route)
         val settings = SettingsMapper.generatorSettings().copy(deferRuleSets = deferRuleSets)
         val generated = generator(routing, settings).build(profile.id, landing, front, ports, groupName)
         if (!generated.ok) error(generated.error ?: "config generation failed")
@@ -54,7 +61,7 @@ object CoreConfigs {
 
     /**
      * One test config for every candidate at once, each under its own group's landing / front proxy, with the DNS of
-     * the current routing profile (BuildTestConfig sets ctx.dns).
+     * the current routing profile (BuildTestConfig sets ctx.dns); tests mix groups, so it stays the global one.
      */
     fun buildTest(profileIds: List<Long>, ports: PortLease? = null): GeneratedConfig {
         val groups = HashMap<Long, Triple<Long, Long, String>>()

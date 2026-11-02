@@ -1,3 +1,42 @@
+#### 2.0.5
+
+**New in Noctwade / Новое в Noctwade**
+
+* **Themes**: 12 colour themes plus your own colours (accent + second colour from a 36-swatch palette, saved for reuse); appearance Light / Dark / System; the new look spreads in a circle from the tapped control
+* **Backgrounds**: theme gradient, your own 2–4 colour gradients, a picture from the gallery, or backgrounds from theme packs
+* **Theme packs** (.zip): backgrounds, characters with animated sprites and a dialogue box on the home screen (status, timer, lines in the character's voice) and halos for the connect button; any background works with any character; a long press deletes a single entry (format: THEME-PACKS.md, AI prompt: docs/prompts/theme-pack-prompt.md)
+* **Button halo**: the animated ring around the connect button — Classic, Rings, none, built-in shader halos, halos from packs and your own **AGSL shaders** (Android 13+): import one .agsl, a .zip of many, or a whole pack from the last "+" tile; shaders are checked on import and the compiler message is shown on errors; in-app guide with an AI prompt that can be copied or shared (HALO-SHADERS.md, docs/prompts/halo-shader-prompt.md)
+* **17 app icons** to choose from
+* New personalization screen: four tabs (Themes, Background, Halo, More), tile grids with a check on the chosen item, choices apply instantly without reloading the screen
+* One card style for every dialog, including the text-field and multi-choice dialogs in Settings; settings screens grow out of the tapped menu tile; smoother start of the home screen; softer screen and menu animations
+* Clearer light theme: cards, buttons and switches no longer blend into the page
+* Routing profiles: import from a JSON file or the clipboard, export to a file or as JSON; per-app routing exports / imports its list (JSON file or clipboard)
+* When another app holds the local proxy port, Noctwade moves to a free port instead of failing to start
+* The in-app updater reads `noctwade-update.json` (and still `throne-update.json`)
+
+**From Throne 2.0.5 / Из Throne 2.0.5**
+
+* Per-group routing profiles: a group can connect with its own routing profile (group settings)
+* Routing profile import from subscriptions (Happ format); DNS settings from the subscription are never used
+* AmneziaWG mode for WARP
+* Compact profile rows and compact group cards (Settings › Appearance)
+* Allow apps to bypass VPN (Settings › General, off by default)
+* Exclude countries in the Auto Selector: `!RU` uses every country but Russia; the Auto Selector starts as soon as enough profiles work
+* Reconnect to the replacement when a subscription update removes the running profile
+* Clear test results and Clear traffic statistics in the profile menu; Xray logs in the app log
+* sing-box core updated (`throneproj/Throne` core `36b6bc4`)
+
+**Fixes / Исправления**
+
+* Buttons turned the stock purple after switching between light and dark until the next theme change
+* Theme switching was slow; Dark → System on a dark phone needed two taps and blinked; fast switching could leave the wrong light/dark look
+* A thin line flickered across the home screen with theme-pack backgrounds; a faint stripe came and went on the animated background
+* The connect button jumped when a character's line took three or four rows
+* A bright smear on character tiles; backgrounds and characters blinked when switched
+* Halo animations around the button stopped when interface animations were off
+* App icon: the app could open only "App info" after an update (no enabled launcher entry)
+* Halo shader import failed for files over 48 KB (limit now 256 KB)
+* From Throne: Xray profiles stalling for about a minute after a network change, Xray XHTTP connection leak, connections not recovering after a network loss, AmneziaWG on devices with UDP GSO, the per-app proxy switch not turning off
 #### 2.0.4
 
 * **Noctwade (unofficial fork)**: new glass interface with 14 themes, wallpapers and a redesigned home screen

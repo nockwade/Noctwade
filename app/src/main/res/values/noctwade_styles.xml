@@ -44,10 +44,58 @@
         <item name="primaryOrTextPrimary">?attr/nwAccent</item>
         <item name="primaryOrTextSecondary">?attr/nwMuted</item>
         <item name="android:colorBackgroundFloating">?attr/nwSurfaceHigh</item>
+        <item name="nwAnimSlideInRight">@anim/nw_slide_in_right</item>
+        <item name="nwAnimSlideOutLeft">@anim/nw_slide_out_left</item>
+        <item name="nwAnimSlideInLeft">@anim/nw_slide_in_left</item>
+        <item name="nwAnimSlideOutRight">@anim/nw_slide_out_right</item>
+        <!-- Switches: the default off state (white thumb) disappears on light surfaces. -->
+        <item name="colorSwitchThumbNormal">?attr/nwMuted</item>
+        <item name="switchStyle">@style/Widget.Noctwade.Switch</item>
+        <item name="android:switchStyle">@style/Widget.Noctwade.Switch.Framework</item>
+    </style>
+    <style name="Widget.Noctwade.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="thumbTint">@color/nw_switch_thumb</item>
+        <item name="trackTint">@color/nw_switch_track</item>
+    </style>
+    <style name="Widget.Noctwade.Switch.Framework" parent="android:Widget.Material.CompoundButton.Switch">
+        <item name="android:thumbTint">@color/nw_switch_thumb</item>
+        <item name="android:trackTint">@color/nw_switch_track</item>
+    </style>
+    <!-- Screen transitions; the soft style swaps them for slower, softer ones. -->
+    <attr name="nwAnimSlideInRight" format="reference" />
+    <attr name="nwAnimSlideOutLeft" format="reference" />
+    <attr name="nwAnimSlideInLeft" format="reference" />
+    <attr name="nwAnimSlideOutRight" format="reference" />
+    <!-- Soft style: unhurried motion and lighter dialogs. Applied after the palette. -->
+    <style name="ThemeOverlay.Noctwade.SoftStyle" parent="">
+        <item name="nwAnimSlideInRight">@anim/nw_soft_slide_in_right</item>
+        <item name="nwAnimSlideOutLeft">@anim/nw_soft_slide_out_left</item>
+        <item name="nwAnimSlideInLeft">@anim/nw_soft_slide_in_left</item>
+        <item name="nwAnimSlideOutRight">@anim/nw_soft_slide_out_right</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Noctwade.Dialog.Soft</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Noctwade.Dialog.Soft</item>
+        <item name="popupMenuStyle">@style/Widget.Noctwade.PopupMenu.Soft</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.Noctwade.PopupMenu.Overflow.Soft</item>
+        <item name="cardElevatedSurfaceColor">?attr/nwSurfaceHigh</item>
+    </style>
+    <style name="ThemeOverlay.Noctwade.Dialog.Soft">
+        <item name="android:windowAnimationStyle">@style/NwSoftDialogAnimation</item>
+        <item name="android:backgroundDimAmount">0.30</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Noctwade.Dialog.Soft</item>
+    </style>
+    <style name="ShapeAppearanceOverlay.Noctwade.Dialog.Soft" parent=""><item name="cornerFamily">rounded</item><item name="cornerSize">28dp</item></style>
+    <style name="Widget.Noctwade.PopupMenu.Soft"><item name="android:popupAnimationStyle">@style/NwSoftPopupAnimation</item></style>
+    <style name="Widget.Noctwade.PopupMenu.Overflow.Soft"><item name="android:popupAnimationStyle">@style/NwSoftPopupAnimation</item></style>
+    <style name="NwSoftDialogAnimation" parent=""><item name="android:windowEnterAnimation">@anim/nw_soft_dialog_enter</item><item name="android:windowExitAnimation">@anim/nw_soft_dialog_exit</item></style>
+    <style name="NwSoftPopupAnimation" parent=""><item name="android:windowEnterAnimation">@anim/nw_soft_popup_enter</item><item name="android:windowExitAnimation">@anim/nw_soft_popup_exit</item></style>
+    <style name="NwSoftSheetAnimation" parent=""><item name="android:windowEnterAnimation">@anim/nw_soft_sheet_enter</item><item name="android:windowExitAnimation">@anim/nw_sheet_exit</item></style>
+    <style name="ThemeOverlay.Noctwade.BottomSheet.Soft">
+        <item name="android:windowAnimationStyle">@style/NwSoftSheetAnimation</item>
+        <item name="android:backgroundDimAmount">0.28</item>
     </style>
     <style name="NwPopupAnimation" parent=""><item name="android:windowEnterAnimation">@anim/nw_popup_enter</item><item name="android:windowExitAnimation">@anim/nw_popup_exit</item></style>
     <style name="NwDialogAnimation" parent=""><item name="android:windowEnterAnimation">@anim/nw_dialog_enter</item><item name="android:windowExitAnimation">@anim/nw_dialog_exit</item></style>
-    <style name="ShapeAppearanceOverlay.Noctwade.Dialog" parent=""><item name="cornerFamily">rounded</item><item name="cornerSize">26dp</item></style>
+    <style name="ShapeAppearanceOverlay.Noctwade.Dialog" parent=""><item name="cornerFamily">rounded</item><item name="cornerSize">28dp</item></style>
     <style name="Widget.Noctwade.EditText" parent="Widget.AppCompat.EditText"><item name="android:background">@drawable/nw_input_field</item><item name="android:textColor">?attr/nwText</item><item name="android:textColorHint">?attr/nwMuted</item><item name="android:textSize">16sp</item><item name="android:selectAllOnFocus">true</item></style>
     <style name="Widget.Noctwade.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"><item name="boxCornerRadiusTopStart">16dp</item><item name="boxCornerRadiusTopEnd">16dp</item><item name="boxCornerRadiusBottomStart">16dp</item><item name="boxCornerRadiusBottomEnd">16dp</item><item name="boxStrokeColor">?attr/nwAccent</item><item name="boxBackgroundColor">?attr/nwSurface</item><item name="hintTextColor">?attr/nwMuted</item></style>
     <style name="ThemeOverlay.Noctwade.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog.SagerNet">
@@ -55,6 +103,8 @@
         <item name="android:textColorPrimary">@color/nw_text_primary</item><item name="android:textColorSecondary">@color/nw_text_secondary</item><item name="android:colorBackgroundFloating">?attr/nwSurfaceHigh</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Noctwade.Dialog</item><item name="android:windowAnimationStyle">@style/NwDialogAnimation</item><item name="android:backgroundDimAmount">0.48</item>
         <item name="editTextStyle">@style/Widget.Noctwade.EditText</item><item name="android:editTextStyle">@style/Widget.Noctwade.EditText</item><item name="textInputStyle">@style/Widget.Noctwade.TextInput</item>
+        <!-- Settings dialogs (the preference ones are plain AlertDialogs) get the same card as the Noctwade dialogs. -->
+        <item name="android:windowBackground">@drawable/nw_dialog_card</item>
     </style>
     <style name="Widget.Noctwade.PopupMenu" parent="Widget.MaterialComponents.PopupMenu"><item name="android:popupBackground">@drawable/nw_popup_surface</item><item name="android:popupAnimationStyle">@style/NwPopupAnimation</item></style>
     <style name="Widget.Noctwade.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow"><item name="android:popupBackground">@drawable/nw_popup_surface</item><item name="android:popupAnimationStyle">@style/NwPopupAnimation</item></style>
@@ -62,7 +112,7 @@
         <item name="android:windowEnterAnimation">@anim/nw_fixed_dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/nw_fixed_dialog_exit</item>
     </style>
-    <style name="Widget.Noctwade.MenuButton" parent="Widget.MaterialComponents.Button.TextButton"><item name="android:minHeight">48dp</item><item name="android:textSize">14sp</item><item name="android:textAllCaps">false</item><item name="android:gravity">start|center_vertical</item><item name="android:paddingStart">16dp</item><item name="android:paddingEnd">16dp</item><item name="cornerRadius">14dp</item><item name="strokeWidth">0dp</item><item name="backgroundTint">?attr/nwSurface</item><item name="android:textColor">?attr/nwAccent</item></style>
+    <style name="Widget.Noctwade.MenuButton" parent="Widget.MaterialComponents.Button.TextButton"><item name="android:minHeight">48dp</item><item name="android:textSize">14sp</item><item name="android:textAllCaps">false</item><item name="android:gravity">start|center_vertical</item><item name="android:paddingStart">16dp</item><item name="android:paddingEnd">16dp</item><item name="cornerRadius">14dp</item><item name="strokeWidth">1dp</item><item name="strokeColor">?attr/nwStroke</item><item name="backgroundTint">?attr/nwSurface</item><item name="android:textColor">?attr/nwAccent</item></style>
     <style name="Widget.Noctwade.MenuCard" parent="Widget.MaterialComponents.CardView"><item name="cardCornerRadius">16dp</item><item name="cardElevation">0dp</item><item name="strokeWidth">0dp</item><item name="cardBackgroundColor">?attr/nwSurface</item></style>
     <item type="id" name="nw_menu_styled"/>
     <item type="id" name="nw_refresh_spin"/>

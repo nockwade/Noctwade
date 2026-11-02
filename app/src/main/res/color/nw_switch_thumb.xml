@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Switch thumb: accent when on, the muted palette colour when off (visible on light and dark surfaces). -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:alpha="0.38" android:color="?attr/nwMuted" />
+    <item android:state_checked="true" android:color="?attr/nwAccent" />
+    <item android:color="?attr/nwMuted" />
+</selector>

@@ -26,7 +26,7 @@ import io.nekohasekai.sagernet.ui.NoctwadeServersFragment
 class ServersSheet : BottomSheetDialogFragment() {
     private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
 
-    override fun getTheme() = R.style.ThemeOverlay_Noctwade_BottomSheet
+    override fun getTheme() = R.style.ThemeOverlay_Noctwade_BottomSheet_Soft
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?): View {
         val context = requireContext()

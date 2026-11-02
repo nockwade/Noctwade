@@ -6,6 +6,7 @@ import io.nekohasekai.sagernet.bg.SingBoxDashboard
 import io.nekohasekai.sagernet.bg.XrayGeoAssets
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.database.ProxyEntity
+import io.nekohasekai.sagernet.database.RouteManager
 import io.nekohasekai.sagernet.ktx.Logs
 import io.nekohasekai.sagernet.ktx.isLoopbackPortFree
 import io.nekohasekai.sagernet.ktx.mkPort
@@ -34,6 +35,10 @@ abstract class BoxInstance(
     /** This start does not wait for remote rule-sets the core has no copy of ([DeferredRuleSets]). */
     var deferRuleSets = false
 
+    /** The routing profile [config] was built with (BuildConfigResult::routeId), 0 for a custom full config. */
+    var routeId = 0L
+        private set
+
     /** The bridge ports [config] listens on (Xray may bind them late), no other box's until [close]. */
     private val ports = PortLease()
 
@@ -44,6 +49,14 @@ abstract class BoxInstance(
     protected open fun buildConfig() {
         // random_inbound_port: a fresh port per start, saved so the app's own requests reach it (mainwindow_setup.cpp:193-196).
         if (DataStore.randomInboundPort) DataStore.inboundSocksPort = mkPort()
+        // Another proxy/VPN client running alongside (NekoBox, Hiddify, v2rayNG...) often holds the same local port
+        // (2080): instead of failing with "address already in use", the mixed inbound moves to a free port. Android
+        // itself hands the VPN slot over to this app when it starts, so the other client's tunnel stops then.
+        else if (!isLoopbackPortFree(DataStore.inboundSocksPort)) {
+            val port = mkPort()
+            Logs.w("local proxy port ${DataStore.inboundSocksPort} is in use by another app, moving to $port")
+            DataStore.inboundSocksPort = port
+        }
         // The dashboard is on by default, so another app holding its port must not fail the start: it moves, and the
         // dashboard screen follows the saved port.
         if (DataStore.apiDashboardEnabled && !isLoopbackPortFree(DataStore.coreBoxApiPort)) {
@@ -53,7 +66,9 @@ abstract class BoxInstance(
         }
         // A custom full config keeps its own rule-sets as written.
         if (isCustomFullConfig()) deferRuleSets = false
-        config = CoreConfigs.buildMain(profile, deferRuleSets, ports)
+        val route = RouteManager.routeFor(profile.groupId)
+        routeId = if (isCustomFullConfig()) 0L else route.id
+        config = CoreConfigs.buildMain(profile, deferRuleSets, ports, route)
     }
 
     protected open suspend fun loadConfig() {

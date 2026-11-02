@@ -43,6 +43,18 @@ class NoctwadeRoutingProfilesFragment : Fragment() {
             activateAfterSave = false
         }
 
+    private var exporting: RouteProfile? = null
+    private val importFile =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) readFile(uri)
+        }
+    private val exportFile =
+        registerForActivityResult(io.nekohasekai.sagernet.ui.SaveDocument("application/json")) { uri ->
+            val p = exporting
+            exporting = null
+            if (uri != null && p != null) writeFile(uri, p)
+        }
+
     private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
 
     override fun onCreate(state: Bundle?) {
@@ -158,6 +170,14 @@ class NoctwadeRoutingProfilesFragment : Fragment() {
             R.drawable.nw_download,
         ) {
             importClipboard()
+        }
+        action(
+            content,
+            getString(R.string.nw_routing_import_file),
+            getString(R.string.nw_routing_import_file_hint),
+            R.drawable.nw_download,
+        ) {
+            importFile.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
         }
         action(
             content,
@@ -352,8 +372,51 @@ class NoctwadeRoutingProfilesFragment : Fragment() {
         }
     }
 
-    private fun importClipboard() {
-        val input = SagerNet.getClipboardText()
+    private fun importClipboard() = importText(SagerNet.getClipboardText())
+
+    private fun readFile(uri: android.net.Uri) {
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            val text =
+                withContext(Dispatchers.IO) {
+                    runCatching {
+                        context.contentResolver.openInputStream(uri)?.use {
+                            // a routing profile is a few kilobytes; refuse anything absurd
+                            val bytes = it.readBytes()
+                            if (bytes.size > MAX_FILE) error("file too large")
+                            String(bytes, Charsets.UTF_8)
+                        } ?: error("cannot read the file")
+                    }
+                }
+            text
+                .onSuccess { importText(it) }
+                .onFailure { status?.text = getString(R.string.nw_route_error, it.message.orEmpty()) }
+        }
+    }
+
+    private fun writeFile(uri: android.net.Uri, p: RouteProfile) {
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result =
+                withContext(Dispatchers.IO) {
+                    runCatching {
+                        val json = shareJson(p)
+                        context.contentResolver.openOutputStream(uri, "wt")!!.bufferedWriter().use { it.write(json) }
+                    }
+                }
+            Toast.makeText(
+                    context,
+                    if (result.isSuccess) R.string.action_export_msg else R.string.action_export_err,
+                    Toast.LENGTH_SHORT,
+                )
+                .show()
+        }
+    }
+
+    private fun shareJson(p: RouteProfile) =
+        io.nekohasekai.sagernet.outbound.json.JsonWriter.write(RouteShare.toShareObject(p, RouteManager::profileName))
+
+    private fun importText(input: String) {
         if (RouteImports.isRemoteRouteLink(input)) {
             val entries = RouteImports.remoteEntries(requireContext(), input) ?: return
             RouteImports.promptRemote(
@@ -409,6 +472,16 @@ class NoctwadeRoutingProfilesFragment : Fragment() {
                         SagerNet.trySetPrimaryClip(link)
                     }
                 },
+                NoctwadeDialogs.Action(R.string.nw_routing_export_json) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        val json = withContext(Dispatchers.IO) { shareJson(p) }
+                        SagerNet.trySetPrimaryClip(json)
+                    }
+                },
+                NoctwadeDialogs.Action(R.string.nw_routing_export_file) {
+                    exporting = p
+                    exportFile.launch(p.name.replace(Regex("[\\/:*?\"<>|]"), "_").ifBlank { "routing" } + ".json")
+                },
                 NoctwadeDialogs.Action(R.string.delete, destructive = true) {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.delete)
@@ -438,6 +511,10 @@ class NoctwadeRoutingProfilesFragment : Fragment() {
                 },
             ),
         )
+    }
+
+    private companion object {
+        const val MAX_FILE = 2 * 1024 * 1024
     }
 
     override fun onDestroyView() {

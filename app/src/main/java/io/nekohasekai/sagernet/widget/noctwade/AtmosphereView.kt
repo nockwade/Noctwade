@@ -26,6 +26,16 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
             cubicTo(7f, -6f, 8f, 3f, 0f, 7f)
             cubicTo(-4f, 2f, -4f, -2f, 0f, -5f)
         }
+    /** Four-point sparkle for the sky. */
+    private val sparkle =
+        Path().apply {
+            moveTo(0f, -6f)
+            quadTo(.9f, -.9f, 6f, 0f)
+            quadTo(.9f, .9f, 0f, 6f)
+            quadTo(-.9f, .9f, -6f, 0f)
+            quadTo(-.9f, -.9f, 0f, -6f)
+            close()
+        }
     private val random = Random(73)
     private val points = FloatArray(90) { random.nextFloat() }
     private var sky: Shader? = null
@@ -48,7 +58,7 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
     var variant = "noctwade"
         set(value) {
             field = value
-            raster = NoctwadeTheme.image(value) != 0
+            raster = true
             prepare(width, height)
             invalidate()
         }
@@ -123,7 +133,8 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
 
     private fun prepare(w: Int, h: Int) {
         if (w <= 0 || h <= 0) return
-        val palette = AtmospherePalette.of(variant)
+        val palette =
+            AtmospherePalette.of(if (NoctwadeTheme.night(context)) "sky_night" else "sky")
         // Photographic wallpapers already contain shading; don't cover Aurora with the
         // opaque procedural sky used by its former canvas-only implementation.
         sky =
@@ -132,29 +143,28 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
                 0f,
                 0f,
                 h.toFloat(),
-                if (raster) intArrayOf(Color.TRANSPARENT, 0x60000000)
-                else intArrayOf(palette.skyTop, palette.skyBottom),
+                intArrayOf(Color.TRANSPARENT, palette.skyBottom),
                 null,
                 Shader.TileMode.CLAMP,
             )
-        fog =
-            RadialGradient(
-                w * .55f,
-                h * .3f,
-                w * .9f,
-                intArrayOf(palette.fog, Color.TRANSPARENT),
-                null,
-                Shader.TileMode.CLAMP,
-            )
-        mist =
-            RadialGradient(
-                w * .5f,
-                h * .5f,
-                w * .7f,
-                intArrayOf(palette.mist, Color.TRANSPARENT),
-                null,
-                Shader.TileMode.CLAMP,
-            )
+        // Fog and mist are unit radial gradients stretched into ellipses that fade to nothing exactly at
+        // the edge of the rectangle they are drawn in. (They used to be wide circular gradients clipped
+        // by an oval that was too short: the cut edge showed as a faint horizontal stripe that came and
+        // went as the fog drifted.)
+        fun ellipse(color: Int, cx: Float, cy: Float, rx: Float, ry: Float, bounds: RectF): Shader {
+            bounds.set(cx - rx, cy - ry, cx + rx, cy + ry)
+            return RadialGradient(
+                    0f,
+                    0f,
+                    1f,
+                    intArrayOf(color, ColorUtils.setAlphaComponent(color, 0)),
+                    null,
+                    Shader.TileMode.CLAMP,
+                )
+                .also { s -> s.setLocalMatrix(Matrix().apply { setScale(rx, ry); postTranslate(cx, cy) }) }
+        }
+        fog = ellipse(palette.fog, w * .55f, h * .32f, w * .85f, h * .36f, fogBounds)
+        mist = ellipse(palette.mist, w * .5f, h * .5f, w * .7f, h * .32f, mistBounds)
         halo =
             RadialGradient(
                 w * .5f,
@@ -168,8 +178,6 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
                 floatArrayOf(0f, .62f, 1f),
                 Shader.TileMode.CLAMP,
             )
-        fogBounds.set(-w * .2f, h * .08f, w * 1.2f, h * .78f)
-        mistBounds.set(-w * .25f, h * .28f, w * 1.25f, h * .82f)
         haloBounds.set(-w * .16f, h * .22f - w * .65f, w * 1.16f, h * .22f + w * .65f)
         starsColor = palette.particle
         if (!raster)
@@ -223,13 +231,13 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
         c.translate(sin(phase * .16f) * w * .18f * amount, cos(phase * .11f) * h * .05f * amount)
         paint.shader = fog
         paint.alpha = (100 + 80 * amount + sin(phase * .2f) * 30 * amount).toInt()
-        c.drawOval(fogBounds, paint)
+        c.drawRect(fogBounds, paint)
         c.restoreToCount(save)
         save = c.save()
         c.translate(cos(phase * .12f + 2) * w * .2f * amount, sin(phase * .14f) * h * .05f * amount)
         paint.shader = mist
         paint.alpha = (110 * amount).toInt()
-        c.drawOval(mistBounds, paint)
+        c.drawRect(mistBounds, paint)
         c.restoreToCount(save)
         if (variant == "noctwade" || variant == "max") {
             paint.shader = halo
@@ -237,43 +245,34 @@ internal class AtmosphereView(context: Context, private val onDrift: (Float, Flo
             c.drawOval(haloBounds, paint)
         }
         paint.shader = null
-        val count = if (variant == "sakura") 28 else 30
-        for (i in 0 until count) {
+        drawSky(c, w, h)
+        paint.alpha = 255
+    }
+
+    /** Slowly rising light motes and a few twinkling four-point sparkles; no meteors. */
+    private fun drawSky(c: Canvas, w: Float, h: Float) {
+        val d = resources.displayMetrics.density
+        for (i in 0 until 26) {
             val a = points[i * 3]
             val b = points[i * 3 + 1]
             val z = points[i * 3 + 2]
-            val x =
-                ((a + sin(phase * .19f + i) * .025f * amount + phase * .0015f * amount) % 1f) * w
-            val y =
-                when (variant) {
-                    "sakura" -> ((b + phase * (.02f + z * .012f) * amount) % 1f) * h
-                    "china" -> ((b - phase * .012f * amount) % 1f + 1f) % 1f * h
-                    else -> ((b - phase * (.001f + z * .002f) * amount) % 1f + 1f) % 1f * h
-                }
+            val x = ((a + sin(phase * .11f + i) * .02f * amount) % 1f) * w
+            val y = ((b - phase * (.004f + z * .006f) * amount) % 1f + 1f) % 1f * h * .82f
+            val twinkle = .5f + .5f * sin(phase * (.35f + z * .4f) + i * 1.7f)
             paint.color = starsColor
-            paint.alpha =
-                ((55 + z * 70 + sin(phase * (.5f + z) + i) * 40) * amount).toInt().coerceIn(6, 165)
-            if (variant == "sakura") {
+            if (i % 5 == 0) {
+                paint.alpha = ((60 + 150 * twinkle) * amount).toInt().coerceIn(8, 210)
                 val k = c.save()
                 c.translate(x, y)
-                c.rotate(phase * 8f + i * 25f)
-                val size = (.35f + z * .45f) * resources.displayMetrics.density
+                c.rotate(phase * 4f + i * 20f)
+                val size = (.32f + z * .38f) * d * (.75f + .25f * twinkle)
                 c.scale(size, size)
-                c.drawPath(petal, paint)
+                c.drawPath(sparkle, paint)
                 c.restoreToCount(k)
-            } else c.drawCircle(x, y, (.4f + z) * resources.displayMetrics.density, paint)
-        }
-        if (variant != "sakura" && variant != "china") {
-            val t = (phase % 18f) / 1.4f
-            if (t < 1f) {
-                meteor.color = starsColor
-                meteor.alpha = (sin(t * Math.PI).toFloat() * 115 * amount).toInt()
-                meteor.strokeWidth = resources.displayMetrics.density
-                val x = w * (.12f + t * .7f)
-                val y = h * (.08f + t * .19f)
-                c.drawLine(x, y, x - w * .09f, y - h * .025f, meteor)
+            } else {
+                paint.alpha = ((40 + 70 * z + 40 * twinkle) * amount).toInt().coerceIn(6, 150)
+                c.drawCircle(x, y, (1.1f + z * 1.6f) * d, paint)
             }
         }
-        paint.alpha = 255
     }
 }

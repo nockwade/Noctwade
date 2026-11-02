@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pre-Android 8 launcher icon: same layers as the adaptive icon. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/nw_icon_sky_bg" />
+    <item android:drawable="@drawable/nw_icon_sky_fg" />
+</layer-list>

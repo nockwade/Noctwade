@@ -1,0 +1,34 @@
+// name: Star crown
+// Twelve twinkling four-point stars on a thin circle that drifts round the button.
+// Contract: see HALO-SHADERS.md. Draws in the square around the button; the button disc fills radius 0..0.62.
+uniform float2 iResolution;
+uniform float iTime;
+uniform float4 iColor;
+uniform float4 iColor2;
+uniform float iConnected;
+uniform float iConnecting;
+
+half4 main(float2 fragCoord) {
+    float2 p = (fragCoord - 0.5 * iResolution) / (0.5 * iResolution.y);
+    float d = length(p);
+    float ang = atan(p.y, p.x);
+    float drift = iTime * (0.15 + 0.1 * iConnected + 0.9 * iConnecting);
+
+    float sparks = 0.0;
+    for (int i = 0; i < 12; i++) {
+        float a = float(i) * 0.5235988 + drift;
+        float2 q = abs(p - 0.82 * float2(cos(a), sin(a)));
+        float twinkle = 0.55 + 0.45 * sin(iTime * 2.0 + float(i) * 1.7);
+        float spark = exp(-q.x * 80.0 - q.y * 14.0) + exp(-q.y * 80.0 - q.x * 14.0) + exp(-length(q) * 38.0);
+        sparks += spark * twinkle;
+    }
+
+    float line = (1.0 - smoothstep(0.0, 0.01, abs(d - 0.82))) * 0.4;
+    float glow = exp(-abs(d - 0.82) * 12.0) * 0.22;
+    float k = sparks + line + glow;
+    float3 col = mix(iColor.rgb, iColor2.rgb, 0.5 + 0.5 * sin(ang * 3.0 - iTime));
+    col = mix(col, float3(1.0), clamp(sparks * 0.5, 0.0, 0.7));
+    float alpha = clamp(k, 0.0, 1.0) * (0.8 + 0.2 * iConnected);
+    alpha *= smoothstep(0.58, 0.68, d) * (1.0 - smoothstep(0.96, 1.0, d));
+    return half4(half3(col * alpha), half(alpha));
+}

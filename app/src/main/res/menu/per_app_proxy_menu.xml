@@ -13,6 +13,14 @@
         android:title="@string/picker_add_package"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_export_file"
+        android:title="@string/nw_apps_export_file"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_import_file"
+        android:title="@string/nw_apps_import_file"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_export_clipboard"
         android:icon="?attr/actionModeCopyDrawable"
         android:title="@string/action_export_clipboard"

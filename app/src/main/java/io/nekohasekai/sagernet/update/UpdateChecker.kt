@@ -21,7 +21,7 @@ import java.io.InputStream
 
 /**
  * GitHub releases of Noctwade, an unofficial fork of ThroneForAndroid (the desktop's CheckUpdate: `allow_beta_update` admits pre-releases). A release
- * built by CI carries `throne-update.json` (buildScript/release_assets.py) and can be installed in-app; older releases
+ * built by CI carries `noctwade-update.json` (older ones `throne-update.json`, buildScript/release_assets.py) and can be installed in-app; older releases
  * are offered in the browser only.
  */
 object UpdateChecker {
@@ -32,7 +32,8 @@ object UpdateChecker {
 
     // The API host, not raw.githubusercontent.com, which is blocked where the releases call still works (as desktop).
     private const val CHANGELOG_API = "https://api.github.com/repos/$REPOSITORY/contents/CHANGELOG.md"
-    private const val MANIFEST = "throne-update.json"
+    /** Preferred first; releases up to 2.0.4 only carry the old name. */
+    private val MANIFESTS = listOf("noctwade-update.json", "throne-update.json")
     private const val MAX_MANIFESTS = 5
     private const val MAX_MANIFEST_BYTES = 256 * 1024
     private const val MAX_CHANGELOG_BYTES = 1024 * 1024
@@ -98,9 +99,10 @@ object UpdateChecker {
         fun notes(release: Release) = if (withNotes) notesOf(client, release) else ""
 
         var best: Pair<Release, JSONObject>? = null
-        for (release in candidates.filter { r -> r.assets.any { it.name == MANIFEST } }.take(MAX_MANIFESTS)) {
+        fun manifestOf(release: Release) = MANIFESTS.firstNotNullOfOrNull { name -> release.assets.firstOrNull { it.name == name } }
+        for (release in candidates.filter { manifestOf(it) != null }.take(MAX_MANIFESTS)) {
             val manifest = try {
-                fetchManifest(client, release.assets.first { it.name == MANIFEST })
+                fetchManifest(client, manifestOf(release)!!)
             } catch (e: Exception) {
                 Logs.w("Update manifest of ${release.tag}: ${e.readableMessage}")
                 continue
@@ -113,7 +115,7 @@ object UpdateChecker {
         best?.let { (release, manifest) -> return Result.Available(offerOf(context, release, manifest, notes(release))) }
 
         // Releases without a manifest predate the in-app updater: open them in the browser.
-        val legacy = candidates.firstOrNull { r -> r.assets.none { it.name == MANIFEST } } ?: return Result.UpToDate
+        val legacy = candidates.firstOrNull { manifestOf(it) == null } ?: return Result.UpToDate
         return Result.Available(
             Offer(
                 legacy, legacy.tag.removePrefix("v"), 0, null, null, null,

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nw_icon_default">Noctwade</string>
+    <string name="nw_icon_sky">Sky</string>
+    <string name="nw_icon_sakura">Sakura</string>
+    <string name="nw_icon_mint">Mint</string>
+    <string name="nw_icon_gold">Gold</string>
+    <string name="nw_icon_ruby">Ruby</string>
+    <string name="nw_icon_snow">Snow</string>
+    <string name="nw_icon_mono">Ink</string>
+    <string name="nw_icon_halo_sky">Halo</string>
+    <string name="nw_icon_halo_night">Night halo</string>
+    <string name="nw_icon_halo_pink">Rose halo</string>
+    <string name="nw_icon_orb_ocean">Ocean</string>
+    <string name="nw_icon_orb_forest">Forest</string>
+    <string name="nw_icon_orb_candy">Candy</string>
+    <string name="nw_icon_gem_amethyst">Amethyst</string>
+    <string name="nw_icon_gem_midnight">Midnight</string>
+    <string name="nw_icon_gem_gold">Amber</string>
+</resources>

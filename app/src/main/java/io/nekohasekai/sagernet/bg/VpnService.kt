@@ -165,12 +165,16 @@ class VpnService : BaseVpnService(),
 
         val includePackage = options.getIncludePackage()
         if (includePackage.hasNext()) {
-            includePackage.toList().forEach {
+            val added = includePackage.toList().count {
                 try {
                     builder.addAllowedApplication(it)
+                    true
                 } catch (_: PackageManager.NameNotFoundException) {
+                    false
                 }
             }
+            // None of the chosen apps is installed: an empty allow list would capture every app instead of none.
+            if (added == 0) builder.addAllowedApplication(packageName)
         }
         val excludePackage = options.getExcludePackage()
         if (excludePackage.hasNext()) {
@@ -192,6 +196,8 @@ class VpnService : BaseVpnService(),
             )
         }
 
+        // Apps may then bind sockets to the underlying network themselves; FCM does this for its push channel.
+        if (DataStore.allowBypass) builder.allowBypass()
         updateUnderlyingNetwork(builder)
         metered = DataStore.meteredNetwork
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) builder.setMetered(metered)
@@ -201,9 +207,12 @@ class VpnService : BaseVpnService(),
     }
 
     fun updateUnderlyingNetwork(builder: Builder? = null) {
-        SagerNet.underlyingNetwork?.let {
-            builder?.setUnderlyingNetworks(arrayOf(SagerNet.underlyingNetwork))
-                ?: setUnderlyingNetworks(arrayOf(SagerNet.underlyingNetwork))
+        val networks = SagerNet.underlyingNetwork?.let { arrayOf(it) }
+        if (builder != null) {
+            if (networks != null) builder.setUnderlyingNetworks(networks)
+        } else {
+            // null once the network is lost: the VPN follows the system default instead of declaring a gone network.
+            setUnderlyingNetworks(networks)
         }
     }
 

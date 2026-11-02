@@ -63,8 +63,8 @@ class NoctwadeRoutingFragment : Fragment() {
             .apply {
                 if (animate && NoctwadeMotion.enabled(requireContext()))
                     setCustomAnimations(
-                        if (forward) R.anim.nw_slide_in_right else R.anim.nw_slide_in_left,
-                        if (forward) R.anim.nw_slide_out_left else R.anim.nw_slide_out_right,
+                        if (forward) NoctwadeMotion.slideInRight(requireContext()) else NoctwadeMotion.slideInLeft(requireContext()),
+                        if (forward) NoctwadeMotion.slideOutLeft(requireContext()) else NoctwadeMotion.slideOutRight(requireContext()),
                     )
             }
             .replace(

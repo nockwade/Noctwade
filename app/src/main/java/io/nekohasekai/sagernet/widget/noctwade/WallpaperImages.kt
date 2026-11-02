@@ -65,4 +65,35 @@ internal object WallpaperImages {
                     .getOrNull()
             if (!Thread.currentThread().isInterrupted) main.post { deliver(bitmap) }
         }
+
+    /** The same, for a picture file (theme packs, gallery backgrounds). */
+    fun loadFile(
+        path: String,
+        width: Int,
+        height: Int,
+        preview: Boolean,
+        deliver: (Bitmap?) -> Unit,
+    ): Future<*> =
+        workers.submit {
+            val bitmap =
+                runCatching {
+                        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                        BitmapFactory.decodeFile(path, bounds)
+                        val targetW = if (preview) minOf(width, 320) else width
+                        val targetH = if (preview) minOf(height, 320) else height
+                        val sample = sampleSize(bounds.outWidth, bounds.outHeight, targetW, targetH)
+                        val key = "$path:${java.io.File(path).lastModified()}:$sample"
+                        cache.get(key)
+                            ?: BitmapFactory.decodeFile(
+                                    path,
+                                    BitmapFactory.Options().apply {
+                                        inSampleSize = sample
+                                        inPreferredConfig = Bitmap.Config.ARGB_8888
+                                    },
+                                )
+                                ?.also { cache.put(key, it) }
+                    }
+                    .getOrNull()
+            if (!Thread.currentThread().isInterrupted) main.post { deliver(bitmap) }
+        }
 }

@@ -93,6 +93,8 @@ class MainActivity : ThemedActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Keeps exactly one launcher icon enabled (see AppIconSwitcher.repair).
+        io.nekohasekai.sagernet.ui.noctwade.AppIconSwitcher.repair(this)
         MessageStore.setCurrentActivity(this)
         val animateInitialControls = savedInstanceState == null
 
@@ -167,7 +169,7 @@ class MainActivity : ThemedActivity(),
                 if ((slideOffset > 0.5f) == overDrawer) return
                 overDrawer = !overDrawer
                 WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
-                    if (overDrawer) !Theme.usingNightMode() else if (currentMainFragment is NoctwadeHomeFragment || currentMainFragment is NoctwadeServersFragment) false else lightStatusBar
+                    if (overDrawer) !Theme.usingNightMode() else if (currentMainFragment is NoctwadeHomeFragment || currentMainFragment is NoctwadeServersFragment) io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.light(this@MainActivity) else lightStatusBar
             }
         })
 
@@ -195,6 +197,23 @@ class MainActivity : ThemedActivity(),
         }
 
         setContentView(binding.root)
+        // A theme change from the settings spreads out from the tapped control over the old look.
+        io.nekohasekai.sagernet.ui.noctwade.ThemeReveal.play(this)
+        // The system splash dissolves into the home screen instead of cutting away.
+        if (android.os.Build.VERSION.SDK_INT >= 31 && savedInstanceState == null && NoctwadeMotion.enabled(this))
+            runCatching {
+                splashScreen.setOnExitAnimationListener { splash ->
+                    splash
+                        .animate()
+                        .alpha(0f)
+                        .scaleX(1.06f)
+                        .scaleY(1.06f)
+                        .setDuration(360L)
+                        .setInterpolator(NoctwadeMotion.soft)
+                        .withEndAction { splash.remove() }
+                        .start()
+                }
+            }
         currentMainFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_holder) as? ToolbarFragment
                 ?: currentMainFragment
@@ -402,8 +421,8 @@ class MainActivity : ThemedActivity(),
         currentMainFragment = fragment
         val transaction = supportFragmentManager.beginTransaction()
         if (previous!=null && NoctwadeMotion.enabled(this)) {
-            if(forward) transaction.setCustomAnimations(R.anim.nw_slide_in_right,R.anim.nw_slide_out_left)
-            else transaction.setCustomAnimations(R.anim.nw_slide_in_left,R.anim.nw_slide_out_right)
+            if(forward) transaction.setCustomAnimations(NoctwadeMotion.slideInRight(this),NoctwadeMotion.slideOutLeft(this))
+            else transaction.setCustomAnimations(NoctwadeMotion.slideInLeft(this),NoctwadeMotion.slideOutRight(this))
         }
         transaction
             .setReorderingAllowed(true)
@@ -425,8 +444,10 @@ class MainActivity : ThemedActivity(),
             is SettingsFragment -> binding.bottomNavigation.select(2, animate)
         }
         WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = if (fragment is NoctwadeHomeFragment || fragment is NoctwadeServersFragment) false else lightStatusBar
-            isAppearanceLightNavigationBars = false
+            // Light palette: dark icons over the bright sky
+            val light = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.light(this@MainActivity)
+            isAppearanceLightStatusBars = if (fragment is NoctwadeHomeFragment || fragment is NoctwadeServersFragment) light else lightStatusBar
+            isAppearanceLightNavigationBars = light
         }
         val immersive = fragment is NoctwadeHomeFragment || fragment is NoctwadeServersFragment
         binding.navigationBackdrop.visibility = if (immersive) View.GONE else View.VISIBLE
@@ -661,7 +682,7 @@ class MainActivity : ThemedActivity(),
         if (DataStore.serviceState.canStop) SagerNet.stopService() else startFromUi()
     }
 
-    /** Wi-Fi rules of the current route profile ask for location access once before a start from here. */
+    /** Wi-Fi rules of the routing profile the selected profile starts with ask for location access once before a start from here. */
     private fun startFromUi() {
         if (DataStore.wifiPermissionAsked || WifiStateAccess.status(this) == WifiStateAccess.Status.OK) {
             return launchConnect()
@@ -669,7 +690,8 @@ class MainActivity : ThemedActivity(),
         lifecycleScope.launch {
             val usesWifi = withContext(Dispatchers.IO) {
                 runCatching {
-                    RouteManager.current().rules.any { rule ->
+                    val groupId = ProfileManager.getProfile(DataStore.selectedProxy)?.groupId ?: -1L
+                    RouteManager.routeFor(groupId).rules.any { rule ->
                         !rule.disabled && (rule.wifi_ssid.any { it.isNotBlank() } || rule.wifi_bssid.any { it.isNotBlank() })
                     }
                 }.getOrDefault(false)

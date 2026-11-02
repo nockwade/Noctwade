@@ -14,6 +14,6 @@ Noctwade is licensed GPL-3.0 (see LICENSE). It includes or builds on:
 | [hydraponique/roscomvpn-geosite / -geoip / -routing](https://github.com/hydraponique) | MIT (geosite) | RoscomVPN rule-sets fetched at run time; `roscom-*.srs` snapshots |
 | [throneproj/routeprofiles](https://github.com/throneproj/routeprofiles) | see repository | fetched at build/run time |
 
-Rule-set snapshots are in `app/src/main/assets/noctwade-rule-sets/` with URLs and checksums in `sources.json`. Route templates and the router UI follow the layout of [v2rayNG](https://github.com/2dust/v2rayNG) as an inspiration; no v2rayNG code is included. The wallpapers were drawn procedurally; some images were produced with an AI image generator.
+Rule-set snapshots are in `app/src/main/assets/noctwade-rule-sets/` with URLs and checksums in `sources.json`. Route templates and the router UI follow the layout of [v2rayNG](https://github.com/2dust/v2rayNG) as an inspiration; no v2rayNG code is included. Backgrounds are gradients and animations drawn in code; the app icons and built-in halo shaders were made for Noctwade (some artwork with the help of an AI image generator). Noctwade ships no theme packs: packs and the art in them come from their makers and are not part of Noctwade.
 
 "Throne", "NekoBox", "SagerNet" and "sing-box" belong to their respective owners. Noctwade is unofficial.

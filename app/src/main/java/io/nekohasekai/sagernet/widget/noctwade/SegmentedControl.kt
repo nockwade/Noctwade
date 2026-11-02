@@ -16,9 +16,12 @@ import io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme
 class SegmentedControl @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
     private val density = resources.displayMetrics.density
+    private val light = NoctwadeTheme.light(context)
+    /** The chosen tab: a white pill that, in the light theme, lifts off the track with a soft shadow. */
     private val paint =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = NoctwadeTheme.color(context, R.attr.nwSurfaceHigh)
+            if (light) setShadowLayer(3 * density, 0f, 1 * density, 0x26000000)
         }
     private val rect = RectF()
     private var position = 0f
@@ -36,18 +39,28 @@ class SegmentedControl @JvmOverloads constructor(context: Context, attrs: Attrib
             (4 * density).toInt(),
             (4 * density).toInt(),
         )
+        // In the light theme the track is tinted and edged, or the white pill on a white track disappears.
         background =
             GradientDrawable().apply {
-                setColor(NoctwadeTheme.surface(context))
+                setColor(
+                    if (light) androidx.core.graphics.ColorUtils.blendARGB(NoctwadeTheme.surface(context), NoctwadeTheme.stroke(context), .45f)
+                    else NoctwadeTheme.surface(context)
+                )
+                if (light) setStroke((1 * density).toInt().coerceAtLeast(1), NoctwadeTheme.stroke(context))
                 cornerRadius = 100 * density
             }
-        for ((i, title) in
-            TABS
-                .withIndex()) addView(
+        setTabs(TABS)
+    }
+
+    /** Replaces the tabs (equal width); the first one is selected. Routing uses the default three. */
+    fun setTabs(titles: List<Int>) {
+        removeAllViews()
+        for ((i, title) in titles.withIndex()) addView(
             TextView(context).apply {
                 setText(title)
                 textSize = 14f
                 gravity = Gravity.CENTER
+                maxLines = 1
                 typeface = Typeface.create("sans-serif-medium", 0)
                 isClickable = true
                 isFocusable = true

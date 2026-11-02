@@ -229,6 +229,7 @@ class AppRoutingFragment : Fragment() {
         loader?.cancel()
         if(access.deniedPermission()!=null){showAccessPlaceholder();return}
         binding.appPlaceholder.root.visibility=View.GONE
+        binding.appbar.visibility=View.VISIBLE
         loader = viewLifecycleOwner.lifecycleScope.launch {
             loading.crossFadeFrom(binding.list)
             val adapter = binding.list.adapter as AppsAdapter
@@ -294,6 +295,82 @@ class AppRoutingFragment : Fragment() {
 
     private var sysApps = false
 
+    private val exportFile = registerForActivityResult(SaveDocument("application/json")) { uri ->
+        if (uri == null) return@registerForActivityResult
+        val resolver = requireContext().contentResolver
+        val json = selectionJson()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val ok = withContext(Dispatchers.IO) {
+                runCatching { resolver.openOutputStream(uri, "wt")!!.bufferedWriter().use { it.write(json) } }.isSuccess
+            }
+            if (view != null) Snackbar.make(binding.list, if (ok) R.string.action_export_msg else R.string.action_export_err, Snackbar.LENGTH_LONG).show()
+        }
+    }
+    private val importFile = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        val resolver = requireContext().contentResolver
+        viewLifecycleOwner.lifecycleScope.launch {
+            val text = withContext(Dispatchers.IO) {
+                runCatching {
+                    val bytes = resolver.openInputStream(uri)!!.use { it.readBytes() }
+                    if (bytes.size > 2 * 1024 * 1024) error("file too large")
+                    String(bytes, Charsets.UTF_8)
+                }.getOrNull()
+            }
+            if (view == null) return@launch
+            if (text == null) Snackbar.make(binding.list, R.string.nw_apps_import_bad, Snackbar.LENGTH_LONG).show()
+            else importSelection(text)
+        }
+    }
+
+    /** Per-app routing as JSON: the enable switch, the bypass mode and the selected packages. */
+    private fun selectionJson(): String = org.json.JSONObject()
+        .put("kind", "noctwade-app-routing")
+        .put("v", 1)
+        .put("enabled", DataStore.proxyApps)
+        .put("bypass", DataStore.bypass)
+        .put("packages", org.json.JSONArray(DataStore.individual.lines().map { it.trim() }.filter { it.isNotEmpty() }))
+        .toString(2)
+
+    /**
+     * The JSON of [selectionJson] or the older text form: a leading "true"/"false" bypass line and one package per
+     * line; a plain package list (the route rule picker's export, whose "unknown" entry is no package) keeps the mode.
+     */
+    private fun importSelection(text: String) {
+        var enabled: Boolean? = null
+        var bypass: Boolean? = null
+        var packages: List<String>
+        val trimmed = text.trim()
+        if (trimmed.startsWith("{")) {
+            val obj = try { org.json.JSONObject(trimmed) } catch (_: Exception) { null }
+            val array = obj?.optJSONArray("packages")
+            if (obj == null || array == null) {
+                Snackbar.make(binding.list, R.string.nw_apps_import_bad, Snackbar.LENGTH_LONG).show()
+                return
+            }
+            if (obj.has("enabled")) enabled = obj.optBoolean("enabled")
+            if (obj.has("bypass")) bypass = obj.optBoolean("bypass")
+            packages = (0 until array.length()).map { array.optString(it).trim() }
+        } else {
+            val lines = trimmed.lines().map { it.trim() }.filter { it.isNotEmpty() }
+            bypass = lines.firstOrNull()?.takeIf { it == "true" || it == "false" }?.toBoolean()
+            packages = if (bypass != null) lines.drop(1) else lines
+        }
+        packages = packages.filter { it.isNotEmpty() && it != RouteRule.UNKNOWN_PACKAGE }
+        if (bypass == null && enabled == null && packages.isEmpty()) {
+            Snackbar.make(binding.list, R.string.action_import_err, Snackbar.LENGTH_LONG).show()
+            return
+        }
+        // Upstream 2.0.5: refuse text that is not a list of package names.
+        if (PackageNameInput.rejectInvalid(binding.list, packages)) return
+        if (enabled != null) binding.appsEnabled.isChecked = enabled
+        if (bypass != null) binding.appsBypass.isChecked = bypass
+        DataStore.individual = packages.distinct().joinToString("\n")
+        Snackbar.make(binding.list, R.string.action_import_msg, Snackbar.LENGTH_LONG).show()
+        selectionLoaded = false
+        loadApps()
+    }
+
     private fun handleMenuItem(item:MenuItem):Boolean {
         when (item.itemId) {
             R.id.action_invert_selections -> {
@@ -335,8 +412,7 @@ class AppRoutingFragment : Fragment() {
             }
 
             R.id.action_export_clipboard -> {
-                val success =
-                    SagerNet.trySetPrimaryClip("${DataStore.bypass}\n${DataStore.individual}")
+                val success = SagerNet.trySetPrimaryClip(selectionJson())
                 Snackbar.make(
                     binding.list,
                     if (success) R.string.action_export_msg else R.string.action_export_err,
@@ -346,22 +422,17 @@ class AppRoutingFragment : Fragment() {
             }
 
             R.id.action_import_clipboard -> {
-                // This screen's export leads with the bypass flag; a plain package list (the route rule picker's
-                // export, whose "unknown" entry is no package) keeps the current mode.
-                val lines = SagerNet.getClipboardText().lines().map { it.trim() }.filter { it.isNotEmpty() }
-                val bypass = lines.firstOrNull()?.takeIf { it == "true" || it == "false" }?.toBoolean()
-                val packages = (if (bypass != null) lines.drop(1) else lines).filter { it != RouteRule.UNKNOWN_PACKAGE }
-                if (bypass == null && packages.isEmpty()) {
-                    Snackbar.make(binding.list, R.string.action_import_err, Snackbar.LENGTH_LONG).show()
-                    return true
-                }
-                if (bypass != null) {
-                    binding.appsBypass.isChecked=bypass
-                }
-                DataStore.individual = packages.distinct().joinToString("\n")
-                Snackbar.make(binding.list, R.string.action_import_msg, Snackbar.LENGTH_LONG).show()
-                selectionLoaded = false
-                loadApps()
+                importSelection(SagerNet.getClipboardText())
+                return true
+            }
+
+            R.id.action_export_file -> {
+                exportFile.launch("noctwade-app-routing.json")
+                return true
+            }
+
+            R.id.action_import_file -> {
+                importFile.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
                 return true
             }
         }
@@ -433,6 +504,7 @@ class AppRoutingFragment : Fragment() {
     }
 
     private fun showAccessPlaceholder(){
+        binding.appbar.visibility=View.GONE
         loading.visibility=View.GONE;binding.list.visibility=View.GONE;binding.appPlaceholder.root.visibility=View.VISIBLE
     }
     private fun offerAccessSettings(){if(!offeredSettings && isResumed){offeredSettings=true;access.explainSettings()}}

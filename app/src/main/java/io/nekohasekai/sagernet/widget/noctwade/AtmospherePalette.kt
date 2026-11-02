@@ -35,6 +35,10 @@ internal data class AtmospherePalette(
                 "china" -> photo(0x77000000, 0xFFF0BF74, fog = 0x2FF4BE78, mist = 0x40D29A6F)
                 "max" -> photo(0x77000000, 0xFFB9ACFF, fog = 0x556759E4, mist = 0x5C8259D2)
                 "noctwade" -> photo(0x77000000, 0xFFCFACF2, fog = 0x288341CA)
+                // Sky: white light over a bright sky; a pink-lilac dusk at night.
+                "sky" -> photo(0x00000000, 0xFFFFFFFF, fog = 0x40FFFFFF, mist = 0x2CBFE4FF)
+                "sky_night" ->
+                    photo(0x55060A18, 0xFFFFD6E8, fog = 0x22B9A7FF, mist = 0x307E8FE0)
                 else -> photo(0x77000000, 0xFFCFACF2)
             }
 

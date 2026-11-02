@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.app
+import io.nekohasekai.sagernet.SagerNet
 
 object Theme {
 
@@ -151,8 +152,20 @@ object Theme {
         return DataStore.appTheme == WHITE && !usingNightMode()
     }
 
+    /** The appearance choice of the character themes (light, dark or system); null before the application exists (unit tests). */
+    private fun appearanceNight(): Boolean? =
+        runCatching { app }.getOrNull()?.let { io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.forcedNight(it) }
+
+    private fun appearanceFollowsSystem(): Boolean =
+        runCatching { app }.getOrNull()?.let { io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.forcedNight(it) == null } ?: false
+
     var currentNightMode = -1
     fun getNightMode(): Int {
+        // Light / dark / system from the appearance settings
+        appearanceNight()?.let {
+            return if (it) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        }
+        if (appearanceFollowsSystem()) return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         if (currentNightMode == -1) {
             currentNightMode = DataStore.nightTheme
         }
@@ -169,10 +182,13 @@ object Theme {
     }
 
     fun usingNightMode(): Boolean {
+        appearanceNight()?.let { return it }
+        if (appearanceFollowsSystem()) return io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.systemNight()
         return when (DataStore.nightTheme) {
+            0 -> (app.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
             1 -> true
             2 -> false
-            else -> (app.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            else -> SagerNet.power.isPowerSaveMode
         }
     }
 

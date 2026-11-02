@@ -142,8 +142,10 @@ def main():
         elif manifest != common:
             fail(f"{apk.name} differs from the other APKs: {common} != {manifest}")
 
-        shutil.copy2(apk, dist / apk.name)
-        assets[abi] = {"name": apk.name, "size": apk.stat().st_size, "sha256": sha256(apk)}
+        # Published as Noctwade-<version>-<abi>.apk (AGP names them Throne-...).
+        name = f"Noctwade-{info['versionName']}-{abi}.apk"
+        shutil.copy2(apk, dist / name)
+        assets[abi] = {"name": name, "size": apk.stat().st_size, "sha256": sha256(dist / name)}
 
     (dist / "SHA256SUMS").write_text("".join(f"{a['sha256']}  {a['name']}\n" for a in assets.values()), newline="\n")
     # throne-update.json is the in-app updater manifest; only the stable channel publishes the Releases the
@@ -162,7 +164,9 @@ def main():
         "signerSha256": manifest["signerSha256"],
         "assets": assets,
     }
-    (dist / "throne-update.json").write_text(json.dumps(update, indent=2) + "\n", newline="\n")
+    # noctwade-update.json for 2.0.5+, the same content as throne-update.json so 2.0.4 still updates itself.
+    for manifest_name in ("noctwade-update.json", "throne-update.json"):
+        (dist / manifest_name).write_text(json.dumps(update, indent=2) + "\n", newline="\n")
     print(json.dumps(update, indent=2))
 
 

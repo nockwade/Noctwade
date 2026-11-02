@@ -1,0 +1,43 @@
+// name: Celestial ring
+// A glowing ring with a comet running round it, a dashed outer ring and four small diamonds.
+// Contract: see HALO-SHADERS.md. Draws in the square around the button; the button disc fills radius 0..0.62.
+uniform float2 iResolution;
+uniform float iTime;
+uniform float4 iColor;
+uniform float4 iColor2;
+uniform float iConnected;
+uniform float iConnecting;
+
+half4 main(float2 fragCoord) {
+    float2 p = (fragCoord - 0.5 * iResolution) / (0.5 * iResolution.y);
+    float d = length(p);
+    float ang = atan(p.y, p.x);
+    float turn = 6.2831853;
+    float spin = iTime * (0.30 + 0.25 * iConnected + 1.5 * iConnecting);
+
+    float dist = abs(d - 0.80);
+    float band = 1.0 - smoothstep(0.0, 0.034, dist);
+    float glow = exp(-dist * 16.0) * 0.5;
+
+    float t = fract((ang + spin) / turn);
+    float comet = pow(1.0 - t, 4.0) * smoothstep(0.0, 0.05, t);
+
+    float outer = 1.0 - smoothstep(0.0, 0.012, abs(d - 0.92));
+    float dash = step(0.5, fract((ang - spin * 0.6) * 14.0 / turn));
+    outer *= mix(0.25, 0.9, dash);
+
+    float diamonds = 0.0;
+    for (int i = 0; i < 4; i++) {
+        float a = float(i) * 1.5707963 + spin * 0.7;
+        float2 c = 0.68 * float2(cos(a), sin(a));
+        float2 q = abs(p - c);
+        diamonds += 1.0 - smoothstep(0.03, 0.045, q.x + q.y);
+    }
+
+    float k = band * (0.45 + 0.55 * comet) + glow * (0.5 + 0.5 * comet) + outer * 0.8 + clamp(diamonds, 0.0, 1.0);
+    float3 col = mix(iColor.rgb, iColor2.rgb, 0.5 + 0.5 * sin(ang * 2.0 + iTime * 0.8));
+    col = mix(col, float3(1.0), 0.25 + 0.45 * comet * band);
+    float alpha = clamp(k, 0.0, 1.0) * (0.78 + 0.22 * iConnected);
+    alpha *= smoothstep(0.58, 0.68, d) * (1.0 - smoothstep(0.96, 1.0, d));
+    return half4(half3(col * alpha), half(alpha));
+}

@@ -119,7 +119,7 @@ class RoutingUiTest {
         val controller = Robolectric.buildActivity(Host::class.java).setup()
         val a = controller.get()
         for (key in NoctwadeTheme.keys) {
-            NoctwadeTheme.prefs(a).edit().clear().putString("theme", key).commit()
+            NoctwadeTheme.prefs(a).edit().clear().putString("palette", key).commit()
             NoctwadeTheme.apply(a)
             val apps = LayoutAppsBinding.inflate(a.layoutInflater)
             assertNotNull(apps.appsEnabled)

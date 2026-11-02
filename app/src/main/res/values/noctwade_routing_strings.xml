@@ -48,4 +48,11 @@
     <string name="nw_tpl_rs_russia">Russian sites — direct</string>
     <string name="nw_tpl_rulesets_source">Lists: runetfreedom/russia-v2ray-rules-dat, updated by the core every day. Downloads go through the VPN.</string>
     <string name="nw_domain_strategy">Domain strategy</string>
+    <string name="nw_routing_import_file">Import from file</string>
+    <string name="nw_routing_import_file_hint">Add a routing profile from a JSON file</string>
+    <string name="nw_routing_export_json">Copy as JSON</string>
+    <string name="nw_routing_export_file">Export to JSON file</string>
+    <string name="nw_apps_export_file">Export to JSON file</string>
+    <string name="nw_apps_import_file">Import from JSON file</string>
+    <string name="nw_apps_import_bad">The file is not a per-app routing list</string>
 </resources>

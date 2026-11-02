@@ -160,6 +160,7 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
             main?.displayFragmentWithId(R.id.nav_home)
         }
         ui.serversHeader.headerAdd.setOnClickListener { imports.show(ui.serversHeader.headerAdd) }
+        io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleHeader(null, ui.serversHeader.headerAdd)
         ui.serversSearchToggle.setOnClickListener { setSearchVisible(!ui.serversQuery.isVisible) }
         listOf(ui.serversHeader.headerAdd, ui.serversSearchToggle).forEach(NoctwadeMotion::press)
         searchBack =

@@ -82,7 +82,7 @@ class DesignScreensTest {
             NoctwadeTheme.prefs(app)
                 .edit()
                 .clear()
-                .putString("theme", theme)
+                .putString("palette", theme)
                 .putString("eco", "off")
                 .commit()
             capture(theme, "home") { host -> home(host) }

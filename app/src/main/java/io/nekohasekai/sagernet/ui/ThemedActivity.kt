@@ -71,6 +71,11 @@ abstract class ThemedActivity : AppCompatActivity {
 
     override fun setTheme(resId: Int) {
         super.setTheme(resId)
+        // AppCompat keeps this id only to re-apply the bare base theme when it updates the night mode
+        // (AppCompatDelegateImpl.updateResourcesConfiguration: setTheme + applyStyle(id, true)). That wiped the
+        // Noctwade overlays: after a light/dark switch the buttons fell back to the stock purple Material style until
+        // the next recreate. Without the id it leaves our theme alone; a real uiMode change recreates the screen anyway.
+        delegate.setTheme(0)
 
         themeResId = resId
     }

@@ -15,24 +15,21 @@ import android.graphics.SweepGradient
 import android.util.AttributeSet
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
-import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import androidx.core.graphics.ColorUtils
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.bg.BaseService
+import io.nekohasekai.sagernet.ui.noctwade.HaloShaders
 import io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme
+import io.nekohasekai.sagernet.ui.noctwade.ThemePacks
 import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Connect button: a glass disc with a thin power glyph, three orbiting accent arcs and a dotted
- * ring with a travelling highlight.
- *
- * Idle: everything drifts slowly. Connecting: the arcs speed up and breathe, a bright dot orbits.
- * Connected: the disc fills with the accent, soft ripples spread out and the halo breathes.
- *
- * Drawn on a 240-unit canvas; every shader and path is allocated once. One TimeAnimator drives all
- * motion and stops when hidden, with animations off or in economy mode.
+ * Connect button: a soft disc under a slowly turning gradient halo with small triangles, as in the
+ * game's UI. Connecting splits the halo into arcs and speeds it up; connected fills the disc with
+ * the accent and sends gentle ripples out. One TimeAnimator drives everything and stops when
+ * hidden, with animations off or in economy mode.
  */
 class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     View(context, attrs) {
@@ -41,6 +38,7 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
     private val secondary = NoctwadeTheme.secondaryAccent(context)
     private val surface = NoctwadeTheme.surface(context)
     private val text = NoctwadeTheme.text(context)
+    private val baLight = NoctwadeTheme.light(context)
 
     private val power =
         Path().apply {
@@ -48,39 +46,10 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
             lineTo(120f, 118f)
             addArc(RectF(99f, 101f, 141f, 143f), -55f, 290f)
         }
-    private val arcBounds = RectF(20f, 20f, 220f, 220f)
 
     private fun withAlpha(color: Int, a: Int) =
         ColorUtils.setAlphaComponent(color, a.coerceIn(0, 255))
 
-    private val idleFill =
-        LinearGradient(
-            70f,
-            42f,
-            170f,
-            198f,
-            intArrayOf(
-                ColorUtils.blendARGB(surface, accent, .22f),
-                ColorUtils.blendARGB(surface, accent, .06f),
-                ColorUtils.blendARGB(surface, secondary, .14f),
-            ),
-            floatArrayOf(0f, .55f, 1f),
-            Shader.TileMode.CLAMP,
-        )
-    private val activeFill =
-        LinearGradient(
-            60f,
-            50f,
-            180f,
-            190f,
-            intArrayOf(
-                ColorUtils.blendARGB(accent, Color.WHITE, .12f),
-                accent,
-                ColorUtils.blendARGB(secondary, surface, .25f),
-            ),
-            floatArrayOf(0f, .5f, 1f),
-            Shader.TileMode.CLAMP,
-        )
     private val sheen =
         RadialGradient(
             98f,
@@ -90,39 +59,19 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
             null,
             Shader.TileMode.CLAMP,
         )
-    private val halo =
-        RadialGradient(
-            120f,
-            120f,
-            120f,
-            intArrayOf(withAlpha(accent, 0), withAlpha(accent, 110), withAlpha(accent, 0)),
-            floatArrayOf(.5f, .72f, 1f),
-            Shader.TileMode.CLAMP,
-        )
-    /** Soft light pooled inside the transparent disc. */
-    private val innerGlow =
-        RadialGradient(
-            120f,
-            112f,
-            82f,
-            intArrayOf(withAlpha(accent, 70), withAlpha(accent, 18), withAlpha(accent, 0)),
-            floatArrayOf(0f, .65f, 1f),
-            Shader.TileMode.CLAMP,
-        )
+    private val shaderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var shader: HaloShaders.Halo? = null
+    private var shaderKey: String? = null
+    private var shaderFailed = false
 
-    /** Gentle inner rim light, brighter at the top: reads as a soft glass edge. */
-    private val rimLight =
-        LinearGradient(
-            120f,
-            42f,
-            120f,
-            198f,
-            intArrayOf(0x66FFFFFF, 0x14FFFFFF, 0x05FFFFFF),
-            floatArrayOf(0f, .5f, 1f),
-            Shader.TileMode.CLAMP,
-        )
-
-    private val arcShader = SweepGradient(120f, 120f, intArrayOf(accent, secondary, accent), null)
+    /** Shows this halo instead of the chosen one (previews in the settings); null = the chosen halo. */
+    var haloKey: String? = null
+        set(value) {
+            field = value
+            resolvedHalo = null
+            invalidate()
+        }
+    private var resolvedHalo: String? = null
 
     private var state = BaseService.State.Idle
     private var mix = 0f // 0 idle → 1 connected
@@ -164,8 +113,8 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         if (effectsVisible && NoctwadeMotion.enabled(context)) {
             transition =
                 ValueAnimator.ofFloat(mix, target).apply {
-                    duration = 520L
-                    interpolator = DecelerateInterpolator()
+                    duration = 900L
+                    interpolator = NoctwadeMotion.soft
                     addUpdateListener {
                         mix = it.animatedValue as Float
                         invalidate()
@@ -178,11 +127,21 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         invalidate()
     }
 
+    /** False while the view or a parent is hidden (say a halo tile on another tab): no frames are drawn for it. */
+    private var aggregated = true
+
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        aggregated = isVisible
+        updateTicker()
+    }
+
     private fun animating() =
         effectsVisible &&
+            aggregated &&
             isAttachedToWindow &&
             windowVisibility == VISIBLE &&
-            NoctwadeMotion.enabled(context) &&
+            NoctwadeTheme.live(context) &&
             !NoctwadeEco.active(context)
 
     private fun updateTicker() {
@@ -198,9 +157,9 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
                     val dt = (delta.coerceAtMost(64L)) / 1000f
                     time += dt
                     val target = if (state == BaseService.State.Connecting) 1f else 0f
-                    connecting += (target - connecting) * (dt * 5f).coerceAtMost(1f)
-                    // degrees per second: idle 15, connected 36, connecting 300
-                    val speed = 15f + 21f * mix + 285f * connecting
+                    connecting += (target - connecting) * (dt * 2.5f).coerceAtMost(1f)
+                    // degrees per second: idle 9, connected 20, connecting 130
+                    val speed = 9f + 11f * mix + 121f * connecting
                     spin = (spin + speed * dt) % 360f
                     invalidate()
                 }
@@ -210,6 +169,8 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        resolvedHalo = null
+        pictureKey = null
         updateTicker()
     }
 
@@ -223,6 +184,8 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         transition?.cancel()
         ticker = null
         transition = null
+        picture = null
+        pictureKey = null
         super.onDetachedFromWindow()
     }
 
@@ -246,115 +209,266 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         val size = minOf(width, height).toFloat()
         canvas.translate((width - size) / 2f, (height - size) / 2f)
         canvas.scale(size / 240f, size / 240f)
-        val breathe = .5f + .5f * sin(time * 1.6f)
+        drawHalo(canvas)
+        canvas.restoreToCount(save)
+    }
 
-        // Halo: faint when idle, breathing once connected.
+    // A white (light) or deep (dark) disc under a slowly turning halo, a soft glow and small triangles.
+    private val baDisc =
+        LinearGradient(
+            120f,
+            42f,
+            120f,
+            198f,
+            if (baLight) intArrayOf(Color.WHITE, ColorUtils.blendARGB(Color.WHITE, accent, .10f))
+            else
+                intArrayOf(
+                    ColorUtils.blendARGB(surface, accent, .16f),
+                    ColorUtils.blendARGB(surface, Color.BLACK, .15f),
+                ),
+            null,
+            Shader.TileMode.CLAMP,
+        )
+    private val baActive =
+        LinearGradient(
+            120f,
+            42f,
+            120f,
+            198f,
+            intArrayOf(ColorUtils.blendARGB(accent, Color.WHITE, .38f), accent),
+            null,
+            Shader.TileMode.CLAMP,
+        )
+    private val baGlow =
+        RadialGradient(
+            120f,
+            120f,
+            120f,
+            intArrayOf(withAlpha(accent, 0), withAlpha(accent, 120), withAlpha(accent, 0)),
+            floatArrayOf(.48f, .70f, 1f),
+            Shader.TileMode.CLAMP,
+        )
+    private val baHalo =
+        SweepGradient(
+            120f,
+            120f,
+            intArrayOf(accent, secondary, ColorUtils.blendARGB(accent, Color.WHITE, .5f), accent),
+            null,
+        )
+    private val baTriangle =
+        Path().apply {
+            moveTo(0f, -4.5f)
+            lineTo(4f, 2.6f)
+            lineTo(-4f, 2.6f)
+            close()
+        }
+    private val baHaloBounds = RectF(28f, 28f, 212f, 212f)
+
+    private fun drawHalo(canvas: Canvas) {
+        val breathe = .5f + .5f * sin(time * 1.05f)
+        val lift = maxOf(mix, connecting)
+
+        // Soft aura: always a little, fuller once connected.
         paint.style = Paint.Style.FILL
-        paint.shader = halo
-        paint.alpha = (35 + mix * (120 + 70 * breathe) + connecting * 50).toInt().coerceAtMost(255)
+        paint.shader = baGlow
+        paint.alpha = (40 + 70 * mix * (.6f + .4f * breathe) + 40 * connecting).toInt()
         canvas.drawCircle(120f, 120f, 120f, paint)
-
-        // Ripples spreading out while connected.
         paint.shader = null
+
+        // Gentle ripples while connected.
         if (mix > .01f) {
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 1.4f
+            paint.strokeWidth = 1.2f
             for (k in 0..1) {
-                val t = ((time / 2.8f) + k * .5f) % 1f
-                paint.color = withAlpha(accent, (mix * 120 * (1 - t)).toInt())
-                canvas.drawCircle(120f, 120f, 80f + 38f * t, paint)
+                val t = ((time / 4.2f) + k * .5f) % 1f
+                paint.color = withAlpha(accent, (mix * 110 * (1 - t) * (1 - t)).toInt())
+                canvas.drawCircle(120f, 120f, 82f + 34f * t, paint)
             }
         }
 
-        // Dotted ring with a highlight travelling the other way.
+        when (val style = haloStyle()) {
+            HaloShaders.NONE -> {}
+            HaloShaders.RINGS -> drawRings(canvas, lift, breathe)
+            HaloShaders.CLASSIC -> drawClassic(canvas, lift, breathe)
+            else ->
+                if (style.startsWith(HaloShaders.PACK)) {
+                    // A pack ring: its shader where shaders run, else its picture.
+                    if (!drawShader(canvas, style) && !drawPicture(canvas, style, lift, breathe)) drawClassic(canvas, lift, breathe)
+                } else if (!drawShader(canvas, style)) drawClassic(canvas, lift, breathe)
+        }
+        drawDisc(canvas)
+    }
+
+    /** The halo picture of a pack ring (decoded once per key, at most 512 px). */
+    private fun loadPicture(key: String): android.graphics.Bitmap? {
+        if (pictureKey != key) {
+            pictureKey = key
+            picture =
+                runCatching {
+                        val file = ThemePacks.halo(context, key.removePrefix(HaloShaders.PACK))?.image?.takeIf { it.isFile } ?: error("missing")
+                        val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                        android.graphics.BitmapFactory.decodeFile(file.path, bounds)
+                        var sample = 1
+                        while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= 512) sample *= 2
+                        android.graphics.BitmapFactory.decodeFile(file.path, android.graphics.BitmapFactory.Options().apply { inSampleSize = sample })
+                    }
+                    .getOrNull()
+        }
+        return picture
+    }
+
+    private val pictureMatrixRect = RectF()
+    private val picturePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private var picture: android.graphics.Bitmap? = null
+    private var pictureKey: String? = null
+
+    /**
+     * A halo picture from a theme pack, drawn behind the button disc in its own shape and swaying gently.
+     * False when the picture cannot be read.
+     */
+    private fun drawPicture(canvas: Canvas, key: String, lift: Float, breathe: Float): Boolean {
+        val bitmap = loadPicture(key) ?: return false
+        // A flat halo picture (seen from the front) turns slowly round the button, like the shader halos.
+        val fit = 228f * (1f + .012f * breathe * (1f + lift)) / maxOf(bitmap.width, bitmap.height)
+        val w = bitmap.width * fit
+        val h = bitmap.height * fit
+        pictureMatrixRect.set(120f - w / 2f, 120f - h / 2f, 120f + w / 2f, 120f + h / 2f)
+        val save = canvas.save()
+        canvas.rotate(spin * .8f, 120f, 120f)
+        picturePaint.alpha = (200 + 55 * lift).toInt()
+        canvas.drawBitmap(bitmap, null, pictureMatrixRect, picturePaint)
+        picturePaint.alpha = 255
+        canvas.restoreToCount(save)
+        return true
+    }
+
+    /** The halo to draw. Resolved once per attach (it reads assets), not on every frame. */
+    private fun haloStyle(): String =
+        resolvedHalo ?: HaloShaders.usable(context, haloKey ?: NoctwadeTheme.halo(context)).also { resolvedHalo = it }
+
+    /** An imported or built-in AGSL halo; false when it cannot run (the caller draws the classic ring). */
+    private fun drawShader(canvas: Canvas, key: String): Boolean {
+        if (!HaloShaders.supported()) return false
+        if (shaderKey != key) {
+            shaderKey = key
+            shader = null
+            shaderFailed = false
+        }
+        if (shaderFailed) return false
+        if (shader == null)
+            shader =
+                runCatching {
+                        HaloShaders.Halo.create(HaloShaders.read(context, key) ?: error("missing")).also { halo ->
+                            // A pack halo's shader may draw the pack's own halo picture (uniform shader iImage).
+                            if (halo.wantsImage) halo.setImage(loadPicture(key) ?: error("no picture"))
+                        }
+                    }
+                    .getOrElse {
+                        shaderFailed = true
+                        null
+                    }
+        val halo = shader ?: return false
+        return runCatching {
+                halo.apply(shaderPaint, 240f, 240f, time, accent, secondary, mix, connecting)
+                canvas.drawRect(0f, 0f, 240f, 240f, shaderPaint)
+                true
+            }
+            .getOrElse {
+                shaderFailed = true
+                false
+            }
+    }
+
+    /** Two thin rings and twelve dots turning slowly: the canvas halo that needs no GPU shader. */
+    private fun drawRings(canvas: Canvas, lift: Float, breathe: Float) {
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 1.6f
+        paint.color = withAlpha(accent, (120 + 100 * lift).toInt())
+        canvas.drawCircle(120f, 120f, 99f, paint)
+        paint.strokeWidth = 1f
+        paint.color = withAlpha(secondary, (70 + 70 * lift).toInt())
+        canvas.drawCircle(120f, 120f, 108f, paint)
         paint.style = Paint.Style.FILL
-        val dots = 60
-        val head = (-spin * .6f + 360f) % 360f
-        for (i in 0 until dots) {
-            val deg = i * 360f / dots
+        for (k in 0 until 12) {
+            val deg = spin * .6f + k * 30f
+            val rad = Math.toRadians(deg.toDouble())
+            val big = k % 3 == 0
+            paint.color = withAlpha(if (big) accent else secondary, (110 + 120 * lift * (.7f + .3f * breathe)).toInt())
+            canvas.drawCircle(120f + 108f * cos(rad).toFloat(), 120f + 108f * sin(rad).toFloat(), if (big) 3.4f else 2f, paint)
+        }
+    }
+
+    private fun drawClassic(canvas: Canvas, lift: Float, breathe: Float) {
+        // Thin guide ring and four small triangles drifting the other way.
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 1f
+        paint.color = withAlpha(accent, (46 + 40 * lift).toInt())
+        canvas.drawCircle(120f, 120f, 108f, paint)
+        paint.style = Paint.Style.FILL
+        for (k in 0..3) {
+            val deg = -spin * .5f + k * 90f
             val rad = Math.toRadians(deg.toDouble() - 90.0)
-            var distance = kotlin.math.abs(deg - head)
-            if (distance > 180f) distance = 360f - distance
-            val lit = (1f - distance / 70f).coerceAtLeast(0f)
-            paint.color =
-                withAlpha(
-                    ColorUtils.blendARGB(text, accent, .5f),
-                    (34 + lit * (110 + 90 * mix)).toInt(),
-                )
-            canvas.drawCircle(
-                120f + 112f * cos(rad).toFloat(),
-                120f + 112f * sin(rad).toFloat(),
-                1.1f + lit * .9f,
-                paint,
-            )
+            val tri = canvas.save()
+            canvas.translate(120f + 108f * cos(rad).toFloat(), 120f + 108f * sin(rad).toFloat())
+            canvas.rotate(deg + 180f)
+            paint.color = withAlpha(if (k % 2 == 0) accent else secondary, (130 + 90 * lift).toInt())
+            canvas.drawPath(baTriangle, paint)
+            canvas.restoreToCount(tri)
         }
 
-        // Thin track and three orbiting arcs.
+        // The halo: a glowing band under a crisp gradient ring, split into arcs while connecting.
+        val haloSave = canvas.save()
+        canvas.rotate(spin, 120f, 120f)
         paint.style = Paint.Style.STROKE
         paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeWidth = 1f
-        paint.color = withAlpha(text, 26)
-        canvas.drawCircle(120f, 120f, 100f, paint)
-        paint.shader = arcShader
-        paint.strokeWidth = 3f
-        paint.alpha = (110 + 120 * maxOf(mix, connecting)).toInt()
-        val arcSave = canvas.save()
-        canvas.rotate(spin, 120f, 120f)
-        val sweep = 54f + 30f * connecting * sin(time * 5f) + 10f * mix
-        for (k in 0..2) canvas.drawArc(arcBounds, k * 120f, sweep, false, paint)
-        canvas.restoreToCount(arcSave)
+        paint.shader = baHalo
+        val gap = 28f * connecting
+        paint.strokeWidth = 11f
+        paint.alpha = (34 + 50 * lift * (.7f + .3f * breathe)).toInt()
+        for (k in 0..2) canvas.drawArc(baHaloBounds, k * 120f + gap / 2f, 120f - gap, false, paint)
+        paint.strokeWidth = 3.4f
+        paint.alpha = (150 + 105 * lift).toInt()
+        for (k in 0..2) canvas.drawArc(baHaloBounds, k * 120f + gap / 2f, 120f - gap, false, paint)
         paint.shader = null
+        canvas.restoreToCount(haloSave)
+    }
 
-        // Orbiting comet while connecting.
-        if (connecting > .02f) {
-            val rad = Math.toRadians((spin * 1.6f - 90f).toDouble())
-            paint.style = Paint.Style.FILL
-            paint.color = withAlpha(Color.WHITE, (connecting * 230).toInt())
-            canvas.drawCircle(
-                120f + 100f * cos(rad).toFloat(),
-                120f + 100f * sin(rad).toFloat(),
-                3.4f,
-                paint,
-            )
-        }
-
-        // Glass disc.
+    private fun drawDisc(canvas: Canvas) {
+        // Disc: white in the light theme, deep navy in the dark one; fills with sky blue once connected.
         paint.style = Paint.Style.FILL
-        // Transparent glass: a faint tint, a pool of soft light and a light edge; the wallpaper
-        // stays visible through it. Connected adds a translucent accent fill.
-        paint.shader = idleFill
-        paint.alpha = 92
-        canvas.drawCircle(120f, 120f, 78f, paint)
-        paint.shader = innerGlow
-        paint.alpha = (200 + 55 * breathe * mix).toInt()
-        canvas.drawCircle(120f, 120f, 78f, paint)
-        paint.shader = activeFill
-        paint.alpha = (mix * 150).toInt()
-        canvas.drawCircle(120f, 120f, 78f, paint)
+        paint.color = withAlpha(accent, if (baLight) 34 else 60)
+        canvas.drawCircle(120f, 124f, 76f, paint) // soft drop shadow
+        paint.shader = baDisc
+        paint.alpha = 255
+        canvas.drawCircle(120f, 120f, 74f, paint)
+        paint.shader = baActive
+        paint.alpha = (mix * 235).toInt()
+        canvas.drawCircle(120f, 120f, 74f, paint)
         paint.shader = sheen
         paint.alpha = 255
-        canvas.drawCircle(120f, 120f, 78f, paint)
+        canvas.drawCircle(120f, 120f, 74f, paint)
         paint.shader = null
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 1.4f
-        paint.shader = rimLight
-        paint.alpha = (190 + 65 * mix).toInt()
-        canvas.drawCircle(120f, 120f, 78f, paint)
-        paint.shader = null
-        paint.alpha = 255
+        paint.strokeWidth = 1.6f
+        paint.color = withAlpha(ColorUtils.blendARGB(accent, Color.WHITE, .55f), 200)
+        canvas.drawCircle(120f, 120f, 74f, paint)
 
-        // Power glyph.
-        paint.strokeWidth = 4.2f
+        // Power glyph: accent on white, white on blue.
+        paint.strokeWidth = 4.6f
         paint.strokeCap = Paint.Cap.ROUND
         paint.color =
-            ColorUtils.blendARGB(ColorUtils.blendARGB(accent, Color.WHITE, .72f), Color.WHITE, mix)
+            ColorUtils.blendARGB(
+                if (baLight) accent else ColorUtils.blendARGB(accent, Color.WHITE, .55f),
+                Color.WHITE,
+                mix,
+            )
         canvas.drawPath(power, paint)
 
         if (isFocused) {
-            paint.color = ColorUtils.blendARGB(accent, Color.WHITE, .8f)
+            paint.color = accent
             paint.strokeWidth = 2f
-            canvas.drawCircle(120f, 120f, 118f, paint)
+            canvas.drawCircle(120f, 120f, 117f, paint)
         }
-        canvas.restoreToCount(save)
+        paint.alpha = 255
     }
 }

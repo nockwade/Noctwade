@@ -4,12 +4,16 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.PathInterpolator
+import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme
 
 internal object NoctwadeMotion {
     fun enabled(context: Context): Boolean =
-        io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.animations(context) &&
+        NoctwadeTheme.animations(context) &&
             if (Build.VERSION.SDK_INT >= 26) {
                 ValueAnimator.areAnimatorsEnabled()
             } else {
@@ -20,6 +24,29 @@ internal object NoctwadeMotion {
                 ) > 0f
             }
 
+    /** Long, gentle ease-out with no overshoot. */
+    val soft = PathInterpolator(.22f, .61f, .36f, 1f)
+
+    /** Screen transition from the theme. */
+    fun anim(context: Context, attr: Int, fallback: Int): Int {
+        val value = TypedValue()
+        return if (context.theme.resolveAttribute(attr, value, true) && value.resourceId != 0)
+            value.resourceId
+        else fallback
+    }
+
+    fun slideInRight(context: Context) =
+        anim(context, R.attr.nwAnimSlideInRight, R.anim.nw_slide_in_right)
+
+    fun slideOutLeft(context: Context) =
+        anim(context, R.attr.nwAnimSlideOutLeft, R.anim.nw_slide_out_left)
+
+    fun slideInLeft(context: Context) =
+        anim(context, R.attr.nwAnimSlideInLeft, R.anim.nw_slide_in_left)
+
+    fun slideOutRight(context: Context) =
+        anim(context, R.attr.nwAnimSlideOutRight, R.anim.nw_slide_out_right)
+
     /** Transform-only feedback: no layout passes, blur, or permanent hardware layers. */
     fun press(view: View) {
         view.setOnTouchListener { target, event ->
@@ -28,10 +55,11 @@ internal object NoctwadeMotion {
                     MotionEvent.ACTION_DOWN ->
                         target
                             .animate()
-                            .scaleX(.97f)
-                            .scaleY(.97f)
+                            .scaleX(.975f)
+                            .scaleY(.975f)
                             .setStartDelay(0)
-                            .setDuration(100)
+                            .setDuration(160)
+                            .setInterpolator(soft)
                             .start()
                     MotionEvent.ACTION_UP,
                     MotionEvent.ACTION_CANCEL ->
@@ -40,7 +68,8 @@ internal object NoctwadeMotion {
                             .scaleX(1f)
                             .scaleY(1f)
                             .setStartDelay(0)
-                            .setDuration(180)
+                            .setDuration(360)
+                            .setInterpolator(soft)
                             .start()
                 }
             }

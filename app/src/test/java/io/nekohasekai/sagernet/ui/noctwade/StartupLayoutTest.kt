@@ -31,7 +31,7 @@ class StartupLayoutTest {
                     uiMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or night
                 }
             for (palette in NoctwadeTheme.keys) {
-                NoctwadeTheme.prefs(app).edit().clear().putString("theme", palette).commit()
+                NoctwadeTheme.prefs(app).edit().clear().putBoolean("live", false).putString("palette", palette).commit()
                 val context =
                     ContextThemeWrapper(
                         app.createConfigurationContext(configuration),

@@ -2,9 +2,9 @@ package io.nekohasekai.sagernet.ui
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -35,6 +35,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
     private var selected: ProxyEntity? = null
     private var selectedGroupId = 0L
     private val imports = ConnectionImportDialog(this)
+    /** The theme's character and her dialogue box (which also shows the status). */
+    private var character: io.nekohasekai.sagernet.ui.noctwade.CharacterHome? = null
     private val main
         get() = activity as? MainActivity
 
@@ -92,6 +94,26 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         }
         listOf(ui.homeServer, ui.homeQuota.root, ui.homeHeader.headerAdd)
             .forEach(NoctwadeMotion::press)
+        // With a theme-pack character, status, hint and timer live in her dialogue box.
+        val pack = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.character(requireContext())
+        val home =
+            pack?.let {
+                ui.homeStatus.isVisible = false
+                ui.homeSubtitle.isVisible = false
+                ui.homeTimer.isVisible = false
+                io.nekohasekai.sagernet.ui.noctwade.CharacterHome(
+                        it,
+                        ui.root,
+                        ui.homeContent,
+                        ui.homeScroll,
+                        ui.homeContent.indexOfChild(ui.homeStatus),
+                    )
+                    .apply { attach(savedInstanceState == null) }
+            }
+        character = home
+        io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeServer)
+        io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeQuota.root)
+        io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleHeader(ui.homeHeader.headerMenu, ui.homeHeader.headerAdd)
         renderState(DataStore.serviceState)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -113,26 +135,41 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
             }
         }
         if (savedInstanceState == null && NoctwadeMotion.enabled(requireContext())) {
-            listOf(
+            val parts =
+                listOf(
                     ui.homeHeader.root,
                     ui.homePower,
-                    ui.homeStatus,
-                    ui.homeSubtitle,
-                    ui.homeServer,
+                    home?.dialog ?: ui.homeStatus,
                     ui.homeQuota.root,
+                    ui.homeServer,
                 )
-                .forEachIndexed { index, child ->
-                    child.alpha = 0f
-                    child.translationY = 10 * resources.displayMetrics.density
-                    child
-                        .animate()
-                        .alpha(1f)
-                        .translationY(0f)
-                        .setStartDelay(index * 35L)
-                        .setDuration(340L)
-                        .setInterpolator(DecelerateInterpolator())
-                        .start()
+            val rise = 18 * resources.displayMetrics.density
+            parts.forEach {
+                it.alpha = 0f
+                it.translationY = rise
+            }
+            ui.homePower.scaleX = .9f
+            ui.homePower.scaleY = .9f
+            ui.homeBackdrop.alpha = 0f
+            // Start once the first frame is on screen: during the first, busiest frames the motion used to stutter.
+            view.doOnPreDraw {
+                view.postOnAnimation {
+                    if (binding == null) return@postOnAnimation
+                    ui.homeBackdrop.animate().alpha(1f).setDuration(520L).setInterpolator(NoctwadeMotion.soft).start()
+                    parts.forEachIndexed { index, child ->
+                        child
+                            .animate()
+                            .alpha(1f)
+                            .translationY(0f)
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setStartDelay(80L + index * 70L)
+                            .setDuration(620L)
+                            .setInterpolator(NoctwadeMotion.soft)
+                            .start()
+                    }
                 }
+            }
         }
     }
 
@@ -140,6 +177,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         super.onResume()
         binding?.homePower?.setEffectsVisible(true)
         binding?.homeBackdrop?.setEffectsVisible(true)
+        character?.resume()
         renderState(DataStore.serviceState)
         refreshProfile()
     }
@@ -148,6 +186,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         binding?.homeTimer?.removeCallbacks(timerTick)
         binding?.homePower?.setEffectsVisible(false)
         binding?.homeBackdrop?.setEffectsVisible(false)
+        character?.pause()
         super.onPause()
     }
 
@@ -161,13 +200,16 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                         requireContext(),
                         DataStore.serviceState,
                     )
-                ui.homeTimer.isVisible = elapsed != null
                 ui.homeTimer.removeCallbacks(this)
-                if (elapsed != null) {
-                    ui.homeTimer.text =
-                        io.nekohasekai.sagernet.ui.noctwade.ConnectionClock.format(elapsed)
-                    if (isResumed) ui.homeTimer.postDelayed(this, 1000L - elapsed % 1000L)
+                val text = elapsed?.let(io.nekohasekai.sagernet.ui.noctwade.ConnectionClock::format)
+                val home = character
+                if (home != null) home.setTimer(text)
+                else {
+                    ui.homeTimer.isVisible = text != null
+                    if (text != null) ui.homeTimer.text = text
                 }
+                if (elapsed != null && isResumed)
+                    ui.homeTimer.postDelayed(this, 1000L - elapsed % 1000L)
             }
         }
 
@@ -179,28 +221,31 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
             getString(
                 if (state.canStop) R.string.nw_disconnect_action else R.string.nw_connect_action
             )
-        val connected = state == BaseService.State.Connected
-        ui.homeStatus.setText(
-            when (state) {
-                BaseService.State.Connected -> R.string.nw_connected
-                BaseService.State.Connecting -> R.string.nw_connecting
-                BaseService.State.Stopping -> R.string.nw_stopping
-                else -> R.string.nw_offline
-            }
-        )
-        setSubtitle(
-            ui,
-            when (state) {
-                BaseService.State.Connected -> R.string.nw_secure
-                BaseService.State.Connecting -> R.string.nw_wait
-                BaseService.State.Stopping -> R.string.nw_wait_stop
-                else -> if (selected == null) R.string.nw_add_hint else R.string.nw_tap_connect
-            },
-        )
-        ui.homeSubtitle.setTextColor(
-            if (connected) ContextCompat.getColor(requireContext(), R.color.nw_green)
-            else io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.muted(requireContext())
-        )
+        val home = character
+        if (home != null) home.render(state, selected != null)
+        else {
+            ui.homeStatus.setText(
+                when (state) {
+                    BaseService.State.Connected -> R.string.nw_connected
+                    BaseService.State.Connecting -> R.string.nw_connecting
+                    BaseService.State.Stopping -> R.string.nw_stopping
+                    else -> R.string.nw_offline
+                }
+            )
+            setSubtitle(
+                ui,
+                when (state) {
+                    BaseService.State.Connected -> R.string.nw_secure
+                    BaseService.State.Connecting -> R.string.nw_wait
+                    BaseService.State.Stopping -> R.string.nw_wait_stop
+                    else -> if (selected == null) R.string.nw_add_hint else R.string.nw_tap_connect
+                },
+            )
+            ui.homeSubtitle.setTextColor(
+                if (state == BaseService.State.Connected) ContextCompat.getColor(requireContext(), R.color.nw_green)
+                else io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.muted(requireContext())
+            )
+        }
         refreshProfile()
     }
 
@@ -305,15 +350,10 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                             )
                             .joinToString(", ")
                 }
-                if (
-                    !DataStore.serviceState.started &&
-                        DataStore.serviceState != BaseService.State.Stopping
-                ) {
-                    setSubtitle(
-                        ui,
-                        if (selected == null) R.string.nw_add_hint else R.string.nw_tap_connect,
-                    )
-                }
+                character?.render(DataStore.serviceState, selected != null)
+                if (character == null && !DataStore.serviceState.started && DataStore.serviceState != BaseService.State.Stopping)
+                    setSubtitle(ui, if (selected == null) R.string.nw_add_hint else R.string.nw_tap_connect)
+
             }
     }
 
@@ -357,6 +397,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         }
         profileJob?.cancel()
         profileJob = null
+        character?.destroy()
+        character = null
         binding = null
         super.onDestroyView()
     }

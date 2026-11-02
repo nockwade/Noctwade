@@ -55,6 +55,24 @@ abstract class SettingsScreenFragment(@XmlRes private val preferences: Int) : Pr
 
     protected abstract fun bind()
 
+    /** List settings open the Noctwade choice card instead of the stock radio dialog. */
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is androidx.preference.ListPreference && preference.entries != null) {
+            val values = preference.entryValues
+            io.nekohasekai.sagernet.ui.noctwade.NoctwadeDialogs.choice(
+                requireContext(),
+                preference.dialogTitle ?: preference.title,
+                preference.entries,
+                preference.findIndexOfValue(preference.value),
+            ) { index ->
+                val value = values[index].toString()
+                if (preference.callChangeListener(value)) preference.value = value
+            }
+            return
+        }
+        super.onDisplayPreferenceDialog(preference)
+    }
+
     override fun onResume() {
         super.onResume()
         // The JSON editors write from their own activity.

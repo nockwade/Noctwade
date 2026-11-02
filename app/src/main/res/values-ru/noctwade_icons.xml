@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nw_icon_default">Ноктвейд</string>
+    <string name="nw_icon_sky">Небо</string>
+    <string name="nw_icon_sakura">Сакура</string>
+    <string name="nw_icon_mint">Мята</string>
+    <string name="nw_icon_gold">Золото</string>
+    <string name="nw_icon_ruby">Рубин</string>
+    <string name="nw_icon_snow">Снег</string>
+    <string name="nw_icon_mono">Тушь</string>
+    <string name="nw_icon_halo_sky">Нимб</string>
+    <string name="nw_icon_halo_night">Ночной</string>
+    <string name="nw_icon_halo_pink">Розовый</string>
+    <string name="nw_icon_orb_ocean">Океан</string>
+    <string name="nw_icon_orb_forest">Лес</string>
+    <string name="nw_icon_orb_candy">Конфета</string>
+    <string name="nw_icon_gem_amethyst">Аметист</string>
+    <string name="nw_icon_gem_midnight">Полночь</string>
+    <string name="nw_icon_gem_gold">Янтарь</string>
+</resources>

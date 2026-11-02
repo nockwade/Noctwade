@@ -68,7 +68,7 @@ class RenameDialogTest {
         for (key in NoctwadeTheme.keys) {
             val controller = Robolectric.buildActivity(Host::class.java).setup()
             val a = controller.get()
-            NoctwadeTheme.prefs(a).edit().putString("theme", key).commit()
+            NoctwadeTheme.prefs(a).edit().putString("palette", key).commit()
             NoctwadeTheme.apply(a)
             val host = Fragment(android.R.layout.simple_list_item_1)
             a.supportFragmentManager.beginTransaction().add(12345, host).commitNow()
@@ -118,7 +118,7 @@ class RenameDialogTest {
         val controller = Robolectric.buildActivity(Host::class.java).setup()
         val a = controller.get()
         for (key in NoctwadeTheme.keys) {
-            NoctwadeTheme.prefs(a).edit().putString("theme", key).commit()
+            NoctwadeTheme.prefs(a).edit().putString("palette", key).commit()
             NoctwadeTheme.apply(a)
             for (layout in
                 listOf(
