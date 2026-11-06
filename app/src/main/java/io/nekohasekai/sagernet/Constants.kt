@@ -20,6 +20,10 @@ object Key {
     const val INDIVIDUAL = "individual"
     const val METERED_NETWORK = "meteredNetwork"
     const val ALLOW_BYPASS = "allowBypass"
+    /** While another server starts, the old tun stays up with nothing behind it, so the real address cannot leak. */
+    const val BLOCK_ON_SWITCH = "blockOnSwitch"
+    /** Set before the app restarts itself with a connection running (restore, reset, log level): Home reconnects. */
+    const val RESUME_AFTER_RESTART = "resumeAfterRestart"
 
     const val SHOW_DIRECT_SPEED = "showDirectSpeed"
     const val SHOW_GROUP_IN_NOTIFICATION = "showGroupInNotification"

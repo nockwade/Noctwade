@@ -94,6 +94,8 @@ object DataStore : OnPreferenceDataStoreChangeListener {
 
     var meteredNetwork by configurationStore.boolean(Key.METERED_NETWORK)
     var allowBypass by configurationStore.boolean(Key.ALLOW_BYPASS)
+    var blockOnSwitch by configurationStore.boolean(Key.BLOCK_ON_SWITCH)
+    var resumeAfterRestart by configurationStore.boolean(Key.RESUME_AFTER_RESTART)
     var proxyApps by configurationStore.boolean(Key.PROXY_APPS)
     var bypass by configurationStore.boolean(Key.BYPASS_MODE) { true }
     var individual by configurationStore.string(Key.INDIVIDUAL)

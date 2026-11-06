@@ -185,6 +185,32 @@ class AppearanceTest {
         controller.pause().stop().destroy()
     }
 
+    /** With the dialogues off the character has no box at all: Home writes the status under the button instead. */
+    @Test
+    fun noDialogueBoxWhenDialoguesAreOff() {
+        ThemePacks.import(app, ByteArrayInputStream(demo()))
+        fun build(lines: Boolean): Triple<CharacterHome, Int, Int> {
+            NoctwadeTheme.prefs(app).edit().clear().putString("character", "demo/neko").putBoolean("ch_lines", lines).putBoolean("animations", false).putBoolean("live", false).commit()
+            val a = Robolectric.buildActivity(DesignScreensTest.Host::class.java).setup().get()
+            val holder = a.main.fragmentHolder as ViewGroup
+            val ui = LayoutNoctwadeHomeBinding.inflate(a.layoutInflater, holder, false)
+            holder.addView(ui.root)
+            val before = ui.homeContent.childCount
+            val home = CharacterHome(NoctwadeTheme.character(a)!!, ui.root as FrameLayout, ui.homeContent, ui.homeScroll, ui.homeContent.indexOfChild(ui.homeStatus))
+            home.attach(false)
+            home.render(BaseService.State.Connected, true)
+            settle()
+            return Triple(home, before, ui.homeContent.childCount)
+        }
+        val (quiet, before, after) = build(false)
+        assertFalse(quiet.hasDialogue)
+        assertNull("no box in the layout", quiet.dialog.parent)
+        assertEquals(before, after)
+        val (talking, before2, after2) = build(true)
+        assertTrue(talking.hasDialogue)
+        assertNotNull(talking.dialog.parent)
+        assertEquals(before2 + 1, after2)
+    }
     private fun texts(view: View): List<String> =
         when (view) {
             is TextView -> listOf(view.text.toString())

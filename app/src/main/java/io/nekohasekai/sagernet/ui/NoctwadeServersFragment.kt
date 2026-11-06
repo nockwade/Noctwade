@@ -76,6 +76,11 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
     private var query = ""
     private var focusGroup = 0L
     private var searchBack: OnBackPressedCallback? = null
+    private var pickBack: OnBackPressedCallback? = null
+
+    /** Servers being picked for a ping ("Select servers" in a server's menu); empty while not picking. */
+    private var picking = false
+    private val picked = linkedSetOf<Long>()
     private var loaded = false
     private var pingWasRunning = false
     private var frozenPingOrder: Map<Long, Int>? = null
@@ -104,6 +109,7 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
                 ::showGroupActions,
                 ::refreshGroup,
                 ::testGroup,
+                ::togglePick,
             )
         ui.serversList.layoutManager = LinearLayoutManager(requireContext())
         ui.serversList.adapter = adapter
@@ -170,6 +176,17 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
                 .also {
                     requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, it)
                 }
+        pickBack =
+            object : OnBackPressedCallback(false) {
+                    override fun handleOnBackPressed() = setPicking(false)
+                }
+                .also {
+                    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, it)
+                }
+        ui.serversSelectClose.setOnClickListener { setPicking(false) }
+        ui.serversSelectAll.setOnClickListener { pickAll() }
+        ui.serversSelectPing.setOnClickListener { pingPicked() }
+        listOf(ui.serversSelectPing, ui.serversSelectAll).forEach(NoctwadeMotion::press)
         ui.serversQuery.setText(query)
         setSearchVisible(savedInstanceState?.getBoolean("searching") == true, false)
         ui.serversQuery.doAfterTextChanged {
@@ -324,6 +341,8 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
     }
 
     private fun renderRows() {
+        // Servers that are gone (a refresh, a delete) leave the pick.
+        if (picked.retainAll(groups.flatMap { g -> g.servers.map { it.id } }.toSet())) updatePicking()
         val needle = query.trim().lowercase(Locale.ROOT)
         val rows = ArrayList<ServerListItem>()
         val order = io.nekohasekai.sagernet.ui.noctwade.ServerListOrder.mode(requireContext())
@@ -465,6 +484,43 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
         reportedFailure = failure
     }
 
+    /** Starts or ends picking servers for a ping; [first] is picked at once (the row that was held). */
+    private fun setPicking(on: Boolean, first: ServerListItem.Server? = null) {
+        picking = on
+        if (!on) picked.clear()
+        first?.let { picked.add(it.id) }
+        pickBack?.isEnabled = on
+        updatePicking()
+    }
+
+    private fun togglePick(server: ServerListItem.Server) {
+        if (!picked.add(server.id)) picked.remove(server.id)
+        updatePicking()
+    }
+
+    /** Every server in view, or none when they are all picked already. */
+    private fun pickAll() {
+        val shown = adapter?.currentList.orEmpty().filterIsInstance<ServerListItem.Server>().map { it.id }
+        if (shown.isNotEmpty() && picked.containsAll(shown)) picked.removeAll(shown.toSet()) else picked.addAll(shown)
+        updatePicking()
+    }
+
+    private fun updatePicking() {
+        val ui = binding ?: return
+        ui.serversSelectBar.isVisible = picking
+        ui.serversSelectCount.text = getString(R.string.nw_selected_count, picked.size)
+        ui.serversSelectPing.alpha = if (picked.isEmpty()) .45f else 1f
+        adapter?.picking(picking, picked)
+    }
+
+    /** One test of just the picked servers; the rows show the results as usual. */
+    private fun pingPicked() {
+        val ids = picked.toList()
+        if (ids.isEmpty()) return
+        if (!TestSessionClient.startProfiles(TestSpec.KIND_URL, ids)) main?.snackbar(R.string.nw_ping_busy)?.show()
+        else setPicking(false)
+    }
+
     private fun pingServer(server: ServerListItem.Server) {
         if (!TestSessionClient.startProfiles(TestSpec.KIND_URL, listOf(server.id), server.groupId))
             main?.snackbar(R.string.nw_ping_busy)?.show()
@@ -477,6 +533,7 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
             listOf(
                 NoctwadeDialogs.Action(R.string.edit) { editServer(server) },
                 NoctwadeDialogs.Action(R.string.nw_test_server) { pingServer(server) },
+                NoctwadeDialogs.Action(R.string.nw_select_servers) { setPicking(true, server) },
                 NoctwadeDialogs.Action(R.string.nw_delete_server, destructive = true) {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.nw_delete_server)
@@ -592,6 +649,9 @@ class NoctwadeServersFragment : ToolbarFragment(R.layout.layout_noctwade_servers
         adapter = null
         binding = null
         searchBack = null
+        pickBack = null
+        picked.clear()
+        picking = false
         super.onDestroyView()
     }
 

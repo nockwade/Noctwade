@@ -193,7 +193,7 @@ internal object AppearancePickers {
 
     internal fun showCard(context: Context, card: LinearLayout, maxDp: Int = 440): AlertDialog = show(context, card, maxDp)
 
-    private fun show(context: Context, card: LinearLayout, maxDp: Int = 440): AlertDialog {
+    private fun show(context: Context, card: View, maxDp: Int = 440): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Noctwade_Dialog_Soft).setView(card).create()
         dialog.window?.apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -232,16 +232,74 @@ internal object AppearancePickers {
         dialog = show(context, card)
     }
 
-    /** Up to four colours in the order tapped, and a direction. */
+    /**
+     * Up to four colours of any RGB value, and a direction. The chosen colour is edited with the full picker (plane,
+     * hue bar, R/G/B, hex) or taken from the ready swatches; "+" adds a colour, a long press on one removes it.
+     */
     fun gradient(context: Context, colors: IntArray, angle: Int, done: (IntArray, Int) -> Unit) {
-        val chosen = colors.map { Swatches.nearest(it) }.distinct().take(4).toMutableList()
+        val stops = colors.map { it or Color.BLACK }.take(4).toMutableList().ifEmpty { mutableListOf(Swatches.colors[0]) }
+        var current = 0
         var direction = angle
         val card = card(context)
         val bar = preview(context)
         val directions = ArrayList<TextView>()
-        fun refresh() {
-            val shown = chosen.ifEmpty { listOf(0) }.map { Swatches.colors[it] }.toIntArray()
-            paintPreview(bar, shown, direction)
+        val chips = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL }
+        val remove =
+            TextView(context).apply {
+                setText(R.string.nw_gradient_remove_stop)
+                textSize = 13f
+                setTextColor(NoctwadeTheme.accent(context))
+                setPadding(dp(context, 4), dp(context, 8), dp(context, 4), dp(context, 4))
+                isClickable = true
+                isFocusable = true
+            }
+        lateinit var editor: ColorEditor
+        lateinit var swatches: SwatchGrid
+        lateinit var refresh: () -> Unit
+
+        fun chip(color: Int, on: Boolean, plus: Boolean, click: () -> Unit, longClick: (() -> Unit)?): View =
+            View(context).apply {
+                val ring = if (on) NoctwadeTheme.text(context) else ColorUtils.setAlphaComponent(NoctwadeTheme.text(context), 60)
+                background =
+                    GradientDrawable().apply {
+                        shape = GradientDrawable.OVAL
+                        setColor(if (plus) ColorUtils.setAlphaComponent(NoctwadeTheme.accent(context), 30) else color)
+                        setStroke(dp(context, if (on) 3 else 1), if (plus) NoctwadeTheme.accent(context) else ring)
+                    }
+                contentDescription = if (plus) context.getString(R.string.nw_colors_add) else String.format("#%06X", color and 0xFFFFFF)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { click() }
+                longClick?.let {
+                    setOnLongClickListener { _ ->
+                        it()
+                        true
+                    }
+                }
+            }
+
+        fun select(index: Int) {
+            current = index.coerceIn(0, stops.lastIndex)
+            editor.setColor(stops[current])
+            refresh()
+        }
+
+        refresh = {
+            paintPreview(bar, (if (stops.size == 1) listOf(stops[0], stops[0]) else stops).toIntArray(), direction)
+            chips.removeAllViews()
+            stops.forEachIndexed { i, c ->
+                chips.addView(
+                    chip(c, i == current, false, { select(i) }, { if (stops.size > 1) { stops.removeAt(i); select(minOf(current, stops.lastIndex)) } }),
+                    LinearLayout.LayoutParams(dp(context, 40), dp(context, 40)).apply { marginEnd = dp(context, 10) },
+                )
+            }
+            if (stops.size < 4)
+                chips.addView(
+                    chip(0, false, true, { stops.add(stops[current]); select(stops.lastIndex) }, null),
+                    LinearLayout.LayoutParams(dp(context, 40), dp(context, 40)),
+                )
+            remove.visibility = if (stops.size > 1) View.VISIBLE else View.GONE
+            swatches.invalidate()
             directions.forEach { chip ->
                 val on = chip.tag == direction
                 chip.setTextColor(if (on) Color.WHITE else NoctwadeTheme.text(context))
@@ -252,18 +310,31 @@ internal object AppearancePickers {
                     }
             }
         }
+        editor = ColorEditor(context, stops[0]) { color ->
+            stops[current] = color
+            refresh()
+        }
+        swatches =
+            SwatchGrid(context, { Swatches.colors.indices.filter { Swatches.colors[it] == stops[current] } }) { index ->
+                stops[current] = Swatches.colors[index]
+                editor.setColor(stops[current])
+                refresh()
+            }
+        remove.setOnClickListener {
+            if (stops.size > 1) {
+                stops.removeAt(current)
+                select(minOf(current, stops.lastIndex))
+            }
+        }
+
         card.addView(title(context, R.string.nw_bg_custom_gradient))
         card.addView(bar, LinearLayout.LayoutParams(-1, dp(context, 56)))
         card.addView(caption(context, R.string.nw_bg_gradient_hint))
-        card.addView(
-            SwatchGrid(context, { chosen }) { index ->
-                if (index in chosen) {
-                    if (chosen.size > 1) chosen.remove(index)
-                } else if (chosen.size < 4) chosen.add(index)
-                refresh()
-            },
-            LinearLayout.LayoutParams(-1, -2),
-        )
+        card.addView(chips, LinearLayout.LayoutParams(-1, -2))
+        card.addView(remove, LinearLayout.LayoutParams(-2, -2))
+        card.addView(editor, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(context, 6) })
+        card.addView(caption(context, R.string.nw_gradient_ready))
+        card.addView(swatches, LinearLayout.LayoutParams(-1, -2))
         card.addView(caption(context, R.string.nw_bg_direction))
         val row = LinearLayout(context)
         // Arrows show where the gradient runs to.
@@ -289,9 +360,24 @@ internal object AppearancePickers {
         lateinit var dialog: AlertDialog
         card.addView(buttons(context, { dialog.dismiss() }) {
             dialog.dismiss()
-            val result = chosen.map { Swatches.colors[it] }.let { if (it.size == 1) it + it else it }.toIntArray()
-            done(result, direction)
+            done((if (stops.size == 1) stops + stops else stops).toIntArray(), direction)
         })
-        dialog = show(context, card)
+        // The picker is tall: it scrolls inside the card on short screens.
+        val scroll =
+            android.widget.ScrollView(context).apply {
+                isVerticalScrollBarEnabled = false
+                // The card's gradient and rounded corners belong to the dialog, not to the scrolling content.
+                background = card.background
+                card.background = null
+                clipToOutline = true
+                outlineProvider =
+                    object : android.view.ViewOutlineProvider() {
+                        override fun getOutline(view: View, outline: android.graphics.Outline) {
+                            outline.setRoundRect(0, 0, view.width, view.height, dp(context, 28).toFloat())
+                        }
+                    }
+                addView(card)
+            }
+        dialog = show(context, scroll, 440)
     }
 }

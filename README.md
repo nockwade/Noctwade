@@ -74,7 +74,8 @@ The certificate SHA-256 must be:
 
 If the fingerprint differs, the file is not an official Noctwade build. The in-app updater pins this certificate. Builds are signed with a release key (not the public Android debug key); the key is held only by the maintainer.
 
-- Package: `com.noctwade.android`; minSdk 24; three builds: `arm64-v8a` (most phones), `armeabi-v7a`, `x86_64`.
+- Package: `com.noctwade.android`; Android 7.0 (API 24) or newer. Files: `arm64-v8a` (most phones), `armeabi-v7a` (old and low-end phones with a 32-bit system), `x86_64` (emulators, Chromebooks), and `universal` (all of them in one file, bigger: take it when you are not sure which one you need).
+- **"App not installed as it is incompatible with your phone"**: the installer's message is generic. Check, in order: the file is whole (its size and SHA-256 match `SHA256SUMS`; re-download it, a half-downloaded or renamed file fails this way); the phone has Android 7.0 or newer; the file's ABI is in the phone (`arm64-v8a` for almost every phone made after 2017, `armeabi-v7a` for a 32-bit system; the `universal` file has all of them); a copy of the app signed with another key is not installed (uninstall it, export profiles first). On Xiaomi / POCO (HyperOS, MIUI) also try installing from a file manager instead of a browser's download popup, and turn off "MIUI optimization" / "Install via USB" limits if they are on.
 - It installs next to Throne (different package). It updates over Noctwade 2.0.4. It cannot update a build signed with another key: uninstall such a build first (export profiles first).
 
 ## Build from source / Сборка

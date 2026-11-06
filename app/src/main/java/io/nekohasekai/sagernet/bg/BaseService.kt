@@ -48,6 +48,10 @@ class BaseService {
          * time, so a close never overlaps a start.
          */
         private val coreDispatcher = Executors.newSingleThreadExecutor { Thread(it, "CoreLifecycle") }.asCoroutineDispatcher()
+
+        /** A restart holds the old tun only when it moves to another profile and the setting is on. */
+        internal fun holdOnSwitch(setting: Boolean, runningId: Long?, targetId: Long) =
+            setting && runningId != null && runningId != targetId
     }
 
     enum class State(
@@ -68,6 +72,10 @@ class BaseService {
         var proxy: ProxyInstance? = null
         var notification: ServiceNotification? = null
         var wifiMonitor: WifiStateAccess.Monitor? = null
+
+        /** Set by a server switch (see [Interface.holdWhenSwitching]); the VPN service reads and clears it when the old core is closed. */
+        @Volatile
+        var holdTunOnce = false
 
         // Pause and wake are JNI calls into the core: run them in order and off the main thread.
         private val idleLock = Mutex()
@@ -282,10 +290,26 @@ class BaseService {
             val s = data.state
             when {
                 s == State.Stopped -> startRunner()
-                s.canStop -> AutoSelectorRuntime.restart(this) { stopRunner(true) }
+                s.canStop -> AutoSelectorRuntime.restart(this) {
+                    holdWhenSwitching()
+                    stopRunner(true)
+                }
                 else -> Logs.w("Illegal state $s when invoking use")
             }
         }
+
+        /**
+         * With "block traffic while switching servers" on, a restart that moves to another profile keeps the old tun
+         * up (and idle) until the new core has its own, so nothing goes out directly in between. A restart for the same
+         * profile (new routing, a setting) is not a switch and keeps the usual behaviour.
+         */
+        fun holdWhenSwitching() {
+            val running = data.proxy?.profile?.id
+            data.holdTunOnce = holdOnSwitch(DataStore.blockOnSwitch, running, DataStore.selectedProxy)
+        }
+
+        /** Lets go of a tun kept for a switch (the VPN service overrides this). */
+        fun releaseHeldTun() {}
 
         /** Runs [id] instead of the current profile, staying in the foreground; the running profile is left alone. */
         fun switchProfile(id: Long) {
@@ -297,7 +321,12 @@ class BaseService {
                 data.binder.broadcast { it.cbSelectorUpdate(id) }
             }
             // While stopping, a restart in flight starts whatever is selected once the old core is gone.
-            if (s.canStop) AutoSelectorRuntime.restart(this) { stopRunner(true) } else Widgets.push(this as Context)
+            if (s.canStop) {
+                AutoSelectorRuntime.restart(this) {
+                    holdWhenSwitching()
+                    stopRunner(true)
+                }
+            } else Widgets.push(this as Context)
         }
 
         /** The neighbour [step] away in the group of the selected profile, wrapping around. */
@@ -498,6 +527,8 @@ class BaseService {
                         "stage=stopped restart=$restart hasCleanupError=${cleanupError != null}"
                 )
                 if (!finishRestart) {
+                    // A switch that ended stopped (a stop in between, a failed start) must not leave the old tun holding traffic.
+                    releaseHeldTun()
                     DeferredRuleSets.serviceStopped()
                     AutoSelectorRuntime.serviceStopped()
                 }

@@ -14,7 +14,9 @@
     <string name="nw_bg_gradient">Gradient</string>
     <string name="nw_bg_custom_gradient">My gradient</string>
     <string name="nw_bg_gallery">From gallery</string>
-    <string name="nw_bg_gradient_hint">Tap up to four colours; tap a chosen colour again to remove it.</string>
+    <string name="nw_bg_gradient_hint">Up to four colours: tap one to edit it, or + to add another. Hold a colour to remove it.</string>
+    <string name="nw_gradient_remove_stop">Remove this colour</string>
+    <string name="nw_gradient_ready">Ready colours</string>
     <string name="nw_bg_direction">Direction</string>
     <string name="nw_ch_title">Character</string>
     <string name="nw_ch_none">None</string>

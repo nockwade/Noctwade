@@ -176,7 +176,8 @@ fun Project.setupApp() {
         splits.abi {
             reset()
             isEnable = true
-            isUniversalApk = false
+            // One APK with every ABI next to the per-ABI ones (-Pthrone.universal=true): for people who do not know their phone's ABI.
+            isUniversalApk = providers.gradleProperty("throne.universal").map(String::toBoolean).orElse(false).get()
             val requestedAbis = providers.gradleProperty("throne.abis")
                 .orElse("armeabi-v7a,arm64-v8a,x86_64").get().split(",").map(String::trim)
             require(requestedAbis.isNotEmpty() && requestedAbis.all { it in setOf("armeabi-v7a", "arm64-v8a", "x86_64") }) {

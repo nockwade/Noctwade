@@ -113,14 +113,20 @@ internal class CharacterHome(
 
     private fun motion() = NoctwadeMotion.enabled(context) && !NoctwadeEco.active(context)
 
+    /** False when the dialogues are switched off: there is no box then, and Home writes the status under the button. */
+    val hasDialogue: Boolean
+        get() = withLines
+
     fun attach(animate: Boolean) {
         animateEntrance = animate
-        buildDialog()
-        content.addView(
-            dialog,
-            dialogIndex.coerceIn(0, content.childCount),
-            LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) },
-        )
+        if (withLines) {
+            buildDialog()
+            content.addView(
+                dialog,
+                dialogIndex.coerceIn(0, content.childCount),
+                LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(18) },
+            )
+        }
         layer.addView(mascot, FrameLayout.LayoutParams(0, 0, Gravity.BOTTOM or Gravity.END))
         character.halo?.takeIf { NoctwadeTheme.characterHalo(context) }?.let {
             halo = FloatingHalo(context, it, character.colors.getOrNull(0) ?: accent, character.colors.getOrNull(1) ?: secondary)
@@ -454,6 +460,7 @@ internal class CharacterHome(
     }
 
     private fun renderStatus() {
+        if (!withLines) return
         val (label, color) =
             when {
                 state == BaseService.State.Connected ->
@@ -502,7 +509,8 @@ internal class CharacterHome(
         val first = lineKey == null
         lineKey = key
         if (key == "connected" && !wasConnected && !first) celebrate()
-        say(lineFor(key), if (first) 700L else 0L)
+        // Without dialogues she only reacts with her face; the status is Home's own text under the button.
+        if (withLines) say(lineFor(key), if (first) 700L else 0L)
     }
 
     private fun lineFor(key: String): String {
@@ -662,6 +670,11 @@ internal class CharacterHome(
 
     private fun finishTyping() {
         main.removeCallbacks(type)
+        if (!withLines) {
+            talking = false
+            mouthOpen = false
+            return
+        }
         if (typed < line.length) {
             typed = line.length
             renderTyped()

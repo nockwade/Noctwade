@@ -77,6 +77,9 @@ class MainActivity : ThemedActivity(),
     NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
+        /** The beta notice was shown in this process (a theme change recreates the activity). */
+        private var previewHintShown = false
+
         /** Texts to import (the QR scanner): URLs and deep links one by one, the rest as one import. */
         const val EXTRA_IMPORT_TEXTS = "importTexts"
     }
@@ -234,12 +237,19 @@ class MainActivity : ThemedActivity(),
         refreshNavMenu(DataStore.apiDashboardEnabled)
 
         if (savedInstanceState == null) {
+            // The app restarted itself with a connection running (restore, reset, log level): put the connection back.
+            if (DataStore.resumeAfterRestart) {
+                DataStore.resumeAfterRestart = false
+                if (DataStore.selectedProxy > 0L && !DataStore.serviceState.canStop) binding.root.post { startFromUi() }
+            }
             firstStart.start()
             if (intent?.getBooleanExtra(PlatformNotifications.EXTRA_WIFI_PERMISSION, false) == true) wifiFlow.run()
         }
         runOnDefaultDispatcher { AppShortcuts.publish(applicationContext) }
 
-        if (isPreview && DataStore.previewHintDismissedVersion != BuildConfig.VERSION_NAME) {
+        // Once per run of the app: changing the look recreates the activity and must not ask again.
+        if (isPreview && !previewHintShown && DataStore.previewHintDismissedVersion != BuildConfig.VERSION_NAME) {
+            previewHintShown = true
             MaterialAlertDialogBuilder(this)
                 .setTitle(BuildConfig.VERSION_NAME)
                 .setMessage(R.string.preview_version_hint)

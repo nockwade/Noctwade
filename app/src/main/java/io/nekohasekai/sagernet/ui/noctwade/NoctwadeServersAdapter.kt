@@ -72,6 +72,7 @@ internal class NoctwadeServersAdapter(
     private val onGroupActions: (ServerListItem.Group, View) -> Unit,
     private val onRefresh: (Long) -> Unit,
     private val onPingGroup: (Long) -> Unit = {},
+    private val onTogglePick: (ServerListItem.Server) -> Unit = {},
 ) :
     ListAdapter<ServerListItem, RecyclerView.ViewHolder>(
         object : DiffUtil.ItemCallback<ServerListItem>() {
@@ -86,6 +87,19 @@ internal class NoctwadeServersAdapter(
     private var updating = emptySet<Long>()
     private var results = emptyMap<Long, RowState>()
     private var progress = emptyMap<Long, Pair<Int, Int>>()
+    private var picking = false
+    private var picked = emptySet<Long>()
+
+    /** Picking servers for a ping: rows show a check and a tap toggles it instead of choosing the server. */
+    fun picking(on: Boolean, ids: Set<Long>) {
+        if (picking == on && picked == ids) return
+        val changed = if (picking == on) (picked - ids) + (ids - picked) else null
+        picking = on
+        picked = ids.toSet()
+        currentList.forEachIndexed { i, row ->
+            if (row is ServerListItem.Server && (changed == null || row.id in changed)) notifyItemChanged(i, "pick")
+        }
+    }
 
     /** Per-group ping progress (done, total), shown in the group line instead of a status row. */
     fun groupProgress(value: Map<Long, Pair<Int, Int>>) {
@@ -267,9 +281,14 @@ internal class NoctwadeServersAdapter(
                         ui.serverPing.contentDescription,
                     )
                     .joinToString(", ")
-            ui.root.setOnClickListener { onSelect(item) }
+            val checked = picking && item.id in picked
+            ui.serverPick.isVisible = picking
+            ui.serverPick.isChecked = checked
+            // Screen readers hear whether the row is in the pick.
+            ViewCompat.setStateDescription(ui.root, if (checked) context.getString(R.string.nw_selected_count, picked.size) else null)
+            ui.root.setOnClickListener { if (picking) onTogglePick(item) else onSelect(item) }
             ui.root.setOnLongClickListener {
-                onLongPress(item, ui.root)
+                if (picking) onTogglePick(item) else onLongPress(item, ui.root)
                 true
             }
         }

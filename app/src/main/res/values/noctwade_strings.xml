@@ -131,4 +131,11 @@
     <string name="nw_ping_group">Test latency of this group</string>
     <string name="nw_ping_stop">Stop latency test</string>
     <string name="nw_group_testing">tested %1$d / %2$d</string>
+    <string name="nw_block_on_switch">Block traffic while switching servers</string>
+    <string name="nw_block_on_switch_summary">While another server starts, the tunnel stays up with nothing behind it, so your real address cannot leak between the two</string>
+    <string name="nw_select_servers">Select servers</string>
+    <string name="nw_selected_count">Selected: %1$d</string>
+    <string name="nw_ping_selected">Ping selected</string>
+    <string name="nw_select_all">Select all</string>
+    <string name="nw_select_cancel">Cancel selection</string>
 </resources>

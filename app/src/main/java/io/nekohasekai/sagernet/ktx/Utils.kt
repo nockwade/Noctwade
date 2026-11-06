@@ -187,6 +187,8 @@ fun Fragment.needRestart() {
 }
 
 fun triggerFullRestart(ctx: Context) {
+    // The restart ends the connection: remember it, and Home puts it back once the app is up again.
+    if (DataStore.serviceState.canStop) DataStore.resumeAfterRestart = true
     runOnDefaultDispatcher {
         SagerNet.stopService()
         delay(500)

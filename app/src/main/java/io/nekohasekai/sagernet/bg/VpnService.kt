@@ -35,6 +35,24 @@ class VpnService : BaseVpnService(),
 
     var conn: ParcelFileDescriptor? = null
 
+    /**
+     * The previous tun, kept open while the core of another server starts (the "block traffic while switching" setting).
+     * Nothing reads it, so everything routed into it is dropped instead of going out directly; the new tun replaces it
+     * as soon as it is established.
+     */
+    private var held: ParcelFileDescriptor? = null
+
+    override fun releaseHeldTun() {
+        val old = held ?: return
+        held = null
+        try {
+            old.close()
+            Logs.i("VpnLifecycleTrace stage=tun-hold released")
+        } catch (error: Throwable) {
+            Logs.w("VpnLifecycleTrace stage=tun-hold release failed message=${error.message}")
+        }
+    }
+
     private var metered = false
 
     override var upstreamInterfaceName: String? = null
@@ -48,13 +66,21 @@ class VpnService : BaseVpnService(),
     override suspend fun killProcesses(): Throwable? {
         val currentConnection = conn
         var cleanupError: Throwable? = null
+        val keep = data.holdTunOnce && currentConnection != null
+        data.holdTunOnce = false
         Logs.i(
             "VpnLifecycleTrace stage=tun-close begin " +
-                "hasConnection=${currentConnection != null}"
+                "hasConnection=${currentConnection != null} hold=$keep"
         )
         try {
-            currentConnection?.close()
-            Logs.i("VpnLifecycleTrace stage=tun-close success")
+            releaseHeldTun() // an older hold, if a switch ended before it was replaced
+            if (keep) {
+                held = currentConnection
+                Logs.i("VpnLifecycleTrace stage=tun-hold begin")
+            } else {
+                currentConnection?.close()
+                Logs.i("VpnLifecycleTrace stage=tun-close success")
+            }
         } catch (error: Throwable) {
             Logs.w(
                 "VpnLifecycleTrace stage=tun-close failed " +
@@ -203,6 +229,8 @@ class VpnService : BaseVpnService(),
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) builder.setMetered(metered)
         val connection = builder.establish() ?: throw NullConnectionException()
         conn = connection
+        // The new interface has replaced the held one: the switch is complete.
+        releaseHeldTun()
         return connection.fd
     }
 
@@ -220,6 +248,7 @@ class VpnService : BaseVpnService(),
 
     override fun onDestroy() {
         DataStore.vpnService = null
+        releaseHeldTun()
         super.onDestroy()
         data.binder.close()
     }

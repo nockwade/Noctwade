@@ -13,7 +13,10 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.SweepGradient
 import android.util.AttributeSet
+import android.view.HapticFeedbackConstants
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import androidx.core.graphics.ColorUtils
@@ -22,7 +25,11 @@ import io.nekohasekai.sagernet.bg.BaseService
 import io.nekohasekai.sagernet.ui.noctwade.HaloShaders
 import io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme
 import io.nekohasekai.sagernet.ui.noctwade.ThemePacks
+import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.hypot
 import kotlin.math.sin
 
 /**
@@ -50,15 +57,6 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun withAlpha(color: Int, a: Int) =
         ColorUtils.setAlphaComponent(color, a.coerceIn(0, 255))
 
-    private val sheen =
-        RadialGradient(
-            98f,
-            82f,
-            70f,
-            intArrayOf(0x30FFFFFF, 0x00FFFFFF),
-            null,
-            Shader.TileMode.CLAMP,
-        )
     private val shaderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var shader: HaloShaders.Halo? = null
     private var shaderKey: String? = null
@@ -81,6 +79,25 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
     private var effectsVisible = false
     private var transition: ValueAnimator? = null
     private var ticker: TimeAnimator? = null
+
+    /** On Home the halo can be turned by hand, like a spinner; the previews in the settings stay still. */
+    var spinnable = false
+
+    private var manual = 0f // degrees the halo was turned by hand, on top of its own motion
+    private var spinSpeed = 0f // deg/s of the last drag; fades away after the finger leaves
+    private var dragging = false
+    private var ringTouch = false
+    private var downX = 0f
+    private var downY = 0f
+    private var lastAngle = 0f
+    private var lastMoveAt = 0L
+    private var clickAngle = 0f
+    private var coast: TimeAnimator? = null
+    private val slop by lazy { ViewConfiguration.get(context).scaledTouchSlop }
+
+    /** How far the halo was turned by hand, in degrees. */
+    internal val handTurn: Float
+        get() = manual
 
     init {
         isClickable = true
@@ -167,6 +184,106 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
             }
     }
 
+    private fun angleOf(x: Float, y: Float) = Math.toDegrees(atan2(y - height / 2f, x - width / 2f).toDouble()).toFloat()
+
+    /** The ring around the disc, where a finger turns the halo; the disc itself still just taps. */
+    private fun inRing(x: Float, y: Float): Boolean {
+        val half = minOf(width, height) / 2f
+        return hypot(x - width / 2f, y - height / 2f) >= half * .66f
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!spinnable || !isEnabled) return super.onTouchEvent(event)
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                stopCoast()
+                ringTouch = inRing(event.x, event.y)
+                // At the sides the finger moves up or down, which a scrolling parent would take at once.
+                if (ringTouch) parent?.requestDisallowInterceptTouchEvent(true)
+                dragging = false
+                downX = event.x
+                downY = event.y
+                lastAngle = angleOf(event.x, event.y)
+                lastMoveAt = event.eventTime
+                spinSpeed = 0f
+            }
+            MotionEvent.ACTION_MOVE ->
+                if (ringTouch) {
+                    if (!dragging && hypot(event.x - downX, event.y - downY) > slop) {
+                        dragging = true
+                        parent?.requestDisallowInterceptTouchEvent(true)
+                        // The tap that began here is over: no click and no pressed state.
+                        val cancel = MotionEvent.obtain(event).apply { action = MotionEvent.ACTION_CANCEL }
+                        super.onTouchEvent(cancel)
+                        cancel.recycle()
+                        lastAngle = angleOf(event.x, event.y)
+                        lastMoveAt = event.eventTime
+                    }
+                    if (dragging) {
+                        turnBy(event)
+                        return true
+                    }
+                }
+            MotionEvent.ACTION_UP,
+            MotionEvent.ACTION_CANCEL ->
+                if (dragging) {
+                    dragging = false
+                    release(event.eventTime)
+                    return true
+                }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    /** Follows the finger round the centre; the speed is smoothed so a flick carries on after release. */
+    private fun turnBy(event: MotionEvent) {
+        val angle = angleOf(event.x, event.y)
+        var delta = angle - lastAngle
+        if (delta > 180f) delta -= 360f else if (delta < -180f) delta += 360f
+        manual = (manual + delta) % 360f
+        val seconds = (event.eventTime - lastMoveAt).coerceAtLeast(1L) / 1000f
+        spinSpeed = spinSpeed * .55f + (delta / seconds).coerceIn(-1800f, 1800f) * .45f
+        lastAngle = angle
+        lastMoveAt = event.eventTime
+        tick(delta)
+        invalidate()
+    }
+
+    /** A soft click for every 30 degrees, like the notches of a dial. */
+    private fun tick(delta: Float) {
+        clickAngle += abs(delta)
+        if (clickAngle >= 30f) {
+            clickAngle %= 30f
+            performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+        }
+    }
+
+    private fun release(at: Long) {
+        // A finger that rested before lifting leaves no speed behind.
+        if (at - lastMoveAt > 90L || abs(spinSpeed) < 60f || !NoctwadeMotion.enabled(context)) {
+            spinSpeed = 0f
+            return
+        }
+        stopCoast()
+        coast =
+            TimeAnimator().apply {
+                setTimeListener { _, _, delta ->
+                    val dt = delta.coerceAtMost(64L) / 1000f
+                    manual = (manual + spinSpeed * dt) % 360f
+                    tick(spinSpeed * dt)
+                    spinSpeed *= exp(-1.7f * dt) // friction: about a second and a half to a stop
+                    invalidate()
+                    if (abs(spinSpeed) < 8f) stopCoast()
+                }
+                start()
+            }
+    }
+
+    private fun stopCoast() {
+        coast?.cancel()
+        coast = null
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         resolvedHalo = null
@@ -180,6 +297,7 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     override fun onDetachedFromWindow() {
+        stopCoast()
         ticker?.cancel()
         transition?.cancel()
         ticker = null
@@ -252,7 +370,7 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         SweepGradient(
             120f,
             120f,
-            intArrayOf(accent, secondary, ColorUtils.blendARGB(accent, Color.WHITE, .5f), accent),
+            intArrayOf(accent, secondary, accent),
             null,
         )
     private val baTriangle =
@@ -286,6 +404,9 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
             }
         }
 
+        // The halo (not the disc) turns by the angle the finger gave it.
+        val turned = canvas.save()
+        if (manual != 0f) canvas.rotate(manual, 120f, 120f)
         when (val style = haloStyle()) {
             HaloShaders.NONE -> {}
             HaloShaders.RINGS -> drawRings(canvas, lift, breathe)
@@ -296,6 +417,7 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
                     if (!drawShader(canvas, style) && !drawPicture(canvas, style, lift, breathe)) drawClassic(canvas, lift, breathe)
                 } else if (!drawShader(canvas, style)) drawClassic(canvas, lift, breathe)
         }
+        canvas.restoreToCount(turned)
         drawDisc(canvas)
     }
 
@@ -443,9 +565,6 @@ class OrbitConnectView @JvmOverloads constructor(context: Context, attrs: Attrib
         canvas.drawCircle(120f, 120f, 74f, paint)
         paint.shader = baActive
         paint.alpha = (mix * 235).toInt()
-        canvas.drawCircle(120f, 120f, 74f, paint)
-        paint.shader = sheen
-        paint.alpha = 255
         canvas.drawCircle(120f, 120f, 74f, paint)
         paint.shader = null
         paint.style = Paint.Style.STROKE

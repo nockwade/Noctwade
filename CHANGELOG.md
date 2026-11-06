@@ -1,3 +1,17 @@
+#### 2.0.5-pre.2 (beta, on top of 2.0.5)
+
+* Noctwade: install fix for phones whose installer refused 2.0.5 as "incompatible with your phone" (HyperOS, POCO X6 Pro): the default launcher icon alias no longer carries its own icon and label
+* Noctwade: the halo can be turned from any side of the ring (a scrolling parent no longer takes the drag at the left and right)
+* Noctwade: the white highlight on the connect button and the bright spot in the classic halo are gone
+* Noctwade: the beta notice shows once per run, not after every theme or colour change
+* Noctwade: a full RGB colour picker for gradient colours (plane, hue bar, R/G/B, hex)
+* Noctwade: turn the halo by hand like a spinner
+* Noctwade: with character dialogues off the box is gone and the status sits under the button
+* Noctwade: the connection comes back after the app restarts itself (backup restore, reset, log level)
+* Noctwade: new setting "Block traffic while switching servers" (off by default)
+* Noctwade: pick several servers and ping only them
+* Noctwade: an optional universal APK for people who are not sure which file fits their phone
+
 #### 2.0.5
 
 **New in Noctwade / Новое в Noctwade**

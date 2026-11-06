@@ -13,7 +13,9 @@
     <string name="nw_bg_gradient">Градиент</string>
     <string name="nw_bg_custom_gradient">Мой градиент</string>
     <string name="nw_bg_gallery">Из галереи</string>
-    <string name="nw_bg_gradient_hint">Выберите до четырёх цветов; повторное нажатие убирает цвет.</string>
+    <string name="nw_bg_gradient_hint">До четырёх цветов: нажмите на цвет, чтобы изменить его, или на «+», чтобы добавить. Долгое нажатие убирает цвет.</string>
+    <string name="nw_gradient_remove_stop">Убрать этот цвет</string>
+    <string name="nw_gradient_ready">Готовые цвета</string>
     <string name="nw_bg_direction">Направление</string>
     <string name="nw_ch_title">Персонаж</string>
     <string name="nw_ch_none">Без персонажа</string>

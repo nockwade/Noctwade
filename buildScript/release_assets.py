@@ -147,7 +147,25 @@ def main():
         shutil.copy2(apk, dist / name)
         assets[abi] = {"name": name, "size": apk.stat().st_size, "sha256": sha256(dist / name)}
 
-    (dist / "SHA256SUMS").write_text("".join(f"{a['sha256']}  {a['name']}\n" for a in assets.values()), newline="\n")
+    # The universal APK (every ABI in one file, built with -Pthrone.universal=true) is a download for people who do not
+    # know their phone's ABI: it goes into SHA256SUMS, not into the updater manifest (the updater takes the ABI's own APK).
+    sums = list(assets.values())
+    universal = next((e for e in metadata["elements"] if e.get("type") == "UNIVERSAL" or e.get("outputType", {}).get("type") == "UNIVERSAL"), None)
+    if universal is not None:
+        apk = apk_dir / universal["outputFile"]
+        if not apk.exists() or apk.name.endswith("-unsigned.apk"):
+            fail(f"{apk.name} is missing or unsigned")
+        info = badging(aapt2, apk)
+        if sorted(info["abis"]) != sorted(ABIS):
+            fail(f"{apk.name}: native code {info['abis']}, expected {ABIS}")
+        if signer_sha256(apksigner, apk) != manifest["signerSha256"]:
+            fail(f"{apk.name} is signed by another key than the per-ABI APKs")
+        if (info["versionCode"], info["versionName"], info["packageName"]) != (manifest["versionCode"], manifest["versionName"], manifest["packageName"]):
+            fail(f"{apk.name} differs from the per-ABI APKs in package or version")
+        name = f"Noctwade-{info['versionName']}-universal.apk"
+        shutil.copy2(apk, dist / name)
+        sums.append({"name": name, "size": apk.stat().st_size, "sha256": sha256(dist / name)})
+    (dist / "SHA256SUMS").write_text("".join(f"{a['sha256']}  {a['name']}\n" for a in sums), newline="\n")
     # throne-update.json is the in-app updater manifest; only the stable channel publishes the Releases the
     # updater reads, so preview artifacts carry the APKs and SHA256SUMS only.
     if channel != "stable":

@@ -75,9 +75,6 @@
             android:name="io.nekohasekai.sagernet.AppIcon_default"
             android:enabled="true"
             android:exported="true"
-            android:icon="@mipmap/ic_noctwade"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_noctwade"
             android:targetActivity="io.nekohasekai.sagernet.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

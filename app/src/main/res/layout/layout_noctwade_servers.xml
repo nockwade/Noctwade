@@ -71,6 +71,67 @@
 
 
 
+        <!-- Picking servers for a ping: how many, all / none, ping, cancel. -->
+        <LinearLayout
+            android:id="@+id/servers_select_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/nw_input_field"
+            android:gravity="center_vertical"
+            android:minHeight="52dp"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/servers_select_count"
+                style="@style/NwText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/servers_select_all"
+                style="@style/NwCaption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="10dp"
+                android:text="@string/nw_select_all"
+                android:textColor="?attr/nwAccent"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/servers_select_ping"
+                style="@style/NwText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/nw_pill"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="16dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="9dp"
+                android:text="@string/nw_ping_selected"
+                android:textColor="?attr/nwAccent"
+                android:textSize="13sp" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/servers_select_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/nw_select_cancel"
+                android:padding="10dp"
+                android:src="@drawable/nw_close" />
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/servers_list"
             android:layout_width="match_parent"

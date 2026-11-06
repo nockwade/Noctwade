@@ -54,6 +54,11 @@
             app:summary="@string/allow_bypass_summary"
             app:title="@string/allow_bypass" />
         <SwitchPreference
+            app:icon="@drawable/ic_baseline_security_24"
+            app:key="blockOnSwitch"
+            app:summary="@string/nw_block_on_switch_summary"
+            app:title="@string/nw_block_on_switch" />
+        <SwitchPreference
             app:icon="@drawable/ic_baseline_visibility_off_24"
             app:key="hideFromRecentApps"
             app:summary="@string/hide_from_recent_apps_summary"

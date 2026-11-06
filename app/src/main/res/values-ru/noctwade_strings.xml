@@ -128,4 +128,11 @@
     <string name="nw_ping_group">Проверить пинг группы</string>
     <string name="nw_ping_stop">Остановить проверку</string>
     <string name="nw_group_testing">проверено %1$d / %2$d</string>
+    <string name="nw_block_on_switch">Блокировать трафик при смене сервера</string>
+    <string name="nw_block_on_switch_summary">Пока запускается другой сервер, туннель остаётся включённым, но трафик не проходит: настоящий адрес не утечёт между сменой</string>
+    <string name="nw_select_servers">Выбрать серверы</string>
+    <string name="nw_selected_count">Выбрано: %1$d</string>
+    <string name="nw_ping_selected">Пинг выбранных</string>
+    <string name="nw_select_all">Выбрать все</string>
+    <string name="nw_select_cancel">Отменить выбор</string>
 </resources>

@@ -429,10 +429,14 @@ class BackupFragment : Fragment(R.layout.layout_backup) {
         val activity = requireActivity()
         busy = true
         showProgress(R.string.backup_restoring)
+        val wasRunning = DataStore.serviceState.canStop
         runOnDefaultDispatcher {
             val result = runCatching {
                 stopService()
-                BackupRestore.restore(backup, choice)
+                BackupRestore.restore(backup, choice).also {
+                    // The app restarts after a restore, which ends the connection: put it back afterwards.
+                    if (wasRunning) DataStore.resumeAfterRestart = true
+                }
             }
             onMainDispatcher {
                 busy = false

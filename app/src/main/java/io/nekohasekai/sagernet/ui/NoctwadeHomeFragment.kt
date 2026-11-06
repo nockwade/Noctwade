@@ -2,6 +2,7 @@ package io.nekohasekai.sagernet.ui
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnPreDraw
@@ -37,6 +38,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
     private val imports = ConnectionImportDialog(this)
     /** The theme's character and her dialogue box (which also shows the status). */
     private var character: io.nekohasekai.sagernet.ui.noctwade.CharacterHome? = null
+    /** The character talks in a dialogue box that carries the status; false without a character or with dialogues off. */
+    private var characterDialogue = false
     private val main
         get() = activity as? MainActivity
 
@@ -94,13 +97,18 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         }
         listOf(ui.homeServer, ui.homeQuota.root, ui.homeHeader.headerAdd)
             .forEach(NoctwadeMotion::press)
-        // With a theme-pack character, status, hint and timer live in her dialogue box.
+        // With a theme-pack character, status, hint and timer live in her dialogue box. With the dialogues off there is
+        // no box: the status is written under the button, below the halo, so nothing overlaps.
         val pack = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.character(requireContext())
         val home =
             pack?.let {
-                ui.homeStatus.isVisible = false
-                ui.homeSubtitle.isVisible = false
-                ui.homeTimer.isVisible = false
+                val withBox = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.lines(requireContext())
+                characterDialogue = withBox
+                if (withBox) {
+                    ui.homeStatus.isVisible = false
+                    ui.homeSubtitle.isVisible = false
+                    ui.homeTimer.isVisible = false
+                } else readableStatus(ui)
                 io.nekohasekai.sagernet.ui.noctwade.CharacterHome(
                         it,
                         ui.root,
@@ -110,7 +118,9 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                     )
                     .apply { attach(savedInstanceState == null) }
             }
+        if (home == null) characterDialogue = false
         character = home
+        ui.homePower.spinnable = true
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeServer)
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeQuota.root)
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleHeader(ui.homeHeader.headerMenu, ui.homeHeader.headerAdd)
@@ -139,7 +149,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                 listOf(
                     ui.homeHeader.root,
                     ui.homePower,
-                    home?.dialog ?: ui.homeStatus,
+                    if (characterDialogue) home?.dialog ?: ui.homeStatus else ui.homeStatus,
                     ui.homeQuota.root,
                     ui.homeServer,
                 )
@@ -203,7 +213,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                 ui.homeTimer.removeCallbacks(this)
                 val text = elapsed?.let(io.nekohasekai.sagernet.ui.noctwade.ConnectionClock::format)
                 val home = character
-                if (home != null) home.setTimer(text)
+                if (home != null && characterDialogue) home.setTimer(text)
                 else {
                     ui.homeTimer.isVisible = text != null
                     if (text != null) ui.homeTimer.text = text
@@ -222,8 +232,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                 if (state.canStop) R.string.nw_disconnect_action else R.string.nw_connect_action
             )
         val home = character
-        if (home != null) home.render(state, selected != null)
-        else {
+        home?.render(state, selected != null)
+        if (!characterDialogue) {
             ui.homeStatus.setText(
                 when (state) {
                     BaseService.State.Connected -> R.string.nw_connected
@@ -247,6 +257,18 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
             )
         }
         refreshProfile()
+    }
+
+    /** A character without her box: the status under the button stays legible over a picture, and clear of the halo. */
+    private fun readableStatus(ui: LayoutNoctwadeHomeBinding) {
+        val d = resources.displayMetrics.density
+        val glow =
+            if (io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.light(requireContext())) 0xCCFFFFFF.toInt() else 0xAA000000.toInt()
+        listOf(ui.homeStatus, ui.homeTimer, ui.homeSubtitle).forEach { it.setShadowLayer(10f * d, 0f, 1f * d, glow) }
+        (ui.homeStatus.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
+            it.topMargin = (16 * d).toInt()
+            ui.homeStatus.layoutParams = it
+        }
     }
 
     /** "Tap to connect" is implied by the button itself, so the idle line stays hidden. */
@@ -351,7 +373,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                             .joinToString(", ")
                 }
                 character?.render(DataStore.serviceState, selected != null)
-                if (character == null && !DataStore.serviceState.started && DataStore.serviceState != BaseService.State.Stopping)
+                if (!characterDialogue && !DataStore.serviceState.started && DataStore.serviceState != BaseService.State.Stopping)
                     setSubtitle(ui, if (selected == null) R.string.nw_add_hint else R.string.nw_tap_connect)
 
             }
