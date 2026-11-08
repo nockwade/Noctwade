@@ -322,6 +322,122 @@ class AppearanceTest {
         }
     }
 
+    /** "Hide the interface": everything but the character, her box and the button goes invisible, and comes back as it was. */
+    @Test
+    fun focusModeKeepsOnlyTheCharacterHerBoxAndTheButton() {
+        ThemePacks.import(app, ByteArrayInputStream(demo()))
+        NoctwadeTheme.prefs(app).edit().clear().putString("character", "demo/neko").putBoolean("animations", false).putBoolean("live", false).commit()
+        val a = Robolectric.buildActivity(DesignScreensTest.Host::class.java).setup().get()
+        val ui = home(a, BaseService.State.Connected)
+        settle()
+        val box = lastHome!!.dialog
+        assertNotNull(box.parent)
+        val header = ui.homeHeader.root as ViewGroup
+        val hideable = listOf(ui.homeQuota.root, ui.homeServer, ui.homeHeader.headerAdd)
+        val kept = listOf(ui.homeHeader.headerMenu, header.findViewById<View>(R.id.header_title))
+        assertEquals(View.GONE, ui.homeTimer.visibility)
+        assertEquals(View.GONE, ui.homeHwid.visibility)
+
+        val focus = HomeFocus(ui, { box.takeIf { it.parent != null } }, listOf(ui.homePower))
+        assertTrue(focus.set(true, false))
+        assertTrue(focus.hidden)
+        hideable.forEach {
+            assertEquals("hidden: $it", View.INVISIBLE, it.visibility)
+            assertEquals(0f, it.alpha, 0f)
+        }
+        assertEquals("the way back stays", View.VISIBLE, ui.homeHeader.headerFocus.visibility)
+        kept.forEach { assertEquals("the menu and the name stay: $it", View.VISIBLE, it.visibility) }
+        assertEquals("her box stays", View.VISIBLE, box.visibility)
+        assertEquals("the connect button and its halo stay", View.VISIBLE, ui.homePower.visibility)
+        assertEquals(1f, ui.homePower.alpha, 0f)
+        assertFalse("nothing changes the second time", focus.set(true, false))
+
+        assertTrue(focus.set(false, false))
+        hideable.forEach {
+            assertEquals(View.VISIBLE, it.visibility)
+            assertEquals(1f, it.alpha, 0f)
+        }
+        // She fills the screen while it is hidden: bigger, in the middle, her box where it was; then back as she was.
+        val home = lastHome!!
+        val boxTop = IntArray(2).also { box.getLocationInWindow(it) }[1]
+        home.zoom(true, false, ui.homePower)
+        assertTrue("grown: ${home.zoomScale}", home.zoomScale > 1.3f)
+        assertTrue("her box is docked at the bottom", box.translationY > 0f)
+        assertEquals("the button stays as it was", 1f, ui.homePower.scaleX, 0f)
+        assertEquals(0f, ui.homePower.translationY, 0f)
+        home.zoom(false, false, ui.homePower)
+        assertEquals(1f, home.zoomScale, 0f)
+        assertEquals(0f, box.translationY, 0f)
+        assertEquals(1f, ui.homePower.scaleX, 0f)
+        assertEquals(0f, ui.homePower.translationY, 0f)
+        assertEquals(boxTop, IntArray(2).also { box.getLocationInWindow(it) }[1])
+        assertEquals("what was hidden before stays hidden", View.GONE, ui.homeTimer.visibility)
+        assertEquals(View.GONE, ui.homeHwid.visibility)
+
+        // Docked, the glass card is gone and the text sits on the dark fade; back, the card returns.
+        home.zoom(true, false, ui.homePower)
+        assertNull("no card when docked", (box.getChildAt(0) as ViewGroup).background)
+        home.zoom(false, false, ui.homePower)
+        assertEquals(255, (box.getChildAt(0) as ViewGroup).background?.alpha)
+    }
+
+    @Test
+    fun glassCardFades() {
+        val a = Robolectric.buildActivity(DesignScreensTest.Host::class.java).setup().get()
+        val card = io.nekohasekai.sagernet.widget.noctwade.ShimmerSurface(a, 10f)
+        card.alpha = 100
+        assertEquals(100, card.alpha)
+    }
+
+    /** Screenshots of the new Home pieces: NOCTWADE_SCREENS=<folder> [NOCTWADE_PACK=<a theme pack .zip>]. */
+    @Test
+    fun captureFocusAndHwidScreens() {
+        org.junit.Assume.assumeTrue(out != null)
+        out!!.mkdirs()
+        val packFile = System.getenv("NOCTWADE_PACK")?.let(::File)?.takeIf { it.isFile }
+        fun session(prefs: Map<String, String>, block: (DesignScreensTest.Host) -> Unit) {
+            NoctwadeTheme.prefs(app).edit().clear().putBoolean("animations", false).putBoolean("live", false).apply {
+                prefs.forEach { (k, v) -> putString(k, v) }
+            }.commit()
+            val controller = Robolectric.buildActivity(DesignScreensTest.Host::class.java).setup()
+            block(controller.get())
+            controller.pause().stop().destroy()
+        }
+        // The HWID banner under the top bar, plain sky, light and dark.
+        for (mode in listOf("light", "dark"))
+            session(mapOf("palette" to "sky", "mode" to mode)) { a ->
+                val ui = home(a, BaseService.State.Idle)
+                CharacterHome.styleCard(ui.homeHwid)
+                ui.homeHwid.visibility = View.VISIBLE
+                ui.homeHwidLater.setTextColor(NoctwadeTheme.muted(a))
+                settle()
+                save(a, "focus-hwid-$mode")
+            }
+        // The interface hidden: a character with her box (a given pack, else the demo one), and the eye in the top bar.
+        val ref =
+            if (packFile != null) {
+                val pack = packFile.inputStream().use { ThemePacks.import(app, it) }
+                ThemePacks.installed(app).first { it.id == pack.id }.characters.first().ref
+            } else {
+                ThemePacks.import(app, ByteArrayInputStream(demo()))
+                "demo/neko"
+            }
+        for (hidden in listOf(false, true))
+            session(mapOf("palette" to "sky", "mode" to "dark", "character" to ref)) { a ->
+                val ui = home(a, BaseService.State.Connected)
+                CharacterHome.styleHeader(ui.homeHeader.headerMenu, ui.homeHeader.headerAdd)
+                ui.homeHeader.headerFocus.imageTintList = android.content.res.ColorStateList.valueOf(NoctwadeTheme.accent(a))
+                if (hidden) {
+                    HomeFocus(ui, { lastHome?.dialog?.takeIf { it.parent != null } }, listOf(ui.homePower)).set(true, false)
+                    ui.homeHeader.headerFocus.setImageResource(R.drawable.nw_eye)
+                    ui.homeHeader.headerFocus.translationX = (ui.homeHeader.headerAdd.left - ui.homeHeader.headerFocus.left).toFloat()
+                    lastHome?.zoom(true, false, ui.homePower)
+                }
+                settle()
+                save(a, "focus-${if (hidden) "hidden" else "shown"}")
+            }
+    }
+
     private fun save(a: DesignScreensTest.Host, name: String) {
         val root = a.window.decorView
         val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)

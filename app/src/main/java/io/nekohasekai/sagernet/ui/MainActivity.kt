@@ -506,6 +506,13 @@ class MainActivity : ThemedActivity(),
         navigation.menu.findItem(R.id.nav_servers).isChecked = true
     }
 
+    /** Swiping in the side menu is off while Home hides the interface. */
+    fun lockDrawer(lock: Boolean) {
+        binding.drawerLayout.setDrawerLockMode(
+            if (lock) DrawerLayout.LOCK_MODE_LOCKED_CLOSED else DrawerLayout.LOCK_MODE_UNLOCKED
+        )
+    }
+
     fun displayFragmentWithId(@IdRes id: Int): Boolean {
         when (id) {
             R.id.nav_home -> displayFragment(NoctwadeHomeFragment())

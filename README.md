@@ -5,12 +5,12 @@
 > **Noctwade — неофициальный форк** [throneproj/ThroneForAndroid](https://github.com/throneproj/ThroneForAndroid). Он никак не связан с авторами Throne и SagerNet и не поддерживается ими. Проблемы Noctwade не нужно сообщать в оригинальный проект.
 
 - Licence: **GNU GPL v3.0** (see [LICENSE](LICENSE)), same as upstream. All changes are published under the same licence.
-- Base: upstream release [v2.0.5](https://github.com/throneproj/ThroneForAndroid/releases/tag/v2.0.5) (commit [`8d2f4c5`](https://github.com/throneproj/ThroneForAndroid/commit/8d2f4c5d655a9c9c87250684da04cc45c67b0a0a)). Git history is preserved.
+- Base: upstream release [v2.0.6](https://github.com/throneproj/ThroneForAndroid/releases/tag/v2.0.6) (commit [`e81549f`](https://github.com/throneproj/ThroneForAndroid/commit/e81549fb928c088d3a47e99d7552d721d3586111)). Git history is preserved.
 - What changed: [CHANGES.md](CHANGES.md), per version: [CHANGELOG.md](CHANGELOG.md). Third-party material: [THIRD-PARTY.md](THIRD-PARTY.md). Upstream README: [README.upstream.md](README.upstream.md).
 
 ## Features / Возможности
 
-Everything of ThroneForAndroid 2.0.5 (sing-box core, Xray, WireGuard/AmneziaWG, WARP, subscriptions, routing profiles, the Auto Selector, per-app proxy), plus a redesigned interface:
+Everything of ThroneForAndroid 2.0.6 (sing-box core, Xray, WireGuard/AmneziaWG, WARP, DNS tunnels, subscriptions, routing profiles, the Auto Selector, per-app proxy), plus a redesigned interface:
 
 **Look and feel**
 - **Themes**: 12 colour themes and your own colours (an accent and a second colour from a 36-swatch palette, saved for reuse); **Light / Dark / System**. A new theme spreads from the tapped control over the old one.
@@ -23,9 +23,10 @@ Everything of ThroneForAndroid 2.0.5 (sing-box core, Xray, WireGuard/AmneziaWG, 
 **Using it**
 - Home: connect button, subscription card (traffic, expiry), server card; the server list opens as a sheet with groups, sorting, country flags and ping quality.
 - Menu with search; routing profiles import/export (JSON file or clipboard); per-app routing export/import; one shared DNS tab (Cloudflare / Google / Quad9 / manual).
+- From upstream 2.0.6: DNS tunnels (DNSTT / VayDNS, MasterDNS / StormDNS, XDNS), mKCP transport in Xray, S3 storage for XDRIVE, WARP MASQUE over HTTP/3, newer sing-box, Xray and Go, a fix for the log export crashing in a loop.
 - From upstream 2.0.5: per-group routing profiles, routing profiles from subscriptions, AmneziaWG mode for WARP, compact profile rows and group cards, Allow apps to bypass VPN, excluding countries in the Auto Selector (`!RU`), recovery after a network loss.
 
-Всё из ThroneForAndroid 2.0.5 плюс новый интерфейс: 12 цветовых тем и свои цвета, светлая / тёмная / как в системе с плавной сменой от нажатой кнопки; фоны — градиент темы, свои градиенты, картинка из галереи, фоны из пакетов; **пакеты тем** с персонажами (анимированные спрайты и окно диалога на главном экране), фонами и нимбами; **нимб кнопки** — встроенные варианты, нимбы из пакетов и свои **шейдеры AGSL** (Android 13+); 17 иконок приложения; стеклянные карточки, единый стиль диалогов, плавные переходы; импорт/экспорт профилей маршрутизации и списка приложений; общий DNS. Из Throne 2.0.5 — маршрутизация по группам, профили маршрутизации из подписок, AmneziaWG для WARP, компактные строки и карточки, «Разрешить приложениям обходить VPN», исключение стран в автовыборе, восстановление после потери сети.
+Всё из ThroneForAndroid 2.0.6 плюс новый интерфейс: 12 цветовых тем и свои цвета, светлая / тёмная / как в системе с плавной сменой от нажатой кнопки; фоны — градиент темы, свои градиенты, картинка из галереи, фоны из пакетов; **пакеты тем** с персонажами (анимированные спрайты и окно диалога на главном экране), фонами и нимбами; **нимб кнопки** — встроенные варианты, нимбы из пакетов и свои **шейдеры AGSL** (Android 13+); 17 иконок приложения; стеклянные карточки, единый стиль диалогов, плавные переходы; импорт/экспорт профилей маршрутизации и списка приложений; общий DNS. Из Throne 2.0.6 — DNS-туннели (DNSTT / VayDNS, MasterDNS / StormDNS, XDNS), транспорт mKCP в Xray, S3-хранилище для XDRIVE, WARP MASQUE по HTTP/3, обновлённые sing-box, Xray и Go, исправление зацикленного сбоя экспорта журнала. Из Throne 2.0.5 — маршрутизация по группам, профили маршрутизации из подписок, AmneziaWG для WARP, компактные строки и карточки, «Разрешить приложениям обходить VPN», исключение стран в автовыборе, восстановление после потери сети.
 
 ## Theme packs and halos / Пакеты тем и нимбы
 
@@ -63,7 +64,7 @@ Releases: <https://github.com/nockwade/Noctwade/releases>. Download only from th
 2. Check the signing certificate:
 
 ```
-apksigner verify --print-certs Noctwade-2.0.5-arm64-v8a.apk
+apksigner verify --print-certs Noctwade-2.0.6-arm64-v8a.apk
 ```
 
 The certificate SHA-256 must be:
@@ -76,7 +77,7 @@ If the fingerprint differs, the file is not an official Noctwade build. The in-a
 
 - Package: `com.noctwade.android`; Android 7.0 (API 24) or newer. Files: `arm64-v8a` (most phones), `armeabi-v7a` (old and low-end phones with a 32-bit system), `x86_64` (emulators, Chromebooks), and `universal` (all of them in one file, bigger: take it when you are not sure which one you need).
 - **"App not installed as it is incompatible with your phone"**: the installer's message is generic. Check, in order: the file is whole (its size and SHA-256 match `SHA256SUMS`; re-download it, a half-downloaded or renamed file fails this way); the phone has Android 7.0 or newer; the file's ABI is in the phone (`arm64-v8a` for almost every phone made after 2017, `armeabi-v7a` for a 32-bit system; the `universal` file has all of them); a copy of the app signed with another key is not installed (uninstall it, export profiles first). On Xiaomi / POCO (HyperOS, MIUI) also try installing from a file manager instead of a browser's download popup, and turn off "MIUI optimization" / "Install via USB" limits if they are on.
-- It installs next to Throne (different package). It updates over Noctwade 2.0.4. It cannot update a build signed with another key: uninstall such a build first (export profiles first).
+- It installs next to Throne (different package). It updates over Noctwade 2.0.4 and 2.0.5. It cannot update a build signed with another key: uninstall such a build first (export profiles first).
 
 ## Build from source / Сборка
 
@@ -94,7 +95,7 @@ Signing: set `SIGNING_KEYSTORE_B64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIA
 
 ### Corresponding source of the core
 
-The core in the release APK is the **unmodified** upstream [throneproj/Throne](https://github.com/throneproj/Throne) `core/` at commit `36b6bc4abd7792dcc1d533b02526b94b049c4a84` (sing-box v1.15.0-alpha.13 via the `throneproj/sing-box` fork, commit `af51a7460ccd`; `throneproj/sing` `e3e392877db8`, `throneproj/wireguard-go` `e11787583013`, `throneproj/xray-core` `d672759ff89f`; see its `go.mod`). A source archive of that core and its Android build script is attached to each release as `ThroneCore-source.zip` (GPLv3 §6).
+The core in the release APK is the **unmodified** upstream [throneproj/Throne](https://github.com/throneproj/Throne) `core/` at commit `cb89a14fed80d3cf6b3d8def99db0f488445bfdc` (sing-box v1.15.0-alpha.13 via the `throneproj/sing-box` fork, commit `6bc5c846150e`; `throneproj/sing` `e3e392877db8`, `throneproj/wireguard-go` `e11787583013`, `throneproj/xray-core` `1c6eb7771c4d`, `throneproj/utls` `f0ae7792aa1d`; see its `go.mod`). A source archive of that core and its Android build script is attached to each release as `ThroneCore-source.zip` (GPLv3 §6).
 
 ## Disclaimer
 

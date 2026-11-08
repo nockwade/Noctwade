@@ -18,6 +18,7 @@
         android:src="@drawable/nw_menu_bars" />
 
     <TextView
+        android:id="@+id/header_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
@@ -30,6 +31,16 @@
         android:text="@string/nw_brand"
         android:textColor="?attr/nwText"
         android:textSize="15sp" />
+
+    <!-- Home only: hides the interface and leaves the wallpaper and the character (Servers hides this button). -->
+    <io.nekohasekai.sagernet.widget.noctwade.GlassIconButton
+        android:id="@+id/header_focus"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/nw_focus_hide"
+        android:padding="11dp"
+        android:src="@drawable/nw_focus" />
 
     <io.nekohasekai.sagernet.widget.noctwade.GlassIconButton
         android:id="@+id/header_add"

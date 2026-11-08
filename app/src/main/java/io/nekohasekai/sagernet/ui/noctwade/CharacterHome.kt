@@ -19,6 +19,7 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -113,9 +114,216 @@ internal class CharacterHome(
 
     private fun motion() = NoctwadeMotion.enabled(context) && !NoctwadeEco.active(context)
 
+    /** A tap on "hide the interface" is a short one-off transition: it runs even when the idle animations are saved. */
+    private fun slide() = NoctwadeMotion.enabled(context)
+
     /** False when the dialogues are switched off: there is no box then, and Home writes the status under the button. */
     val hasDialogue: Boolean
         get() = withLines
+
+    /** The interface is hidden: she grows to fill the screen, her box is docked at the bottom, the connect button above it. */
+    private var zoomed = false
+    private var faceMargin = 0
+    private var shownOrb: View? = null
+
+    /** How much the character is magnified now (1 = her place beside the cards). */
+    internal val zoomScale: Float
+        get() = layer.scaleX
+
+    /**
+     * Fills the screen with her (hiding the interface) or puts her back. The layer grows about her feet, so she
+     * stays put at the bottom, and slides to the middle. Her box is docked along the bottom edge as a solid panel
+     * (floating mid-screen over her it looked cut off), and the connect button, made smaller, sits right above it.
+     */
+    fun zoom(on: Boolean, animate: Boolean, orb: View? = null) {
+        zoomed = on
+        if (orb != null) shownOrb = orb
+        dock(on)
+        // A child is clipped to its own bounds while its parent clips children: with the scene clipping, the
+        // layer's enlarged picture would be cut where the layer used to end, and the box and the button moved
+        // down inside the scrolling column would be cut at its edge. Let everything draw freely while zoomed.
+        if (on) {
+            scroll.scrollTo(0, 0)
+            freeClip(true)
+        }
+        if (dialog.parent != null && !dialogWatched) {
+            dialogWatched = true
+            dialog.addOnLayoutChangeListener { _, _, t, _, b, _, ot, _, ob ->
+                // The box got taller or shorter (its margin or text changed): keep it and the button docked.
+                if (zoomed && b - t != ob - ot) scene.post { if (zoomed) applyZoom(slide()) }
+            }
+        }
+        applyZoom(animate && slide())
+    }
+
+    private var dialogWatched = false
+
+    private fun freeClip(free: Boolean) {
+        scene.clipChildren = !free
+        (scroll as? ViewGroup)?.let {
+            it.clipChildren = !free
+            it.clipToPadding = !free
+            (it.getChildAt(0) as? ViewGroup)?.clipChildren = !free
+        }
+        content.clipChildren = !free
+    }
+
+    /** Where [v] ends in the scene's coordinates by layout alone, ignoring its own and its parents' transforms. */
+    private fun layoutBottom(v: View): Float {
+        var y = v.bottom.toFloat()
+        var p = v.parent as? View
+        while (p != null && p !== scene) {
+            y += p.top - p.scrollY
+            p = p.parent as? View
+        }
+        return y
+    }
+
+    private fun applyBoxMargin() {
+        val end = if (zoomed) 0 else faceMargin
+        (dialog.layoutParams as? LinearLayout.LayoutParams)?.let {
+            if (it.marginEnd != end) {
+                it.marginEnd = end
+                dialog.layoutParams = it
+            }
+        }
+    }
+
+    /** The dark fade along the bottom of the screen that the docked text sits on, like a visual novel's. */
+    private val scrim =
+        View(context).apply {
+            visibility = View.GONE
+            alpha = 0f
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            background =
+                GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    // Eased stops: the black melts into the picture instead of ending in a visible edge.
+                    intArrayOf(0x00000000, 0x14000000, 0x38000000, 0x68000000, 0x98000000.toInt(), 0xBC000000.toInt(), 0xD0000000.toInt()),
+                )
+        }
+    private var boxEdge: android.graphics.drawable.Drawable? = null
+
+    /**
+     * Docked: no card at all, only the fade along the bottom with the name, the line and the status on it in light
+     * text; undocked: the glass card again.
+     */
+    private fun dock(on: Boolean) {
+        if (scrim.parent == null) scene.addView(scrim, 2, FrameLayout.LayoutParams(-1, 0, Gravity.BOTTOM))
+        scrim.animate().cancel()
+        if (on) {
+            scrim.visibility = View.VISIBLE
+            if (slide()) scrim.animate().alpha(1f).setDuration(ZOOM_MS).setInterpolator(NoctwadeMotion.soft).start() else scrim.alpha = 1f
+        } else if (slide()) {
+            scrim.animate().alpha(0f).setDuration(ZOOM_MS).setInterpolator(NoctwadeMotion.soft)
+                .withEndAction { if (!zoomed) scrim.visibility = View.GONE }.start()
+        } else {
+            scrim.alpha = 0f
+            scrim.visibility = View.GONE
+        }
+        if (!withLines || dialog.parent == null) return
+        applyBoxMargin()
+        // Above the tiles that fade in and out behind it, so it never slides out from under them.
+        dialog.translationZ = if (on) dp(6).toFloat() else 0f
+        restyle?.cancel()
+        val fromT = dockT
+        if (!on) {
+            box.background = ShimmerSurface.background(context, 22)
+            box.foreground = boxEdge
+        } else if (boxEdge == null) boxEdge = box.foreground
+        val toT = if (on) 1f else 0f
+        val paint = { t: Float ->
+            dockT = t
+            val a = ((1f - t) * 255).toInt()
+            box.background?.alpha = a
+            box.foreground?.alpha = a
+            club.setTextColor(ColorUtils.blendARGB(NoctwadeTheme.muted(context), 0xFFC9CBD2.toInt(), t))
+            body.setTextColor(ColorUtils.blendARGB(NoctwadeTheme.text(context), Color.WHITE, t))
+        }
+        val finish = {
+            if (toT == 1f) {
+                box.background = null
+                box.foreground = null
+            }
+        }
+        if (!slide()) {
+            paint(toT)
+            finish()
+        } else {
+            restyle =
+                android.animation.ValueAnimator.ofFloat(fromT, toT).apply {
+                    duration = ZOOM_MS
+                    interpolator = NoctwadeMotion.soft
+                    addUpdateListener { paint(it.animatedValue as Float) }
+                    addListener(
+                        object : android.animation.AnimatorListenerAdapter() {
+                            var cancelled = false
+
+                            override fun onAnimationCancel(animation: android.animation.Animator) {
+                                cancelled = true
+                            }
+
+                            override fun onAnimationEnd(animation: android.animation.Animator) {
+                                if (!cancelled) finish()
+                            }
+                        },
+                    )
+                    start()
+                }
+        }
+    }
+
+    private var restyle: android.animation.ValueAnimator? = null
+    private var dockT = 0f
+
+    private fun applyZoom(animate: Boolean) {
+        val width = scene.width.toFloat()
+        val height = scene.height.toFloat()
+        val lp = mascot.layoutParams as? FrameLayout.LayoutParams
+        val mw = lp?.width?.toFloat() ?: 0f
+        val mh = lp?.height?.toFloat() ?: 0f
+        if (width <= 0f || height <= 0f || mw <= 0f || mh <= 0f) return
+        (scrim.layoutParams as? FrameLayout.LayoutParams)?.let {
+            val stack = if (dialog.parent != null) (dialog.height + dp(12)).toFloat() else 0f
+            val wanted = maxOf(height * .46f, stack + dp(90)).coerceAtMost(height * .8f).toInt()
+            if (it.height != wanted) {
+                it.height = wanted
+                scrim.layoutParams = it
+            }
+        }
+        // Her feet sit a little below the screen (place() pushes her down by 5% of her height).
+        val feet = height + mh * .05f
+        val centre = width - mw / 2f + mw * .22f
+        layer.pivotX = centre
+        layer.pivotY = feet
+        val scale = if (zoomed) minOf(height * .98f / mh, width * 1.2f / mw).coerceAtLeast(1f) else 1f
+        val shift = if (zoomed) width / 2f - centre else 0f
+        // The box ends just above the bottom padding of the scrolling content; the connect button stays where it is.
+        val bottomLimit = height - maxOf(scroll.paddingBottom, content.paddingBottom) - dp(4)
+        // Layout positions (no transforms): the content column starts at the scene's top-left.
+        val boxShift = if (zoomed && dialog.parent != null) (bottomLimit - layoutBottom(dialog)).coerceAtLeast(0f) else 0f
+        if (!animate) {
+            layer.animate().cancel()
+            dialog.animate().cancel()
+            layer.scaleX = scale
+            layer.scaleY = scale
+            layer.translationX = shift
+            dialog.translationY = boxShift
+            if (!zoomed) freeClip(false)
+            return
+        }
+        if (dialog.parent != null)
+            dialog.animate().translationY(boxShift).setDuration(ZOOM_MS).setInterpolator(NoctwadeMotion.soft).start()
+        layer
+            .animate()
+            .scaleX(scale)
+            .scaleY(scale)
+            .translationX(shift)
+            .setDuration(ZOOM_MS)
+            .setInterpolator(NoctwadeMotion.soft)
+            .withEndAction { if (!zoomed) freeClip(false) }
+            .start()
+    }
 
     fun attach(animate: Boolean) {
         animateEntrance = animate
@@ -204,6 +412,8 @@ internal class CharacterHome(
         footer.addView(status, LinearLayout.LayoutParams(-2, -2))
         footer.addView(View(context), LinearLayout.LayoutParams(0, 1, 1f))
         footer.addView(next, LinearLayout.LayoutParams(-2, -2))
+        // The status pill changes size with its text; a fixed footer keeps the box (and what is docked to it) still.
+        footer.minimumHeight = dp(28)
         box.addView(footer, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         dialog.addView(box, FrameLayout.LayoutParams(-1, -2).apply { topMargin = dp(13) })
 
@@ -302,14 +512,10 @@ internal class CharacterHome(
             it.pivotY = h.toFloat()
         }
         // The dialogue ends before her face so she stays visible beside it.
-        val end = (w * .40f - 20 * density).toInt().coerceIn(dp(48), dp(120))
-        (dialog.layoutParams as? LinearLayout.LayoutParams)?.let {
-            if (it.marginEnd != end) {
-                it.marginEnd = end
-                dialog.layoutParams = it
-            }
-        }
+        faceMargin = (w * .40f - 20 * density).toInt().coerceIn(dp(48), dp(120))
+        applyBoxMargin()
         layer.requestLayout()
+        if (zoomed) applyZoom(false)
     }
 
     private fun enter() {
@@ -705,8 +911,9 @@ internal class CharacterHome(
                 context,
                 object : GestureDetector.SimpleOnGestureListener() {
                     override fun onSingleTapUp(e: MotionEvent): Boolean {
-                        val x = e.x
-                        val y = e.y
+                        // Back through the zoom of the layer to where she is laid out.
+                        val x = (e.x - layer.translationX - layer.pivotX) / layer.scaleX + layer.pivotX
+                        val y = (e.y - layer.translationY - layer.pivotY) / layer.scaleY + layer.pivotY
                         val left = mascot.left + mascot.translationX
                         val top = mascot.top + mascot.translationY
                         // Upper two thirds: the lower part runs behind the cards.
@@ -725,6 +932,7 @@ internal class CharacterHome(
     }
 
     companion object {
+        private const val ZOOM_MS = 520L
         private const val BODY_SP = 16f
         private const val BODY_MIN_SP = 13f
         private const val BODY_LINES = 3

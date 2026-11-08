@@ -1,9 +1,10 @@
-#### 2.0.5-pre.2 (beta, on top of 2.0.5)
+#### 2.0.6
+
+**New in Noctwade / Новое в Noctwade**
 
 * Noctwade: install fix for phones whose installer refused 2.0.5 as "incompatible with your phone" (HyperOS, POCO X6 Pro): the default launcher icon alias no longer carries its own icon and label
 * Noctwade: the halo can be turned from any side of the ring (a scrolling parent no longer takes the drag at the left and right)
 * Noctwade: the white highlight on the connect button and the bright spot in the classic halo are gone
-* Noctwade: the beta notice shows once per run, not after every theme or colour change
 * Noctwade: a full RGB colour picker for gradient colours (plane, hue bar, R/G/B, hex)
 * Noctwade: turn the halo by hand like a spinner
 * Noctwade: with character dialogues off the box is gone and the status sits under the button
@@ -11,6 +12,20 @@
 * Noctwade: new setting "Block traffic while switching servers" (off by default)
 * Noctwade: pick several servers and ping only them
 * Noctwade: an optional universal APK for people who are not sure which file fits their phone
+* Noctwade: a "hide the interface" button in the top bar of Home (left of +): everything fades out and stops taking touches, only the wallpaper, the character, her dialogue box, the connect button with its halo, the menu button and the app name stay: she grows to fill the screen, her text sits on a dark fade along the bottom of the screen like in a visual novel, the connect button stays in place, and the button slides into the corner where + was; the icon becomes an eye, tap it (or Back) to bring everything back smoothly. It can be switched off in Themes › More › Home screen
+* Noctwade: on the first start a banner says that HWID is off and subscriptions need it, with "Turn on" and "Later"
+
+**From Throne 2.0.6 / Из Throne 2.0.6**
+
+* DNS tunnels: DNSTT / VayDNS, MasterDNS / StormDNS and XDNS (see the [Throne documentation](https://throneproj.github.io/advanced/dns_tunnels/))
+* mKCP transport in Xray
+* S3 storage for XDRIVE
+* Improved WARP MASQUE over HTTP/3
+* Updated sing-box, Xray and Go
+* Fixed: the log export crashing in a loop
+* Other fixes and improvements
+
+Noctwade 2.0.5-pre.2 (beta) was published before this release; everything in it is part of 2.0.6.
 
 #### 2.0.5
 

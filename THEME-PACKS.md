@@ -6,8 +6,8 @@ personalization → Background → Theme packs → Import a pack (.zip)** (or fr
 After import its backgrounds and characters appear on the **Background** tab and its halos on the **Halo** tab; any
 background can be combined with any character and any colour theme.
 
-**Make a pack with an AI:** [docs/prompts/theme-pack-prompt.md](docs/prompts/theme-pack-prompt.md) (a step-by-step prompt
-in English and Russian). **Animated halos:** [docs/prompts/halo-shader-prompt.md](docs/prompts/halo-shader-prompt.md).
+**Make a pack with an AI:** [docs/prompts/theme-pack-prompt.md](docs/prompts/theme-pack-prompt.md) (the prompt, English only).
+**Animated halos:** [docs/prompts/halo-shader-prompt.md](docs/prompts/halo-shader-prompt.md).
 
 Noctwade сам содержит только цветовые темы и градиентные фоны. **Пакеты тем** добавляют фоны и персонажей
 (спрайты, имена, диалоги) и нимбы для кнопки подключения. Пакет — это `.zip`; импорт: **Меню → Темы и персонализация →
@@ -15,8 +15,8 @@ Noctwade сам содержит только цветовые темы и гр�
 импорта фоны и персонажи пакета появляются на вкладке **Фон**, нимбы — на вкладке **Нимб**; любой фон сочетается с
 любым персонажем и любой цветовой темой.
 
-**Сделать пакет с нейросетью:** [docs/prompts/theme-pack-prompt.md](docs/prompts/theme-pack-prompt.md) (пошаговый промт
-на английском и русском). **Анимированные нимбы:** [docs/prompts/halo-shader-prompt.md](docs/prompts/halo-shader-prompt.md).
+**Сделать пакет с нейросетью:** [docs/prompts/theme-pack-prompt.md](docs/prompts/theme-pack-prompt.md) (промт только на английском).
+**Анимированные нимбы:** [docs/prompts/halo-shader-prompt.md](docs/prompts/halo-shader-prompt.md).
 
 > Use only art you made yourself or have permission to use. Do not share packs with other people's art.
 > Используйте только свои арты или арты, на которые есть разрешение. Не распространяйте пакеты с чужими артами.

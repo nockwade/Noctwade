@@ -141,13 +141,21 @@ class ShimmerSurface(context: Context, private val radius: Float) : Drawable() {
         glowB.shader?.setLocalMatrix(matrix)
     }
 
+    /** Whole-surface opacity (the card can fade out as one piece). */
+    private var surfaceAlpha = 255
+
     override fun draw(canvas: Canvas) {
+        if (surfaceAlpha <= 0) return
+        val layer = if (surfaceAlpha < 255) canvas.saveLayerAlpha(rect, surfaceAlpha) else -1
         canvas.drawRoundRect(rect, radius, radius, fill)
         canvas.drawRoundRect(rect, radius, radius, glowA)
         canvas.drawRoundRect(rect, radius, radius, glowB)
         canvas.drawRoundRect(rect, radius, radius, highlight)
         canvas.drawRoundRect(rect, radius, radius, edge)
+        if (layer >= 0) canvas.restoreToCount(layer)
     }
+
+    override fun getAlpha() = surfaceAlpha
 
     override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
         val changed = super.setVisible(visible, restart)
@@ -176,7 +184,12 @@ class ShimmerSurface(context: Context, private val radius: Float) : Drawable() {
         animator = null
     }
 
-    override fun setAlpha(alpha: Int) = Unit
+    override fun setAlpha(alpha: Int) {
+        val a = alpha.coerceIn(0, 255)
+        if (a == surfaceAlpha) return
+        surfaceAlpha = a
+        invalidateSelf()
+    }
 
     override fun setColorFilter(colorFilter: ColorFilter?) = Unit
 

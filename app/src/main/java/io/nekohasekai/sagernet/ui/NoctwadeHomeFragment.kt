@@ -3,6 +3,7 @@ package io.nekohasekai.sagernet.ui
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnPreDraw
@@ -42,6 +43,10 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
     private var characterDialogue = false
     private val main
         get() = activity as? MainActivity
+
+    /** "Hide the interface": only the wallpaper, the character and her box stay. */
+    private var focus: io.nekohasekai.sagernet.ui.noctwade.HomeFocus? = null
+    private var focusBack: OnBackPressedCallback? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -121,6 +126,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         if (home == null) characterDialogue = false
         character = home
         ui.homePower.spinnable = true
+        setupFocus(ui)
+        setupHwidBanner(ui)
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeServer)
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeQuota.root)
         io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleHeader(ui.homeHeader.headerMenu, ui.homeHeader.headerAdd)
@@ -215,7 +222,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
                 val home = character
                 if (home != null && characterDialogue) home.setTimer(text)
                 else {
-                    ui.homeTimer.isVisible = text != null
+                    ui.homeTimer.isVisible = text != null && focus?.hidden != true
                     if (text != null) ui.homeTimer.text = text
                 }
                 if (elapsed != null && isResumed)
@@ -259,6 +266,70 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         refreshProfile()
     }
 
+    /** The top-bar button: hides everything but the wallpaper, the character and her dialogue box, and back. */
+    private fun setupFocus(ui: LayoutNoctwadeHomeBinding) {
+        val context = requireContext()
+        val button = ui.homeHeader.headerFocus
+        focus = io.nekohasekai.sagernet.ui.noctwade.HomeFocus(ui, { character?.dialog?.takeIf { it.parent != null } }, listOf(ui.homePower))
+        button.isVisible = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.focusButton(context)
+        button.imageTintList =
+            android.content.res.ColorStateList.valueOf(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.accent(context))
+        NoctwadeMotion.press(button)
+        // The system Back brings the interface back first; it never leaves the app while everything is hidden.
+        focusBack =
+            object : OnBackPressedCallback(false) {
+                    override fun handleOnBackPressed() = setFocus(false)
+                }
+                .also { requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, it) }
+        button.setOnClickListener { setFocus(focus?.hidden != true) }
+    }
+
+    private fun setFocus(hide: Boolean) {
+        val ui = binding ?: return
+        val motion = NoctwadeMotion.enabled(requireContext())
+        if (focus?.set(hide, motion) != true) return
+        focusBack?.isEnabled = hide
+        ui.homeHeader.headerFocus.apply {
+            setImageResource(if (hide) R.drawable.nw_eye else R.drawable.nw_focus)
+            contentDescription = getString(if (hide) R.string.nw_focus_show else R.string.nw_focus_hide)
+        }
+        // The button slides into the corner where the + button was (that one is hidden too) and back.
+        val corner = if (hide) (ui.homeHeader.headerAdd.left - ui.homeHeader.headerFocus.left).toFloat() else 0f
+        if (motion) {
+            ui.homeHeader.headerFocus.animate().translationX(corner).setDuration(520L).setInterpolator(NoctwadeMotion.soft).start()
+        } else {
+            ui.homeHeader.headerFocus.animate().cancel()
+            ui.homeHeader.headerFocus.translationX = corner
+        }
+        character?.zoom(hide, motion, ui.homePower)
+        // The timer and the hint decide for themselves whether to show once the interface is back.
+        if (!hide) renderState(DataStore.serviceState)
+    }
+
+    /**
+     * First start: HWID is off and subscriptions need it. Shown until it is answered (turn on / later), once; the
+     * answer is kept in the theme preferences, which a reinstall does not bring back.
+     */
+    private fun setupHwidBanner(ui: LayoutNoctwadeHomeBinding) {
+        val context = requireContext()
+        val prefs = io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.prefs(context)
+        val show = !DataStore.subSendHwid && !prefs.getBoolean("hwid_banner_done", false)
+        ui.homeHwid.isVisible = show
+        if (!show) return
+        io.nekohasekai.sagernet.ui.noctwade.CharacterHome.styleCard(ui.homeHwid)
+        ui.homeHwidLater.setTextColor(io.nekohasekai.sagernet.ui.noctwade.NoctwadeTheme.muted(context))
+        fun answered(message: Int) {
+            prefs.edit().putBoolean("hwid_banner_done", true).apply()
+            ui.homeHwid.isVisible = false
+            main?.snackbar(message)?.show()
+        }
+        ui.homeHwidEnable.setOnClickListener {
+            DataStore.subSendHwid = true
+            answered(R.string.nw_hwid_enabled)
+        }
+        ui.homeHwidLater.setOnClickListener { answered(R.string.nw_hwid_later_hint) }
+    }
+
     /** A character without her box: the status under the button stays legible over a picture, and clear of the halo. */
     private fun readableStatus(ui: LayoutNoctwadeHomeBinding) {
         val d = resources.displayMetrics.density
@@ -274,7 +345,7 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
     /** "Tap to connect" is implied by the button itself, so the idle line stays hidden. */
     private fun setSubtitle(ui: LayoutNoctwadeHomeBinding, text: Int) {
         ui.homeSubtitle.setText(text)
-        ui.homeSubtitle.isVisible = text != R.string.nw_tap_connect
+        ui.homeSubtitle.isVisible = text != R.string.nw_tap_connect && focus?.hidden != true
     }
 
     // No transfer card on Home; MainActivity can continue forwarding service samples.
@@ -421,6 +492,8 @@ class NoctwadeHomeFragment : ToolbarFragment(R.layout.layout_noctwade_home) {
         profileJob = null
         character?.destroy()
         character = null
+        focus = null
+        focusBack = null
         binding = null
         super.onDestroyView()
     }

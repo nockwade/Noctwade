@@ -83,4 +83,14 @@
     <string name="nw_halo_skipped">Пропущено %1$d: %2$s</string>
     <string name="nw_halo_add">Добавить</string>
     <string name="nw_halo_add_hint">.agsl, .zip или пак</string>
+    <string name="nw_focus_hide">Скрыть интерфейс</string>
+    <string name="nw_focus_show">Показать интерфейс</string>
+    <string name="nw_home_screen">Главный экран</string>
+    <string name="nw_focus_setting">Кнопка «Скрыть интерфейс» на главной</string>
+    <string name="nw_hwid_title">HWID выключен</string>
+    <string name="nw_hwid_text">Для подписок его надо включить: без HWID некоторые провайдеры не выдают серверы. Включить сейчас?</string>
+    <string name="nw_hwid_enable">Включить</string>
+    <string name="nw_hwid_later">Позже</string>
+    <string name="nw_hwid_enabled">HWID включён. Выключить можно в Настройки › Подписки</string>
+    <string name="nw_hwid_later_hint">Включить HWID можно в Настройки › Подписки</string>
 </resources>

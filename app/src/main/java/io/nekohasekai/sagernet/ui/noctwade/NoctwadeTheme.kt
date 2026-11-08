@@ -237,6 +237,9 @@ internal object NoctwadeTheme {
 
     fun lines(context: Context) = prefs(context).getBoolean("ch_lines", true)
 
+    /** The "hide the interface" button in the top bar of Home. */
+    fun focusButton(context: Context) = prefs(context).getBoolean("focus_button", true)
+
     fun animations(context: Context) = prefs(context).getBoolean("animations", true)
 
     fun live(context: Context) = prefs(context).getBoolean("live", true)

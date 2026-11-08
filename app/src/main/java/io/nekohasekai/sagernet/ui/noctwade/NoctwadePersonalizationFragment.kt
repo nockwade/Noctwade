@@ -160,6 +160,7 @@ class NoctwadePersonalizationFragment : Fragment() {
             }
             "halo" -> addHalo(page)
             "more" -> {
+                addHomeScreen(page)
                 addAnimationSettings(page)
                 addEconomyMode(page)
                 addAppIcons(page)
@@ -1050,6 +1051,23 @@ class NoctwadePersonalizationFragment : Fragment() {
                 applyAppearance()
             } else android.widget.Toast.makeText(context, R.string.nw_gallery_failed, android.widget.Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /** Switches for the Home screen itself. */
+    private fun addHomeScreen(body: LinearLayout) {
+        val context = body.context
+        val prefs = NoctwadeTheme.prefs(context)
+        caption(body, getString(R.string.nw_home_screen))
+        body.addView(
+            SwitchCompat(context).apply {
+                text = getString(R.string.nw_focus_setting)
+                textSize = 15f
+                setTextColor(NoctwadeTheme.text(context))
+                setPadding(dp(4), dp(10), dp(4), dp(10))
+                isChecked = NoctwadeTheme.focusButton(context)
+                setOnCheckedChangeListener { _, value -> prefs.edit().putBoolean("focus_button", value).apply() }
+            }
+        )
     }
 
     private fun addAnimationSettings(body: LinearLayout) {

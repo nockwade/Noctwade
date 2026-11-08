@@ -84,4 +84,14 @@
     <string name="nw_halo_skipped">Skipped %1$d: %2$s</string>
     <string name="nw_halo_add">Add</string>
     <string name="nw_halo_add_hint">.agsl, .zip or a pack</string>
+    <string name="nw_focus_hide">Hide the interface</string>
+    <string name="nw_focus_show">Show the interface</string>
+    <string name="nw_home_screen">Home screen</string>
+    <string name="nw_focus_setting">“Hide interface” button on Home</string>
+    <string name="nw_hwid_title">HWID is off</string>
+    <string name="nw_hwid_text">Subscriptions need it: without HWID some providers do not give you servers. Turn it on now?</string>
+    <string name="nw_hwid_enable">Turn on</string>
+    <string name="nw_hwid_later">Later</string>
+    <string name="nw_hwid_enabled">HWID is on. You can switch it off in Settings › Subscriptions</string>
+    <string name="nw_hwid_later_hint">You can turn HWID on in Settings › Subscriptions</string>
 </resources>
